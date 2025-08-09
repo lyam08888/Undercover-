@@ -237,15 +237,20 @@
         <!-- Step 2: Mission -->
         <div class="setup-step" data-step="2">
             <div class="card">
-                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a2.4 2.4 0 0 1 3 0L8 20l3-3a2.4 2.4 0 0 1 3 0L19.5 20a2.4 2.4 0 0 1 0-3L17 15l3-3a2.4 2.4 0 0 0 0-3L15 4l-3 3a2.4 2.4 0 0 0-3 0L4 4a2.4 2.4 0 0 0 0 3l3 3-2.5 2.5a2.4 2.4 0 0 0 0 3Z"/></svg>Thème & Agents</h1>
-                <h2>1. Choisissez un thème</h2>
-                <div id="theme-grid"></div>
-                <h2 style="margin-top: 1.5rem;">2. Paramétrez les agents</h2>
-                <div class="row" style="margin-top:.6rem"><div class="pill" style="flex:1.5"><span><b>Agents</b> (3–12)</span><div class="numstep"><button id="minus" class="step-btn">−</button><div id="playerNum" class="counter">4</div><button id="plus" class="step-btn">+</button></div></div><div class="pill" style="flex:1"><span>Bots IA</span><div class="numstep"><button id="minusBot" class="step-btn">−</button><div id="botNum" class="counter">0</div><button id="plusBot" class="step-btn">+</button></div></div></div>
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a2.4 2.4 0 0 1 3 0L8 20l3-3a2.4 2.4 0 0 1 3 0L19.5 20a2.4 2.4 0 0 1 0-3L17 15l3-3a2.4 2.4 0 0 0 0-3L15 4l-3 3a2.4 2.4 0 0 0-3 0L4 4a2.4 2.4 0 0 0 0 3l3 3-2.5 2.5a2.4 2.4 0 0 0 0 3Z"/></svg>Choisissez un thème</h1>
+                <div id="theme-grid" style="margin-top: 1rem;"></div>
             </div>
         </div>
-        <!-- Step 3: Options -->
+        <!-- Step 3: Agents -->
         <div class="setup-step" data-step="3">
+            <div class="card">
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Paramétrez les agents</h1>
+                <div class="row" style="margin-top:1rem"><div class="pill" style="flex:1.5"><span><b>Agents Humains</b> (0–12)</span><div class="numstep"><button id="minus" class="step-btn">−</button><div id="playerNum" class="counter">4</div><button id="plus" class="step-btn">+</button></div></div><div class="pill" style="flex:1"><span>Bots IA</span><div class="numstep"><button id="minusBot" class="step-btn">−</button><div id="botNum" class="counter">0</div><button id="plusBot" class="step-btn">+</button></div></div></div>
+                <p class="hint" style="margin-top: 1rem; text-align: center;">Le nombre total d'agents (humains + bots) doit être entre 3 et 12.</p>
+            </div>
+        </div>
+        <!-- Step 4: Options -->
+        <div class="setup-step" data-step="4">
             <div class="card">
                 <h1 style="font-size: 1.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Options de la partie</h1>
                 <div class="setup-options" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: .75rem;">
@@ -255,8 +260,8 @@
                 </div>
             </div>
         </div>
-        <!-- Step 4: Players -->
-        <div class="setup-step" data-step="4">
+        <!-- Step 5: Players -->
+        <div class="setup-step" data-step="5">
             <div class="card">
                 <h1 style="font-size: 1.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Agents Humains</h1>
                 <div id="playersSetup" class="players"></div>
@@ -542,7 +547,7 @@
 
   // ---------- SETUP ----------
   function showSetupStep(step) {
-    state.setupStep = clamp(step, 1, 4);
+    state.setupStep = clamp(step, 1, 5);
     document.querySelectorAll('.setup-step').forEach(el => {
         el.style.display = el.dataset.step == state.setupStep ? 'block' : 'none';
     });
@@ -929,7 +934,7 @@
           }
           const nextBtn = document.createElement('button');
           nextBtn.className = 'btn';
-          if (state.setupStep < 4) {
+          if (state.setupStep < 5) {
               nextBtn.textContent = 'Suivant →';
               nextBtn.onclick = () => showSetupStep(state.setupStep + 1);
           } else {
