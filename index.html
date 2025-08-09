@@ -183,8 +183,6 @@
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-  @keyframes slideOut { to { opacity: 0; transform: translateX(-50%); visibility: hidden; } }
-  @keyframes slideIn { from { opacity: 0; transform: translateX(50%); } to { opacity: 1; transform: translateX(0); visibility: visible;} }
   .reveal-avatar { animation: zoomIn .5s .1s both; }
   .reveal-title { animation: fadeInUp .5s .3s both; }
   .reveal-card-info { animation: fadeInUp .5s .5s both; }
@@ -194,6 +192,32 @@
     from { text-shadow: 0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow); }
     to { text-shadow: 0 0 20px var(--accent-glow), 0 0 30px var(--accent-glow), 0 0 5px var(--accent); }
   }
+
+  /* --- NEW ANIMATIONS --- */
+  .screen, .setup-step {
+    animation-duration: .35s;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes slideInRight { from { transform: translateX(100%); opacity: .5; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes slideOutLeft { from { transform: translateX(0); opacity: 1; } to { transform: translateX(-100%); opacity: .5; } }
+  @keyframes slideInLeft { from { transform: translateX(-100%); opacity: .5; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: .5; } }
+
+  .slide-in-right { animation-name: slideInRight; }
+  .slide-out-left { animation-name: slideOutLeft; }
+  .slide-in-left { animation-name: slideInLeft; }
+  .slide-out-right { animation-name: slideOutRight; }
+
+  @keyframes pop {
+    0% { transform: scale(0.8); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  .pop-in { animation: pop 0.3s cubic-bezier(0.25, 2.5, 0.5, 1); }
+
+  dialog.closing { animation: zoomOut .2s ease-in forwards; }
+  @keyframes zoomOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
 </style>
 </head>
 <body>
@@ -454,9 +478,25 @@
     const nextScreen = dom.screens[screenId];
 
     if (currentScreen && nextScreen && currentScreen !== nextScreen) {
-        currentScreen.classList.remove('active');
-        nextScreen.classList.add('active');
-    } else if (nextScreen) {
+        const outClass = direction === 'forward' ? 'slide-out-left' : 'slide-out-right';
+        const inClass = direction === 'forward' ? 'slide-in-right' : 'slide-in-left';
+
+        currentScreen.classList.add(outClass);
+        nextScreen.classList.add('active', inClass);
+
+        currentScreen.addEventListener('animationend', (e) => {
+            if (e.target === currentScreen) {
+              currentScreen.classList.remove('active', outClass);
+            }
+        }, { once: true });
+
+        nextScreen.addEventListener('animationend', (e) => {
+            if (e.target === nextScreen) {
+              nextScreen.classList.remove(inClass);
+            }
+        }, { once: true });
+
+    } else if (nextScreen) { // Fallback for the first screen load
         Object.values(dom.screens).forEach(s => s.classList.remove('active'));
         nextScreen.classList.add('active');
     }
@@ -470,6 +510,14 @@
   }
 
   // ---------- MODAL SYSTEM ----------
+  function closeModal(dialog) {
+    dialog.classList.add('closing');
+    dialog.addEventListener('animationend', () => {
+        dialog.classList.remove('closing');
+        dialog.close();
+    }, { once: true });
+  }
+
   const showModal = (config) => {
     dom.modalTitle.textContent = config.title;
     dom.modalMessage.innerHTML = config.message;
@@ -489,12 +537,12 @@
             button.onclick = () => {
                 const inputValue = config.input ? dom.modalInput.value : null;
                 if (btnConfig.onClick) btnConfig.onClick(inputValue);
-                if (!config.preventClose) dom.modalTemplate.close();
+                if (!config.preventClose) closeModal(dom.modalTemplate);
             };
             dom.modalActions.appendChild(button);
         });
     }
-    if (dom.modalTemplate.open) dom.modalTemplate.close();
+    if (dom.modalTemplate.open) closeModal(dom.modalTemplate);
     dom.modalTemplate.showModal();
   };
 
@@ -541,11 +589,38 @@
   }
 
   // ---------- SETUP ----------
-  function showSetupStep(step) {
-    state.setupStep = clamp(step, 1, 4);
-    document.querySelectorAll('.setup-step').forEach(el => {
-        el.style.display = el.dataset.step == state.setupStep ? 'block' : 'none';
-    });
+  function showSetupStep(newStep) {
+    const oldStep = state.setupStep;
+    const clampedNewStep = clamp(newStep, 1, 4);
+    if (clampedNewStep === oldStep) return;
+
+    const direction = clampedNewStep > oldStep ? 'forward' : 'backward';
+    const currentStepEl = document.querySelector(`.setup-step[data-step="${oldStep}"]`);
+    const nextStepEl = document.querySelector(`.setup-step[data-step="${clampedNewStep}"]`);
+
+    if (currentStepEl && nextStepEl) {
+        const outClass = direction === 'forward' ? 'slide-out-left' : 'slide-out-right';
+        const inClass = direction === 'forward' ? 'slide-in-right' : 'slide-in-left';
+
+        nextStepEl.style.display = 'block';
+        currentStepEl.classList.add(outClass);
+        nextStepEl.classList.add(inClass);
+
+        currentStepEl.addEventListener('animationend', (e) => {
+            if(e.target === currentStepEl) {
+              currentStepEl.style.display = 'none';
+              currentStepEl.classList.remove(outClass);
+            }
+        }, { once: true });
+
+        nextStepEl.addEventListener('animationend', (e) => {
+            if(e.target === nextStepEl) {
+              nextStepEl.classList.remove(inClass);
+            }
+        }, { once: true });
+    }
+
+    state.setupStep = clampedNewStep;
     updateActionBar('setup');
   }
 
@@ -577,29 +652,33 @@
 
   function renderThemeSelection() {
       dom.themeGrid.innerHTML = '';
-      const createThemeCard = (name, value) => {
+      const themes = [['Aléatoire', 'random'], ...Object.keys(THEME_DATA).map(t => [t,t])];
+
+      themes.forEach(([name, value], index) => {
           const card = document.createElement('div');
           card.className = 'theme-card';
           card.dataset.theme = value;
           if (state.settings.theme === value) card.classList.add('active');
           card.innerHTML = `<div class="icon">${THEME_ICONS[value] || '✨'}</div><div class="label">${name}</div>`;
+          card.style.animation = `fadeInUp .4s ${index * 40}ms both`;
           card.onclick = () => {
               state.settings.theme = value;
               sounds.click();
               dom.themeGrid.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
               card.classList.add('active');
           };
-          return card;
-      };
-      dom.themeGrid.appendChild(createThemeCard('Aléatoire', 'random'));
-      for (const themeName in THEME_DATA) {
-          dom.themeGrid.appendChild(createThemeCard(themeName, themeName));
-      }
+          dom.themeGrid.appendChild(card);
+      });
   }
 
   function initSetup(){
     state.setupStep = 1;
-    showSetupStep(1);
+    document.querySelectorAll('.setup-step').forEach(el => {
+        el.style.display = el.dataset.step == '1' ? 'block' : 'none';
+        // remove any lingering animation classes
+        el.classList.remove('slide-in-left', 'slide-in-right', 'slide-out-left', 'slide-out-right');
+    });
+    updateActionBar('setup');
     setupAgentNames = shuffle([...RANDOM_AGENT_NAMES]);
     
     renderThemeSelection();
@@ -722,7 +801,7 @@
     state._gameController = new GameController();
     
     if (playerCount > 0) {
-        show('pass');
+        show('pass', 'forward');
         renderRevealCard();
     } else { 
         state._gameController.startRound();
@@ -761,7 +840,7 @@
           if (isLastPlayer) {
               showModal({ title: "Mission activée !", message: "Tous les agents ont reçu leurs instructions. La phase de jeu commence.", buttons: [] });
               setTimeout(() => {
-                  if (dom.modalTemplate.open) dom.modalTemplate.close();
+                  if (dom.modalTemplate.open) closeModal(dom.modalTemplate);
                   state._gameController.startRound();
               }, 2000);
           } else {
@@ -795,7 +874,7 @@
     dom.roleBadge.textContent = roleText;
     dom.revealedWord.innerHTML = player.word && player.role !== 'innocent' ? `Mot : <b>${player.word}</b>` : 'Ce joueur n\'avait pas de mot.';
     
-    show('reveal');
+    show('reveal', 'forward');
   }
 
   function handlePostElimination() {
@@ -834,7 +913,7 @@
         };
         grid.appendChild(card);
     });
-    show('lastword');
+    show('lastword', 'forward');
   }
 
   function checkVictory(){
@@ -875,26 +954,26 @@
     if (Object.keys(state.lastVotes).length > 0) {
         dom.voteRevealContainer.style.display = 'block';
         let voteHtml = '';
-        for(const voterId in state.lastVotes) {
+        Object.keys(state.lastVotes).forEach((voterId, index) => {
             const voter = byId(parseInt(voterId));
             const target = byId(state.lastVotes[voterId]);
             if(voter && target) {
                 const isSuspect = state.lastSuspect === parseInt(voterId);
                 voteHtml += `
-                    <div class="vote-reveal-grid">
+                    <div class="vote-reveal-grid" style="animation: fadeInUp .5s ${index * 120}ms both">
                         <div class="vote-reveal-item"><div class="avatar">${avatarHTML(voter)}</div><div class="name">${voter.name}</div></div>
                         <div class="vote-arrow ${isSuspect ? 'suspect' : ''}">→</div>
                         <div class="vote-reveal-item"><div class="avatar">${avatarHTML(target)}</div><div class="name">${target.name}</div></div>
                     </div>
                 `;
             }
-        }
+        });
         dom.voteRevealDetails.innerHTML = voteHtml;
     } else {
         dom.voteRevealContainer.style.display = 'none';
     }
 
-    show('end');
+    show('end', 'forward');
   }
   
   // ---------- ACTION BAR & NAVIGATION ----------
@@ -911,7 +990,7 @@
             }
         }
     }}],
-    end: [{ text: 'Menu principal', class: 'ghost', flex: 1, action: () => { initSetup(); show('home'); } }, { text: 'Rejouer', class: '', flex: 2, action: () => { state.players.forEach(p=>{ p.alive=true; }); startGame(true); }}]
+    end: [{ text: 'Menu principal', class: 'ghost', flex: 1, action: () => { initSetup(); show('home', 'backward'); } }, { text: 'Rejouer', class: '', flex: 2, action: () => { state.players.forEach(p=>{ p.alive=true; }); startGame(true); }}]
   };
 
   function updateActionBar(screenId) {
@@ -1035,7 +1114,7 @@
     }
     
     sounds.event();
-    show('event');
+    show('event', 'forward');
   }
 
   // ---------- GAME CONTROLLER CLASS ----------
@@ -1071,7 +1150,7 @@
     
     continueFromEvent() {
         this.phase = 'hint';
-        show('game');
+        show('game', 'forward');
         this.nextTurn();
     }
     
@@ -1188,7 +1267,8 @@
     startVotePhase() {
         this.cleanup();
         this.phase = 'vote';
-        show('game');
+        // No screen change here, it's already 'game'
+        // show('game');
         dom.turnDisplay.style.display = 'none';
         
         this.timeLeft = this.voteTimerDuration;
@@ -1232,9 +1312,10 @@
         const grid = dom.gameContentArea.querySelector('.player-grid-vote');
         if (!grid) return;
         grid.innerHTML = '';
-        alive().forEach(player => {
+        alive().forEach((player, index) => {
             const card = document.createElement('div');
             card.className = 'player-vote-card';
+            card.style.animation = `fadeInUp .4s ${index * 60}ms both`;
             card.dataset.playerId = player.id;
             
             const voterIDs = Object.keys(this.votes).map(id => parseInt(id));
@@ -1259,7 +1340,7 @@
                 }
             });
 
-            const voteDisplay = state.paranoia ? `<div class="votes-count" style="font-size:0.7rem; color: var(--muted);">${votersList.join(', ')}</div>` : '';
+            const voteDisplay = state.paranoia ? `<div class="voters-list" style="font-size:0.7rem; color: var(--muted);">${votersList.join(', ')}</div>` : '';
             card.innerHTML = `${avatarHTML(player)}<div class="name">${player.name}</div><div class="votes-count" style="font-weight:bold;">${'🗳️'.repeat(voteCount)}</div>${voteDisplay}`;
             grid.appendChild(card);
         });
@@ -1287,8 +1368,14 @@
                 if (voter && !this.votes[voter.id]) {
                     sounds.click();
                     this.votes[voter.id] = { targetId: target.id, isDouble: !!voter.doubleVote };
-                    dom.modalTemplate.close();
+                    closeModal(dom.modalTemplate);
                     this.renderVoteGrid();
+                    const card = dom.gameContentArea.querySelector(`.player-vote-card[data-player-id="${target.id}"]`);
+                    const voteCountEl = card?.querySelector('.votes-count');
+                    if (voteCountEl) {
+                        voteCountEl.classList.add('pop-in');
+                        voteCountEl.addEventListener('animationend', () => voteCountEl.classList.remove('pop-in'), {once: true});
+                    }
                 }
             }
         });
@@ -1346,7 +1433,7 @@
     
     dom.startGameBtn.onclick = () => {
         sounds.click();
-        show('setup');
+        show('setup', 'forward');
     };
 
     dom.tipsBtn.onclick = () => {
