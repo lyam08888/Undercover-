@@ -168,12 +168,43 @@
   .option-card .label { font-size: .9rem; font-weight: 600; }
   .option-card .value { font-size: .8rem; color: var(--muted); }
 
-  .theme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: .75rem; margin-top: 1rem; }
-  .theme-card { padding: 1rem .5rem; text-align: center; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all .2s ease; }
-  .theme-card:hover { transform: translateY(-3px); border-color: var(--muted); }
-  .theme-card.active { background: var(--surface-light); border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); transform: translateY(-3px); }
-  .theme-card .icon { font-size: 1.75rem; line-height: 1; }
-  .theme-card .label { font-size: .9rem; font-weight: 600; margin-top: .5rem; }
+  .theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; margin-top: 1rem; }
+  .theme-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: .75rem;
+    text-align: left;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all .2s ease;
+    background: var(--bg); /* To contrast with parent .card */
+  }
+  .theme-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+  }
+  .theme-card.active {
+    background: var(--surface-light);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+    transform: translateY(-3px);
+  }
+  .theme-card .icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    background: var(--surface);
+    padding: .5rem;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+  }
+  .theme-card .label {
+    font-size: .9rem;
+    font-weight: 700;
+    margin-top: 0;
+  }
 
   /* Home Screen */
   .home-title { font-size: 3rem; font-weight: 800; text-align: center; letter-spacing: -1px; }
