@@ -152,9 +152,16 @@
   .option-card .label { font-size: .9rem; font-weight: 600; }
   .option-card .value { font-size: .8rem; color: var(--muted); }
 
+  .theme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: .75rem; margin-top: 1rem; }
+  .theme-card { padding: 1rem .5rem; text-align: center; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all .2s ease; }
+  .theme-card:hover { transform: translateY(-3px); border-color: var(--muted); }
+  .theme-card.active { background: var(--surface-light); border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); transform: translateY(-3px); }
+  .theme-card .icon { font-size: 1.75rem; line-height: 1; }
+  .theme-card .label { font-size: .9rem; font-weight: 600; margin-top: .5rem; }
+
   /* Home Screen */
   .home-title { font-size: 3rem; font-weight: 800; text-align: center; letter-spacing: -1px; }
-  .home-title .accent { color: var(--accent); text-shadow: 0 0 15px var(--accent-glow); }
+  .home-title .accent { color: var(--accent); animation: title-glow 2s alternate infinite ease-in-out; }
 
   /* Vote Reveal */
   .vote-reveal-grid { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; margin-top: 1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
@@ -183,6 +190,10 @@
   .reveal-card-info { animation: fadeInUp .5s .5s both; }
   .winner-banner { animation: zoomIn .5s cubic-bezier(0.25, 2.5, 0.5, 1) both; }
 
+  @keyframes title-glow {
+    from { text-shadow: 0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow); }
+    to { text-shadow: 0 0 20px var(--accent-glow), 0 0 30px var(--accent-glow), 0 0 5px var(--accent); }
+  }
 </style>
 </head>
 <body>
@@ -201,10 +212,12 @@
   <main>
     <!-- HOME -->
     <section id="screen-home" class="screen active">
-        <div class="center">
-            <h1 class="home-title" style="animation: fadeInUp .5s both;">Undercover<span class="accent"> 3.0</span></h1>
-            <p class="hint" style="animation: fadeInUp .5s .1s both;">La Révolution</p>
-            <button id="start-game-btn" class="btn" style="width: auto; padding: 1rem 2rem; margin-top: 2rem; animation: fadeInUp .5s .2s both;">Commencer à jouer</button>
+        <div class="center" style="gap: .5rem;">
+            <h1 class="home-title" style="animation: fadeInUp .5s .1s both;">Undercover<span class="accent"> 3.0</span></h1>
+            <div style="animation: fadeInUp .5s .3s both; display: flex; flex-direction: column; gap: .75rem; margin-top: 2rem; width: 80%; max-width: 300px;">
+                <button id="start-game-btn" class="btn" style="width: 100%; padding: 1rem 2rem;">Commencer à jouer</button>
+                <button id="tips-btn" class="btn ghost" style="width: 100%;">Astuces du jeu</button>
+            </div>
         </div>
     </section>
 
@@ -225,7 +238,9 @@
         <div class="setup-step" data-step="2">
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a2.4 2.4 0 0 1 3 0L8 20l3-3a2.4 2.4 0 0 1 3 0L19.5 20a2.4 2.4 0 0 1 0-3L17 15l3-3a2.4 2.4 0 0 0 0-3L15 4l-3 3a2.4 2.4 0 0 0-3 0L4 4a2.4 2.4 0 0 0 0 3l3 3-2.5 2.5a2.4 2.4 0 0 0 0 3Z"/></svg>Thème & Agents</h1>
-                <div class="row"><div class="pill" style="flex:1;"><span>Thème</span><select id="themeSelect"></select></div></div>
+                <h2>1. Choisissez un thème</h2>
+                <div id="theme-grid"></div>
+                <h2 style="margin-top: 1.5rem;">2. Paramétrez les agents</h2>
                 <div class="row" style="margin-top:.6rem"><div class="pill" style="flex:1.5"><span><b>Agents</b> (3–12)</span><div class="numstep"><button id="minus" class="step-btn">−</button><div id="playerNum" class="counter">4</div><button id="plus" class="step-btn">+</button></div></div><div class="pill" style="flex:1"><span>Bots IA</span><div class="numstep"><button id="minusBot" class="step-btn">−</button><div id="botNum" class="counter">0</div><button id="plusBot" class="step-btn">+</button></div></div></div>
             </div>
         </div>
@@ -233,9 +248,10 @@
         <div class="setup-step" data-step="3">
             <div class="card">
                 <h1 style="font-size: 1.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Options de la partie</h1>
-                <div class="setup-options" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem;">
+                <div class="setup-options" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: .75rem;">
                     <div id="option-sound" class="option-card"><div class="icon">🔊</div><div class="label">Sons</div><div class="value">Désactivé</div></div>
                     <div id="option-innocent" class="option-card"><div class="icon">😇</div><div class="label">Innocent</div><div class="value">Désactivé</div></div>
+                    <div id="option-jester" class="option-card"><div class="icon">🃏</div><div class="label">Jester</div><div class="value">Désactivé</div></div>
                 </div>
             </div>
         </div>
@@ -311,70 +327,81 @@
   // ---------- WORD DATA V4 ----------
   const THEME_DATA = {
     "Culture Pop": [
-      {a:"Pokémon",b:"Digimon", hintA:"capture", hintB:"digital"},
-      {a:"Marvel",b:"DC Comics", hintA:"iron man", hintB:"batman"},
-      {a:"Harry Potter",b:"Seigneur des Anneaux", hintA:"baguette", hintB:"anneau"},
-      {a:"Twitch",b:"YouTube", hintA:"stream", hintB:"vidéo"},
-      {a:"Star Wars", b:"Star Trek", hintA:"force", hintB:"fédération"},
-      {a:"Mario",b:"Sonic", hintA:"plombier", hintB:"hérisson"},
-      {a:"Fortnite",b:"Minecraft", hintA:"battle royale", hintB:"construction"},
+      {a:"Pokémon",b:"Digimon", hintsA:["capture", "pokéball", "arène"], hintsB:["digital", "monde", "données"]},
+      {a:"Marvel",b:"DC Comics", hintsA:["iron man", "avengers", "cinéma"], hintsB:["batman", "justice league", "sombre"]},
+      {a:"Harry Potter",b:"Seigneur des Anneaux", hintsA:["baguette", "sorcier", "école"], hintsB:["anneau", "communauté", "quête"]},
+      {a:"Twitch",b:"YouTube", hintsA:["stream", "emote", "abonnement"], hintsB:["vidéo", "chaîne", "playlist"]},
+      {a:"Star Wars", b:"Star Trek", hintsA:["force", "sabre laser", "jedi"], hintsB:["fédération", "vaisseau", "exploration"]},
+      {a:"Mario",b:"Sonic", hintsA:["plombier", "champignon", "princesse"], hintsB:["hérisson", "vitesse", "anneaux"]},
+      {a:"Fortnite",b:"Minecraft", hintsA:["battle royale", "construction", "skin"], hintsB:["blocs", "crafting", "survie"]},
     ],
     "Vie Quotidienne": [
-      {a:"Pull",b:"Gilet", hintA:"fermé", hintB:"ouvert"},
-      {a:"Café",b:"Thé", hintA:"machine", hintB:"infusion"},
-      {a:"Fourchette",b:"Cuillère", hintA:"piquer", hintB:"contenir"},
-      {a:"Chaussette",b:"Collant", hintA:"pied", hintB:"jambe"},
-      {a:"Livre",b:"Magazine", hintA:"histoire", hintB:"article"},
-      {a:"Bus", b:"Métro", hintA:"surface", hintB:"souterrain"},
+      {a:"Pull",b:"Gilet", hintsA:["laine", "manches", "col"], hintsB:["boutons", "sans manches", "cardigan"]},
+      {a:"Café",b:"Thé", hintsA:["machine", "expresso", "arabica"], hintsB:["infusion", "sachet", "bouilloire"]},
+      {a:"Fourchette",b:"Cuillère", hintsA:["piquer", "dents", "couvert"], hintsB:["contenir", "soupe", "ronde"]},
+      {a:"Chaussette",b:"Collant", hintsA:["pied", "paire", "coton"], hintsB:["jambe", "nylon", "robe"]},
+      {a:"Livre",b:"Magazine", hintsA:["chapitres", "roman", "auteur"], hintsB:["articles", "photos", "hebdomadaire"]},
+      {a:"Bus", b:"Métro", hintsA:["arrêt", "surface", "ville"], hintsB:["station", "souterrain", "rail"]},
     ],
     "Gastronomie": [
-      {a:"Baguette",b:"Croissant", hintA:"salé", hintB:"sucré"},
-      {a:"Camembert",b:"Roquefort", hintA:"vache", hintB:"brebis"},
-      {a:"Raclette",b:"Fondue", hintA:"pomme de terre", hintB:"pain"},
-      {a:"Sel",b:"Poivre", hintA:"blanc", hintB:"noir"},
-      {a:"Vin rouge",b:"Vin blanc", hintA:"viande", hintB:"poisson"},
+      {a:"Baguette",b:"Croissant", hintsA:["longue", "salée", "pain"], hintsB:["viennoiserie", "beurre", "sucré"]},
+      {a:"Camembert",b:"Roquefort", hintsA:["vache", "normandie", "croute"], hintsB:["brebis", "bleu", "cave"]},
+      {a:"Raclette",b:"Fondue", hintsA:["pomme de terre", "fromage fondu", "charcuterie"], hintsB:["pain", "fromage fondu", "caquelon"]},
+      {a:"Sel",b:"Poivre", hintsA:["blanc", "cristal", "mer"], hintsB:["noir", "grain", "épice"]},
+      {a:"Vin rouge",b:"Vin blanc", hintsA:["viande", "tannin", "sombre"], hintsB:["poisson", "sec", "clair"]},
     ],
     "Culture G & Arts": [
-        {a:"Tour Eiffel",b:"Arc de Triomphe", hintA:"fer", hintB:"pierre"},
-        {a:"Molière",b:"Victor Hugo", hintA:"théâtre", hintB:"roman"},
-        {a:"Peinture",b:"Sculpture", hintA:"plat", hintB:"volume"},
-        {a:"Joconde",b:"Cri", hintA:"sourire", hintB:"angoisse"},
-        {a:"Mozart",b:"Beethoven", hintA:"prodige", hintB:"sourd"},
+        {a:"Tour Eiffel",b:"Arc de Triomphe", hintsA:["fer", "champs de mars", "antenne"], hintsB:["pierre", "étoile", "tombe"]},
+        {a:"Molière",b:"Victor Hugo", hintsA:["théâtre", "comédie", "farce"], hintsB:["roman", "poésie", "misérables"]},
+        {a:"Peinture",b:"Sculpture", hintsA:["toile", "pinceau", "couleur"], hintsB:["volume", "marbre", "statue"]},
+        {a:"Joconde",b:"Cri", hintsA:["sourire", "da vinci", "louvre"], hintsB:["angoisse", "munch", "pont"]},
+        {a:"Mozart",b:"Beethoven", hintsA:["prodige", "opéra", "autriche"], hintsB:["sourd", "symphonie", "allemagne"]},
     ],
     "Lieux & Voyages": [
-        {a:"Paris",b:"Londres", hintA:"seine", hintB:"tamise"},
-        {a:"Alpes",b:"Pyrénées", hintA:"mont blanc", hintB:"frontière"},
-        {a:"Japon",b:"Chine", hintA:"sushi", hintB:"riz cantonais"},
-        {a:"Plage",b:"Montagne", hintA:"sable", hintB:"neige"},
-        {a:"Désert",b:"Forêt", hintA:"chaud", hintB:"humide"},
+        {a:"Paris",b:"Londres", hintsA:["seine", "capitale", "france"], hintsB:["tamise", "capitale", "angleterre"]},
+        {a:"Alpes",b:"Pyrénées", hintsA:["mont blanc", "ski", "haute"], hintsB:["frontière", "espagne", "chaîne"]},
+        {a:"Japon",b:"Chine", hintsA:["sushi", "tokyo", "île"], hintsB:["muraille", "pékin", "continent"]},
+        {a:"Plage",b:"Montagne", hintsA:["sable", "mer", "vague"], hintsB:["neige", "sommet", "rocher"]},
+        {a:"Désert",b:"Forêt", hintsA:["chaud", "sable", "cactus"], hintsB:["humide", "arbres", "verdure"]},
     ],
     "Animaux & Nature": [
-      {a:"Chat",b:"Chien", hintA:"indépendant", hintB:"fidèle"},
-      {a:"Lion",b:"Tigre", hintA:"savane", hintB:"jungle"},
-      {a:"Abeille",b:"Guêpe", hintA:"miel", hintB:"piqûre"},
-      {a:"Rose",b:"Tulipe", hintA:"épines", hintB:"bulbe"},
-      {a:"Soleil",b:"Lune", hintA:"jour", hintB:"nuit"},
+      {a:"Chat",b:"Chien", hintsA:["félin", "indépendant", "griffes"], hintsB:["canin", "fidèle", "aboie"]},
+      {a:"Lion",b:"Tigre", hintsA:["savane", "roi", "crinière"], hintsB:["jungle", "rayures", "solitaire"]},
+      {a:"Abeille",b:"Guêpe", hintsA:["miel", "ruche", "pollen"], hintsB:["dard", "agressive", "jaune"]},
+      {a:"Rose",b:"Tulipe", hintsA:["épines", "rouge", "fleur"], hintsB:["bulbe", "hollande", "pétale"]},
+      {a:"Soleil",b:"Lune", hintsA:["jour", "étoile", "chaleur"], hintsB:["nuit", "satellite", "lumière"]},
     ],
     "Science & Tech": [
-      {a:"Apple",b:"Microsoft", hintA:"iphone", hintB:"windows"},
-      {a:"ADN",b:"ARN", hintA:"double hélice", hintB:"simple brin"},
-      {a:"Voiture électrique",b:"Voiture thermique", hintA:"batterie", hintB:"essence"},
-      {a:"Astronaute",b:"Cosmonaute", hintA:"américain", hintB:"russe"},
+      {a:"Apple",b:"Microsoft", hintsA:["iphone", "mac", "design"], hintsB:["windows", "office", "logiciel"]},
+      {a:"ADN",b:"ARN", hintsA:["double hélice", "génétique", "chromosome"], hintsB:["simple brin", "messager", "transcription"]},
+      {a:"Voiture électrique",b:"Voiture thermique", hintsA:["batterie", "recharge", "silence"], hintsB:["essence", "moteur", "pollution"]},
+      {a:"Astronaute",b:"Cosmonaute", hintsA:["nasa", "américain", "espace"], hintsB:["roscosmos", "russe", "espace"]},
     ],
     "Culture Algérienne": [
-      {a:"Chorba",b:"Hrira", hintA:"vermicelles", hintB:"légumineuses"},
-      {a:"Couscous",b:"Berkoukes", hintA:"fin", hintB:"gros plomb"},
-      {a:"Zlabia",b:"Makrout", hintA:"friture", hintB:"semoule"},
-      {a:"Thé à la menthe",b:"Café maure", hintA:"vert", hintB:"noir"},
+      {a:"Chorba",b:"Hrira", hintsA:["vermicelles", "soupe", "ramadan"], hintsB:["légumineuses", "soupe", "maroc"]},
+      {a:"Couscous",b:"Berkoukes", hintsA:["fin", "semoule", "légumes"], hintsB:["gros", "plombs", "pâtes"]},
+      {a:"Zlabia",b:"Makrout", hintsA:["friture", "miel", "sucré"], hintsB:["semoule", "datte", "gâteau"]},
+      {a:"Thé à la menthe",b:"Café maure", hintsA:["vert", "infusion", "maghreb"], hintsB:["noir", "turc", "serré"]},
     ],
     "Mots Piégés & Absurdes": [
-      {a:"Ornithorynque",b:"Pangolin", hintA:"bec", hintB:"écailles"},
-      {a:"Schizophrène",b:"Paranoïaque", hintA:"voix", hintB:"méfiance"},
-      {a:"Clé",b:"Serrure", hintA:"tourne", hintB:"reçoit"},
-      {a:"Haut",b:"Bas", hintA:"ciel", hintB:"sol"},
+      {a:"Ornithorynque",b:"Pangolin", hintsA:["bec", "australie", "venin"], hintsB:["écailles", "fourmis", "roule"]},
+      {a:"Schizophrène",b:"Paranoïaque", hintsA:["voix", "hallucination", "dissociation"], hintsB:["méfiance", "complot", "persécution"]},
+      {a:"Clé",b:"Serrure", hintsA:["tourne", "porte", "métal"], hintsB:["reçoit", "trou", "verrou"]},
+      {a:"Haut",b:"Bas", hintsA:["ciel", "dessus", "monter"], hintsB:["sol", "dessous", "descendre"]},
     ]
   };
   const RANDOM_AGENT_NAMES = ["Spectre", "Vipère", "Corbeau", "Ombre", "Fantôme", "Loup", "Cobra", "Phénix", "Tigre", "Faucon", "Mirage", "Zodiac"];
+  const TIPS = [
+    "En tant que Civil, donnez un indice précis mais pas trop évident pour ne pas aider l'Undercover.",
+    "En tant qu'Undercover, essayez de vous fondre dans la masse. Votre premier indice est crucial !",
+    "Si un rôle 'Innocent' est en jeu, il gagne s'il est éliminé ET devine le mot des Civils. Ne le sous-estimez pas !",
+    "Observez les réactions des autres après chaque indice. Une hésitation peut être révélatrice.",
+    "N'hésitez pas à utiliser les événements à votre avantage, ils peuvent renverser la partie !",
+    "Un vote blanc ou une égalité peut sauver un Undercover en difficulté. Discutez bien avant de voter !",
+    "Si vous êtes l'Undercover et que vous avez une idée du mot des Civils, essayez de donner un indice qui correspond aux deux mots.",
+    "En mode Révolution, préparez-vous à tout ! Les rôles peuvent changer à tout moment."
+  ];
+  const THEME_ICONS = { "Culture Pop": "🍿", "Vie Quotidienne": "🏠", "Gastronomie": "🍔", "Culture G & Arts": "🎨", "Lieux & Voyages": "✈️", "Animaux & Nature": "🐾", "Science & Tech": "🔬", "Culture Algérienne": "🇩🇿", "Mots Piégés & Absurdes": "🤪", "random": "🎲" };
 
   // ---------- DOM & STATE ----------
   const dom = {};
@@ -386,7 +413,7 @@
         theme: 'Culture Pop', 
         playerCount: 4, botCount: 0, 
         undercoverCount: 1, 
-        sound:false, innocent:false 
+        sound:false, innocent:false, jester: false
     },
     round: 1, distributionIndex: 0,
     lastEliminated: null, lastVotes: {}, lastSuspect: null,
@@ -398,10 +425,10 @@
   const getDOMElements = () => {
     const ids = [
       'screen-home', 'screen-setup', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
-      'themeSelect', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
-      'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent',
+      'theme-grid', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
+      'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester',
       'mode-classic', 'mode-dynamic', 'mode-revolution',
-      'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'game-header',
+      'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header',
       'turn-display', 'game-content-area', 'lastword-prompt', 'lastword-grid',
       'event-icon', 'event-title', 'event-description',
       'revealPhoto', 'revealTitle', 'roleBadge', 'revealedWord', 'winnerBanner', 'summary', 'actionBar',
@@ -548,29 +575,34 @@
     dom.playersSetup.querySelectorAll('input[data-file]').forEach(inp=>inp.onchange=async(e)=>{ const i=parseInt(e.target.dataset.file,10); const file=e.target.files?.[0]; if(!file)return; try{const d=await fileToDataURL(file);(state.players[i]||={id:i+1}).photo=d;renderPlayerSetup();}catch{showModal({title:"Erreur",message:"Impossible de charger la photo.",buttons:[{text:"OK"}]})}});
   }
 
+  function renderThemeSelection() {
+      dom.themeGrid.innerHTML = '';
+      const createThemeCard = (name, value) => {
+          const card = document.createElement('div');
+          card.className = 'theme-card';
+          card.dataset.theme = value;
+          if (state.settings.theme === value) card.classList.add('active');
+          card.innerHTML = `<div class="icon">${THEME_ICONS[value] || '✨'}</div><div class="label">${name}</div>`;
+          card.onclick = () => {
+              state.settings.theme = value;
+              sounds.click();
+              dom.themeGrid.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
+              card.classList.add('active');
+          };
+          return card;
+      };
+      dom.themeGrid.appendChild(createThemeCard('Aléatoire', 'random'));
+      for (const themeName in THEME_DATA) {
+          dom.themeGrid.appendChild(createThemeCard(themeName, themeName));
+      }
+  }
+
   function initSetup(){
     state.setupStep = 1;
     showSetupStep(1);
     setupAgentNames = shuffle([...RANDOM_AGENT_NAMES]);
     
-    // Populate themes
-    const themeSelect = dom.themeSelect;
-    themeSelect.innerHTML = '';
-    const randomOpt = document.createElement('option');
-    randomOpt.value = "random";
-    randomOpt.textContent = "🎲 Thème Aléatoire";
-    themeSelect.appendChild(randomOpt);
-
-    for (const groupName in THEME_DATA) {
-        const optgroup = document.createElement('optgroup');
-        optgroup.label = groupName;
-        const option = document.createElement('option');
-        option.value = groupName;
-        option.textContent = groupName;
-        optgroup.appendChild(option);
-        themeSelect.appendChild(optgroup);
-    }
-    themeSelect.value = state.settings.theme;
+    renderThemeSelection();
 
     // Load saved players
     const savedPlayers = JSON.parse(localStorage.getItem('undercoverPlayers') || '[]');
@@ -582,8 +614,9 @@
     renderPlayerSetup();
     
     const updateOptionCards = () => {
-        ['sound', 'innocent'].forEach(key => {
+        ['sound', 'innocent', 'jester'].forEach(key => {
             const el = dom[`option${key.charAt(0).toUpperCase() + key.slice(1)}`];
+            if (!el) return;
             el.classList.toggle('active', state.settings[key]);
             el.querySelector('.value').textContent = state.settings[key] ? 'Activé' : 'Désactivé';
         });
@@ -617,9 +650,10 @@
     dom.minusBot.onclick = ()=>{ state.settings.botCount = clamp(state.settings.botCount - 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
     dom.plusBot.onclick  = ()=>{ state.settings.botCount = clamp(state.settings.botCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
 
-    dom.themeSelect.onchange = (e)=> state.settings.theme = e.target.value;
-    ['sound', 'innocent'].forEach(key => {
-        dom[`option${key.charAt(0).toUpperCase() + key.slice(1)}`].onclick = () => {
+    ['sound', 'innocent', 'jester'].forEach(key => {
+        const el = dom[`option${key.charAt(0).toUpperCase() + key.slice(1)}`];
+        if (!el) return;
+        el.onclick = () => {
             state.settings[key] = !state.settings[key];
             if(key==='sound' && state.settings.sound) { initAudio(); sounds.click(); }
             updateOptionCards();
@@ -635,15 +669,16 @@
 
   // ---------- GAME FLOW ----------
   function startGame(isNewWord = false){
-    const { playerCount, botCount, undercoverCount, innocent } = state.settings;
+    const { playerCount, botCount, undercoverCount, innocent, jester } = state.settings;
     const n = playerCount + botCount;
     if (n < state.minPlayers) { showModal({title:"Pas assez de joueurs", message:`Il faut au moins ${state.minPlayers} agents au total (humains + bots).`, buttons:[{text:"OK"}]}); return; }
     
     const U = (n < 4) ? 1 : undercoverCount;
     const I = (n < 3) ? 0 : (innocent ? 1 : 0);
-    const civils = n - U - I;
+    const J = (n < 4) ? 0 : (jester ? 1 : 0);
+    const civils = n - U - I - J;
 
-    if (civils < 1){ showModal({title:"Configuration invalide", message:"Configuration de rôles impossible. Essayez avec plus de joueurs ou moins d'Undercovers.", buttons:[{text:"OK"}]}); return; }
+    if (civils < 1){ showModal({title:"Configuration invalide", message:"Configuration de rôles impossible. Essayez avec plus de joueurs ou moins de rôles spéciaux.", buttons:[{text:"OK"}]}); return; }
     
     sounds.start();
     state.round = 1; state.distributionIndex = 0; state.lastSuspect = null; state._currentEvent = null;
@@ -676,8 +711,10 @@
     }
 
     const p_ids = shuffle(state.players.map(p=>p.id));
-    for(let i=0; i<U; i++){ const p = byId(p_ids[i]); p.role='undercover'; p.word=state.wordPair.b; }
-    if(I === 1 && p_ids.length > U){ const p = byId(p_ids[U]); p.role='innocent'; p.word = "???"; }
+    let assigned_roles = 0;
+    for(let i=0; i<U; i++){ const p = byId(p_ids[i]); p.role='undercover'; p.word=state.wordPair.b; assigned_roles++; }
+    if(I === 1 && p_ids.length > assigned_roles){ const p = byId(p_ids[assigned_roles]); p.role='innocent'; p.word = "???"; assigned_roles++; }
+    if(J === 1 && p_ids.length > assigned_roles){ const p = byId(p_ids[assigned_roles]); p.role='jester'; p.word = "???"; assigned_roles++; }
     state.players.forEach(p => {
         if (!p.role) { p.role = 'civil'; p.word = state.wordPair.a; }
     });
@@ -697,7 +734,13 @@
     const player = state.players.filter(p => !p.isBot)[state.distributionIndex];
     if (!player) return;
     dom.currentName.textContent = player.name;
-    dom.secretWord.textContent = player.role === 'innocent' ? 'Vous êtes l\'Innocent' : (player.word || "—");
+    if (player.role === 'innocent') {
+        dom.secretWord.textContent = "Vous êtes l'Innocent";
+    } else if (player.role === 'jester') {
+        dom.secretWord.textContent = "Vous êtes le Jester";
+    } else {
+        dom.secretWord.textContent = player.word || "—";
+    }
   }
   
   function nextPlayerReveal() {
@@ -748,6 +791,7 @@
     let roleText = 'Rôle : Civil';
     if(player.role === 'undercover') roleText = 'Rôle : Undercover';
     if(player.role === 'innocent') roleText = 'Rôle : Innocent';
+    if(player.role === 'jester') roleText = 'Rôle : Jester';
     dom.roleBadge.textContent = roleText;
     dom.revealedWord.innerHTML = player.word && player.role !== 'innocent' ? `Mot : <b>${player.word}</b>` : 'Ce joueur n\'avait pas de mot.';
     
@@ -756,6 +800,10 @@
 
   function handlePostElimination() {
     const player = state.lastEliminated;
+    if (player.role === 'jester') {
+        endGame('jester');
+        return;
+    }
     if (player.role === 'innocent') {
         showModal({
             title: "L'Innocent a été découvert !", message: "Pour gagner, vous devez deviner le mot des <b>Civils</b>.",
@@ -809,15 +857,18 @@
     let banner = '', detail='';
     if(winner==='civils'){ banner='Victoire des Civils !'; detail='Les Undercover ont été démasqués.'; sounds.win(); }
     else if(winner==='innocent'){ banner='Victoire de l\'Innocent !'; detail='Il a deviné le mot des civils !'; sounds.win(); }
+    else if(winner==='jester'){ banner='Victoire du Jester !'; detail='Le Jester a réussi à se faire éliminer !'; sounds.win(); }
     else { banner='Victoire des Undercover !'; detail='Ils ont atteint la parité ou sont les derniers en lice.'; sounds.lose(); }
     
     dom.winnerBanner.innerHTML = banner;
     const civils = state.players.filter(p=>p.role==='civil').map(p=>p.name).join(', ');
     const undercovers = state.players.filter(p=>p.role==='undercover').map(p=>p.name).join(', ');
     const innocent = state.players.find(p=>p.role==='innocent');
+    const jester = state.players.find(p=>p.role==='jester');
     
     let summaryHtml = `${detail}<br><br><b>Civils (${state.wordPair.a})</b>: ${civils || 'aucun'}<br><b>Undercover (${state.wordPair.b})</b>: ${undercovers || 'aucun'}`;
     if (innocent) summaryHtml += `<br><b>Innocent</b>: ${innocent.name}`;
+    if (jester) summaryHtml += `<br><b>Jester</b>: ${jester.name}`;
 
     dom.summary.innerHTML = summaryHtml;
     
@@ -1055,8 +1106,13 @@
         if (currentPlayer.isBot) {
             setTimeout(() => {
                 let hint = "Hmm...";
-                if (currentPlayer.role === 'civil') hint = state.wordPair.hintA || "Civil";
-                else if (currentPlayer.role === 'undercover') hint = state.wordPair.hintB || "Undercover";
+                if (currentPlayer.role === 'civil') {
+                    const hints = state.wordPair.hintsA || ["Civil"];
+                    hint = hints[rand(hints.length)];
+                } else if (currentPlayer.role === 'undercover') {
+                    const hints = state.wordPair.hintsB || ["Undercover"];
+                    hint = hints[rand(hints.length)];
+                }
                 this.processHint(currentPlayer, hint);
             }, rand(2000) + 1000);
         } else {
@@ -1291,6 +1347,16 @@
     dom.startGameBtn.onclick = () => {
         sounds.click();
         show('setup');
+    };
+
+    dom.tipsBtn.onclick = () => {
+        sounds.click();
+        const randomTip = TIPS[rand(TIPS.length)];
+        showModal({
+            title: "💡 Astuce du Jeu",
+            message: randomTip,
+            buttons: [{text: "Super !"}]
+        });
     };
 
     dom.btnReset.onclick = () => showModal({ title: "Nouvelle partie ?", message: "Toute la progression sera perdue. Voulez-vous vraiment recommencer ?", buttons: [{ text: "Annuler", class: "ghost" }, { text: "Oui, recommencer", class: "danger", onClick: () => { initSetup(); show('home'); } }] });
