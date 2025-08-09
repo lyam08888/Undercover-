@@ -340,6 +340,7 @@
       {a:"Star Wars", b:"Star Trek", hintsA:["force", "sabre laser", "jedi"], hintsB:["fédération", "vaisseau", "exploration"]},
       {a:"Mario",b:"Sonic", hintsA:["plombier", "champignon", "princesse"], hintsB:["hérisson", "vitesse", "anneaux"]},
       {a:"Fortnite",b:"Minecraft", hintsA:["battle royale", "construction", "skin"], hintsB:["blocs", "crafting", "survie"]},
+      {a:"Netflix",b:"Prime Video", hintsA:["streaming", "série", "abonnement"], hintsB:["amazon", "livraison", "original"]},
     ],
     "Vie Quotidienne": [
       {a:"Pull",b:"Gilet", hintsA:["laine", "manches", "col"], hintsB:["boutons", "sans manches", "cardigan"]},
@@ -348,6 +349,7 @@
       {a:"Chaussette",b:"Collant", hintsA:["pied", "paire", "coton"], hintsB:["jambe", "nylon", "robe"]},
       {a:"Livre",b:"Magazine", hintsA:["chapitres", "roman", "auteur"], hintsB:["articles", "photos", "hebdomadaire"]},
       {a:"Bus", b:"Métro", hintsA:["arrêt", "surface", "ville"], hintsB:["station", "souterrain", "rail"]},
+      {a:"Ascenseur",b:"Escalier", hintsA:["bouton", "étage", "monter"], hintsB:["marches", "effort", "rampe"]},
     ],
     "Gastronomie": [
       {a:"Baguette",b:"Croissant", hintsA:["longue", "salée", "pain"], hintsB:["viennoiserie", "beurre", "sucré"]},
@@ -355,6 +357,7 @@
       {a:"Raclette",b:"Fondue", hintsA:["pomme de terre", "fromage fondu", "charcuterie"], hintsB:["pain", "fromage fondu", "caquelon"]},
       {a:"Sel",b:"Poivre", hintsA:["blanc", "cristal", "mer"], hintsB:["noir", "grain", "épice"]},
       {a:"Vin rouge",b:"Vin blanc", hintsA:["viande", "tannin", "sombre"], hintsB:["poisson", "sec", "clair"]},
+      {a:"Pizza",b:"Tarte", hintsA:["italie", "tomate", "mozzarella"], hintsB:["pâte", "four", "dessert"]},
     ],
     "Culture G & Arts": [
         {a:"Tour Eiffel",b:"Arc de Triomphe", hintsA:["fer", "champs de mars", "antenne"], hintsB:["pierre", "étoile", "tombe"]},
@@ -401,6 +404,18 @@
       {a:"Schizophrène",b:"Paranoïaque", hintsA:["voix", "hallucination", "dissociation"], hintsB:["méfiance", "complot", "persécution"]},
       {a:"Clé",b:"Serrure", hintsA:["tourne", "porte", "métal"], hintsB:["reçoit", "trou", "verrou"]},
       {a:"Haut",b:"Bas", hintsA:["ciel", "dessus", "monter"], hintsB:["sol", "dessous", "descendre"]},
+    ],
+    "Métiers": [
+      {a:"Boulanger", b:"Pâtissier", hintsA:["pain", "four", "farine"], hintsB:["gâteau", "crème", "sucre"]},
+      {a:"Médecin", b:"Infirmier", hintsA:["docteur", "diagnostic", "prescription"], hintsB:["soin", "piqûre", "pansement"]},
+      {a:"Professeur", b:"Élève", hintsA:["cours", "tableau", "leçon"], hintsB:["devoirs", "apprendre", "classe"]},
+      {a:"Acteur", b:"Réalisateur", hintsA:["scène", "rôle", "jouer"], hintsB:["caméra", "film", "action"]}
+    ],
+    "Marques": [
+      {a:"Nike", b:"Adidas", hintsA:["swoosh", "chaussure", "air max"], hintsB:["trois bandes", "stan smith", "sport"]},
+      {a:"Coca-Cola", b:"Pepsi", hintsA:["rouge", "original", "boisson"], hintsB:["bleu", "challenge", "soda"]},
+      {a:"Google", b:"Facebook", hintsA:["recherche", "moteur", "android"], hintsB:["social", "like", "profil"]},
+      {a:"McDonald's", b:"Burger King", hintsA:["big mac", "frites", "clown"], hintsB:["whopper", "flame-grilled", "roi"]}
     ]
   };
   const RANDOM_AGENT_NAMES = ["Spectre", "Vipère", "Corbeau", "Ombre", "Fantôme", "Loup", "Cobra", "Phénix", "Tigre", "Faucon", "Mirage", "Zodiac"];
@@ -415,7 +430,7 @@
     "En mode Révolution, préparez-vous à tout ! Les rôles peuvent changer à tout moment.",
     "N'ayez pas peur de voter contre quelqu'un qui semble sûr de lui, c'est peut-être une tactique !"
   ];
-  const THEME_ICONS = { "Culture Pop": "🍿", "Vie Quotidienne": "🏠", "Gastronomie": "🍔", "Culture G & Arts": "🎨", "Lieux & Voyages": "✈️", "Animaux & Nature": "🐾", "Science & Tech": "🔬", "Sport": "⚽", "Culture Algérienne": "🇩🇿", "Mots Piégés & Absurdes": "🤪", "random": "🎲" };
+  const THEME_ICONS = { "Culture Pop": "🍿", "Vie Quotidienne": "🏠", "Gastronomie": "🍔", "Culture G & Arts": "🎨", "Lieux & Voyages": "✈️", "Animaux & Nature": "🐾", "Science & Tech": "🔬", "Sport": "⚽", "Culture Algérienne": "🇩🇿", "Mots Piégés & Absurdes": "🤪", "Métiers": "🧑‍🍳", "Marques": "🛍️", "random": "🎲" };
 
   // ---------- DOM & STATE ----------
   const dom = {};
@@ -1064,6 +1079,7 @@
         this.timerId = null;
         this.timeLeft = 0;
         this.votes = {};
+        this.hintsGivenThisRound = [];
         this.turnTimerDuration = state.settings.gameMode === 'fast' ? 10 : 20; // seconds
         this.voteTimerDuration = state.settings.gameMode === 'fast' ? 15 : 30; // seconds
     }
@@ -1077,9 +1093,10 @@
 
     startRound() {
         this.cleanup();
-        state.players.forEach(p => { p.votes = 0; p.hintGiven = false; p.doubleVote = false; p.silenced = false; p.amnesia = false; });
+        state.players.forEach(p => { p.votes = 0; p.hintGiven = false; p.doubleVote = false; p.silenced = false; p.amnesia = false; p.suspicion = {}; });
         state.paranoia = false;
         this.votes = {};
+        this.hintsGivenThisRound = [];
         this.turnOrder = shuffle(alive());
         this.turnIndex = 0;
         
@@ -1122,13 +1139,17 @@
         
         if (currentPlayer.isBot) {
             setTimeout(() => {
-                let hint = "Hmm...";
-                if (currentPlayer.role === 'civil') {
-                    const hints = state.wordPair.hintsA || ["Civil"];
-                    hint = hints[rand(hints.length)];
-                } else if (currentPlayer.role === 'undercover') {
-                    const hints = state.wordPair.hintsB || ["Undercover"];
-                    hint = hints[rand(hints.length)];
+                let hint = "Oops..."; // Fallback hint
+                const isCivil = currentPlayer.role === 'civil';
+                const possibleHints = isCivil ? (state.wordPair.hintsA || []) : (state.wordPair.hintsB || []);
+
+                const availableHints = possibleHints.filter(h => !this.hintsGivenThisRound.includes(h.toLowerCase()));
+
+                if (availableHints.length > 0) {
+                    hint = availableHints[rand(availableHints.length)];
+                } else if (possibleHints.length > 0) {
+                    // If all unique hints are used, just repeat one.
+                    hint = possibleHints[rand(possibleHints.length)];
                 }
                 this.processHint(currentPlayer, hint);
             }, rand(2000) + 1000);
@@ -1191,6 +1212,22 @@
     processHint(player, hint) {
         if (this.timerId) clearInterval(this.timerId);
         player.hintGiven = true;
+        this.hintsGivenThisRound.push(hint.toLowerCase());
+
+        // Bot suspicion logic
+        alive().filter(p => p.isBot).forEach(bot => {
+            if (bot.id === player.id) return;
+            const isCivil = bot.role === 'civil';
+            const friendlyHints = isCivil ? (state.wordPair.hintsA || []) : (state.wordPair.hintsB || []);
+            const enemyHints = isCivil ? (state.wordPair.hintsB || []) : (state.wordPair.hintsA || []);
+
+            if (enemyHints.includes(hint.toLowerCase())) {
+                bot.suspicion[player.id] = (bot.suspicion[player.id] || 0) + 2;
+            } else if (!friendlyHints.includes(hint.toLowerCase())) {
+                bot.suspicion[player.id] = (bot.suspicion[player.id] || 0) + 1;
+            }
+        });
+
         dom.gameContentArea.innerHTML = `<p class="hint">${player.name} a donné l'indice :</p><div class="hint-text">"${hint}"</div>`;
         dom.actionBar.innerHTML = '';
         dom.actionBar.classList.remove('visible');
@@ -1315,10 +1352,28 @@
         if(this.timerId) clearInterval(this.timerId);
         this.timerId = null;
 
+        // Bot voting logic
         alive().filter(p => p.isBot).forEach(bot => {
-            if(!this.votes[bot.id]) {
+            if (!this.votes[bot.id]) {
                 const targets = alive().filter(p => p.id !== bot.id);
-                if (targets.length > 0) this.votes[bot.id] = { targetId: targets[rand(targets.length)].id, isDouble: false };
+                if (targets.length === 0) return;
+
+                let voteTargetId = -1;
+                const suspicionEntries = Object.entries(bot.suspicion).filter(([id, score]) => targets.some(t => t.id == id));
+
+                if (suspicionEntries.length > 0) {
+                    suspicionEntries.sort((a, b) => b[1] - a[1]);
+                    const highestScore = suspicionEntries[0][1];
+                    const topSuspects = suspicionEntries.filter(([id, score]) => score === highestScore);
+                    voteTargetId = parseInt(topSuspects[rand(topSuspects.length)][0], 10);
+                }
+
+                if (voteTargetId === -1) {
+                    const humanTargets = targets.filter(p => !p.isBot);
+                    voteTargetId = humanTargets.length > 0 ? humanTargets[rand(humanTargets.length)].id : targets[rand(targets.length)].id;
+                }
+
+                this.votes[bot.id] = { targetId: voteTargetId, isDouble: !!bot.doubleVote };
             }
         });
         
