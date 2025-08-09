@@ -258,6 +258,7 @@
                     <div id="option-sound" class="option-card"><div class="icon">🔊</div><div class="label">Sons</div><div class="value">Désactivé</div></div>
                     <div id="option-innocent" class="option-card"><div class="icon">😇</div><div class="label">Innocent</div><div class="value">Désactivé</div></div>
                     <div id="option-jester" class="option-card"><div class="icon">🃏</div><div class="label">Jester</div><div class="value">Désactivé</div></div>
+                    <div id="option-agent-blanc" class="option-card"><div class="icon">🕵️</div><div class="label">Agent Blanc</div><div class="value">Désactivé</div></div>
                 </div>
             </div>
         </div>
@@ -340,6 +341,7 @@
       {a:"Star Wars", b:"Star Trek", hintsA:["force", "sabre laser", "jedi"], hintsB:["fédération", "vaisseau", "exploration"]},
       {a:"Mario",b:"Sonic", hintsA:["plombier", "champignon", "princesse"], hintsB:["hérisson", "vitesse", "anneaux"]},
       {a:"Fortnite",b:"Minecraft", hintsA:["battle royale", "construction", "skin"], hintsB:["blocs", "crafting", "survie"]},
+      {a:"Netflix",b:"Disney+", hintsA:["streaming", "série", "binge"], hintsB:["streaming", "famille", "mickey"]},
     ],
     "Vie Quotidienne": [
       {a:"Pull",b:"Gilet", hintsA:["laine", "manches", "col"], hintsB:["boutons", "sans manches", "cardigan"]},
@@ -348,6 +350,7 @@
       {a:"Chaussette",b:"Collant", hintsA:["pied", "paire", "coton"], hintsB:["jambe", "nylon", "robe"]},
       {a:"Livre",b:"Magazine", hintsA:["chapitres", "roman", "auteur"], hintsB:["articles", "photos", "hebdomadaire"]},
       {a:"Bus", b:"Métro", hintsA:["arrêt", "surface", "ville"], hintsB:["station", "souterrain", "rail"]},
+      {a:"T-shirt",b:"Chemise", hintsA:["coton", "manches courtes", "décontracté"], hintsB:["col", "boutons", "formel"]},
     ],
     "Gastronomie": [
       {a:"Baguette",b:"Croissant", hintsA:["longue", "salée", "pain"], hintsB:["viennoiserie", "beurre", "sucré"]},
@@ -401,6 +404,25 @@
       {a:"Schizophrène",b:"Paranoïaque", hintsA:["voix", "hallucination", "dissociation"], hintsB:["méfiance", "complot", "persécution"]},
       {a:"Clé",b:"Serrure", hintsA:["tourne", "porte", "métal"], hintsB:["reçoit", "trou", "verrou"]},
       {a:"Haut",b:"Bas", hintsA:["ciel", "dessus", "monter"], hintsB:["sol", "dessous", "descendre"]},
+      {a:"Gauche",b:"Droite", hintsA:["politique", "main", "coeur"], hintsB:["politique", "main", "sens"]},
+    ],
+    "Histoire & Mythologie": [
+      {a:"Jules César",b:"Alexandre le Grand", hintsA:["rome", "gaule", "empereur"], hintsB:["macédoine", "perse", "conquérant"]},
+      {a:"Cléopâtre",b:"Néfertiti", hintsA:["reine", "égypte", "nil"], hintsB:["reine", "égypte", "beauté"]},
+      {a:"Zeus",b:"Poséidon", hintsA:["ciel", "foudre", "olympe"], hintsB:["mer", "trident", "océan"]},
+      {a:"Lancelot",b:"Arthur", hintsA:["chevalier", "table ronde", "guenièvre"], hintsB:["roi", "excalibur", "camelot"]},
+    ],
+    "Marques Célèbres": [
+      {a:"Coca-Cola",b:"Pepsi", hintsA:["rouge", "boisson", "américain"], hintsB:["bleu", "boisson", "concurrent"]},
+      {a:"Nike",b:"Adidas", hintsA:["swoosh", "chaussure", "sport"], hintsB:["trois bandes", "chaussure", "allemand"]},
+      {a:"Google",b:"Facebook", hintsA:["recherche", "moteur", "android"], hintsB:["social", "profil", "meta"]},
+      {a:"McDonald's",b:"Burger King", hintsA:["arches", "big mac", "clown"], hintsB:["flamme", "whopper", "roi"]},
+    ],
+    "Corps Humain": [
+      {a:"Cerveau",b:"Coeur", hintsA:["pensée", "organe", "tête"], hintsB:["sang", "organe", "pompe"]},
+      {a:"Main",b:"Pied", hintsA:["doigts", "saisir", "bras"], hintsB:["orteils", "marcher", "jambe"]},
+      {a:"Oeil",b:"Oreille", hintsA:["vision", "regarder", "couleur"], hintsB:["audition", "écouter", "son"]},
+      {a:"Poumon",b:"Estomac", hintsA:["respiration", "air", "cage thoracique"], hintsB:["digestion", "nourriture", "acide"]},
     ]
   };
   const RANDOM_AGENT_NAMES = ["Spectre", "Vipère", "Corbeau", "Ombre", "Fantôme", "Loup", "Cobra", "Phénix", "Tigre", "Faucon", "Mirage", "Zodiac"];
@@ -415,7 +437,7 @@
     "En mode Révolution, préparez-vous à tout ! Les rôles peuvent changer à tout moment.",
     "N'ayez pas peur de voter contre quelqu'un qui semble sûr de lui, c'est peut-être une tactique !"
   ];
-  const THEME_ICONS = { "Culture Pop": "🍿", "Vie Quotidienne": "🏠", "Gastronomie": "🍔", "Culture G & Arts": "🎨", "Lieux & Voyages": "✈️", "Animaux & Nature": "🐾", "Science & Tech": "🔬", "Sport": "⚽", "Culture Algérienne": "🇩🇿", "Mots Piégés & Absurdes": "🤪", "random": "🎲" };
+  const THEME_ICONS = { "Culture Pop": "🍿", "Vie Quotidienne": "🏠", "Gastronomie": "🍔", "Culture G & Arts": "🎨", "Lieux & Voyages": "✈️", "Animaux & Nature": "🐾", "Science & Tech": "🔬", "Sport": "⚽", "Culture Algérienne": "🇩🇿", "Mots Piégés & Absurdes": "🤪", "Histoire & Mythologie": "📜", "Marques Célèbres": "®️", "Corps Humain": "🧬", "random": "🎲" };
 
   // ---------- DOM & STATE ----------
   const dom = {};
@@ -427,10 +449,11 @@
         theme: 'Culture Pop', 
         playerCount: 4, botCount: 0, 
         undercoverCount: 1, 
-        sound:false, innocent:false, jester: false
+        sound:false, innocent:false, jester: false, agentBlanc: false
     },
     round: 1, distributionIndex: 0,
     lastEliminated: null, lastVotes: {}, lastSuspect: null,
+    tabooWord: null,
     maxPlayers: 12, minPlayers: 3,
     setupStep: 1,
     _activeScreen: 'home', _gameController: null, _currentEvent: null
@@ -440,7 +463,7 @@
     const ids = [
       'screen-home', 'screen-setup', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
       'theme-grid', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
-      'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester',
+      'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc',
       'mode-classic', 'mode-dynamic', 'mode-revolution', 'mode-fast',
       'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header',
       'turn-display', 'game-content-area', 'lastword-prompt', 'lastword-grid',
@@ -628,8 +651,10 @@
     renderPlayerSetup();
     
     const updateOptionCards = () => {
-        ['sound', 'innocent', 'jester'].forEach(key => {
-            const el = dom[`option${key.charAt(0).toUpperCase() + key.slice(1)}`];
+        ['sound', 'innocent', 'jester', 'agentBlanc'].forEach(key => {
+            // Correctly constructs dom property name like 'optionInnocent' or 'optionAgentBlanc'
+            const domKey = `option${key.charAt(0).toUpperCase() + key.slice(1)}`;
+            const el = dom[domKey];
             if (!el) return;
             el.classList.toggle('active', state.settings[key]);
             el.querySelector('.value').textContent = state.settings[key] ? 'Activé' : 'Désactivé';
@@ -664,8 +689,9 @@
     dom.minusBot.onclick = ()=>{ state.settings.botCount = clamp(state.settings.botCount - 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
     dom.plusBot.onclick  = ()=>{ state.settings.botCount = clamp(state.settings.botCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
 
-    ['sound', 'innocent', 'jester'].forEach(key => {
-        const el = dom[`option${key.charAt(0).toUpperCase() + key.slice(1)}`];
+    ['sound', 'innocent', 'jester', 'agentBlanc'].forEach(key => {
+        const domKey = `option${key.charAt(0).toUpperCase() + key.slice(1)}`;
+        const el = dom[domKey];
         if (!el) return;
         el.onclick = () => {
             state.settings[key] = !state.settings[key];
@@ -686,14 +712,15 @@
 
   // ---------- GAME FLOW ----------
   function startGame(isNewWord = false){
-    const { playerCount, botCount, undercoverCount, innocent, jester } = state.settings;
+    const { playerCount, botCount, undercoverCount, innocent, jester, agentBlanc } = state.settings;
     const n = playerCount + botCount;
     if (n < state.minPlayers) { showModal({title:"Pas assez de joueurs", message:`Il faut au moins ${state.minPlayers} agents au total (humains + bots).`, buttons:[{text:"OK"}]}); return; }
     
     const U = (n < 4) ? 1 : undercoverCount;
     const I = (n < 3) ? 0 : (innocent ? 1 : 0);
     const J = (n < 4) ? 0 : (jester ? 1 : 0);
-    const civils = n - U - I - J;
+    const AB = (n < 4) ? 0 : (agentBlanc ? 1 : 0);
+    const civils = n - U - I - J - AB;
 
     if (civils < 1){ showModal({title:"Configuration invalide", message:"Configuration de rôles impossible. Essayez avec plus de joueurs ou moins de rôles spéciaux.", buttons:[{text:"OK"}]}); return; }
     
@@ -732,6 +759,7 @@
     for(let i=0; i<U; i++){ const p = byId(p_ids[i]); p.role='undercover'; p.word=state.wordPair.b; assigned_roles++; }
     if(I === 1 && p_ids.length > assigned_roles){ const p = byId(p_ids[assigned_roles]); p.role='innocent'; p.word = "???"; assigned_roles++; }
     if(J === 1 && p_ids.length > assigned_roles){ const p = byId(p_ids[assigned_roles]); p.role='jester'; p.word = "???"; assigned_roles++; }
+    if(AB === 1 && p_ids.length > assigned_roles){ const p = byId(p_ids[assigned_roles]); p.role='agentBlanc'; p.word = "???"; assigned_roles++; }
     state.players.forEach(p => {
         if (!p.role) { p.role = 'civil'; p.word = state.wordPair.a; }
     });
@@ -755,6 +783,8 @@
         dom.secretWord.textContent = "Vous êtes l'Innocent";
     } else if (player.role === 'jester') {
         dom.secretWord.textContent = "Vous êtes le Jester";
+    } else if (player.role === 'agentBlanc') {
+        dom.secretWord.textContent = "Vous êtes l'Agent Blanc";
     } else {
         dom.secretWord.textContent = player.word || "—";
     }
@@ -809,6 +839,7 @@
     if(player.role === 'undercover') roleText = 'Rôle : Undercover';
     if(player.role === 'innocent') roleText = 'Rôle : Innocent';
     if(player.role === 'jester') roleText = 'Rôle : Jester';
+    if(player.role === 'agentBlanc') roleText = 'Rôle : Agent Blanc';
     dom.roleBadge.textContent = roleText;
     dom.revealedWord.innerHTML = player.word && player.role !== 'innocent' ? `Mot : <b>${player.word}</b>` : 'Ce joueur n\'avait pas de mot.';
     
@@ -856,15 +887,43 @@
 
   function checkVictory(){
     if (state._activeScreen === 'end') return;
-    const u = alive().filter(p => p.role === 'undercover').length;
-    const c = alive().filter(p => p.role === 'civil').length;
-    const i = alive().filter(p => p.role === 'innocent').length;
-    const others = c + i;
     
-    if(u === 0){ endGame('civils'); return; }
-    if(u >= others){ endGame('undercover'); return; }
-    if (alive().length <= 2 && u > 0) { endGame('undercover'); return; }
+    const u_alive = alive().filter(p => p.role === 'undercover');
+    const ab_alive = alive().filter(p => p.role === 'agentBlanc');
+    const non_undercovers_alive = alive().filter(p => p.role !== 'undercover');
+
+    // Undercover win condition
+    if(u_alive.length >= non_undercovers_alive.length){
+        endGame('undercover');
+        return;
+    }
+
+    // Civil / Agent Blanc win condition
+    if(u_alive.length === 0) {
+        // Undercovers are gone. Now it's between Civils and Agent Blanc (if present).
+        if (ab_alive.length > 0) {
+            const agent = ab_alive[0];
+            showModal({
+                title: `L'Agent Blanc a Survécu !`,
+                message: `<b>${agent.name}</b>, tous les Undercover ont été éliminés. Pour remporter la victoire, vous devez maintenant deviner le mot des Civils !`,
+                input: { placeholder: "Le mot des Civils..." },
+                preventClose: true,
+                buttons: [{ text: "Valider", class: "warn", onClick: (guess) => {
+                    if(guess && guess.trim().toLowerCase() === state.wordPair.a.toLowerCase()) {
+                        endGame('agentBlanc');
+                    } else {
+                        showModal({title:"Mauvaise réponse !", message:`Le mot des Civils était "<b>${state.wordPair.a}</b>". Les Civils remportent la partie !`, buttons:[{text:"OK", onClick: () => endGame('civils') }]});
+                    }
+                }}]
+            });
+        } else {
+            // No Agent Blanc, Civils win normally.
+            endGame('civils');
+        }
+        return;
+    }
     
+    // If no one has won, continue the game
     if (['reveal', 'lastword'].includes(state._activeScreen)) {
         actions.reveal[0].action();
     }
@@ -875,6 +934,7 @@
     if(winner==='civils'){ banner='Victoire des Civils !'; detail='Les Undercover ont été démasqués.'; sounds.win(); }
     else if(winner==='innocent'){ banner='Victoire de l\'Innocent !'; detail='Il a deviné le mot des civils !'; sounds.win(); }
     else if(winner==='jester'){ banner='Victoire du Jester !'; detail='Le Jester a réussi à se faire éliminer !'; sounds.win(); }
+    else if(winner==='agentBlanc'){ banner='Victoire de l\'Agent Blanc !'; detail='L\'Agent Blanc a démasqué les Civils !'; sounds.win(); }
     else { banner='Victoire des Undercover !'; detail='Ils ont atteint la parité ou sont les derniers en lice.'; sounds.lose(); }
     
     dom.winnerBanner.innerHTML = banner;
@@ -882,10 +942,12 @@
     const undercovers = state.players.filter(p=>p.role==='undercover').map(p=>p.name).join(', ');
     const innocent = state.players.find(p=>p.role==='innocent');
     const jester = state.players.find(p=>p.role==='jester');
+    const agentBlanc = state.players.find(p=>p.role==='agentBlanc');
     
     let summaryHtml = `${detail}<br><br><b>Civils (${state.wordPair.a})</b>: ${civils || 'aucun'}<br><b>Undercover (${state.wordPair.b})</b>: ${undercovers || 'aucun'}`;
     if (innocent) summaryHtml += `<br><b>Innocent</b>: ${innocent.name}`;
     if (jester) summaryHtml += `<br><b>Jester</b>: ${jester.name}`;
+    if (agentBlanc) summaryHtml += `<br><b>Agent Blanc</b>: ${agentBlanc.name}`;
 
     dom.summary.innerHTML = summaryHtml;
     
@@ -1007,24 +1069,46 @@
           else if (p.role === 'undercover') { p.role = 'civil'; p.word = state.wordPair.a; }
         });
       },
-      modes: ['revolution'] // This event only appears in Revolution mode
+      modes: ['revolution']
+    },
+    {
+      id: 'interrogation', title: 'Interrogatoire', icon: '🔍',
+      description: (p1, p2) => `<b>${p1.name}</b> a mené un interrogatoire secret sur <b>${p2.name}</b>... L'information est cruciale.`,
+      effect: (p1, p2) => {
+        if (!p1.isBot) {
+          const wordToShow = p2.role === 'innocent' || p2.role === 'jester' || p2.role === 'agentBlanc'
+            ? "Cet agent n'a pas de mot."
+            : p2.word;
+          setTimeout(() => showModal({
+            title: "Rapport d'Interrogatoire",
+            message: `Le mot de <b>${p2.name}</b> est : <div class="word-big" style="margin-top:0.5rem;">${wordToShow}</div>`,
+            buttons: [{text: "Compris"}]
+          }), 500);
+        }
+      }
+    },
+    {
+      id: 'motTabou', title: 'Mot Tabou', icon: '🚫',
+      description: (word) => `Le mot "<b>${word}</b>" est TABOU ce tour. L'utiliser comme indice annulera votre vote !`,
+      effect: (word) => {
+        state.tabooWord = word.toLowerCase();
+      }
     }
   ];
 
   function triggerRandomEvent() {
     const mode = state.settings.gameMode;
-    if (mode === 'classic') {
-        state._gameController.continueFromEvent();
-        return;
-    }
-    
-    const eventChance = mode === 'revolution' ? 0.7 : 0.4; // 70% in Revolution, 40% in Dynamic
-    if (Math.random() > eventChance) {
+    if (mode === 'classic' || Math.random() > (mode === 'revolution' ? 0.7 : 0.4)) {
         state._gameController.continueFromEvent();
         return;
     }
 
-    const availableEvents = randomEvents.filter(e => !e.modes || e.modes.includes(mode));
+    const availableEvents = randomEvents.filter(e => (!e.modes || e.modes.includes(mode)) && (e.id !== 'interrogation' || alive().length >= 2));
+    if (availableEvents.length === 0) {
+        state._gameController.continueFromEvent();
+        return;
+    }
+
     const event = availableEvents[rand(availableEvents.length)];
     state._currentEvent = event;
     const players = shuffle(alive());
@@ -1032,23 +1116,28 @@
     dom.eventIcon.textContent = event.icon;
     dom.eventTitle.textContent = event.title;
     
-    if (event.id === 'oracle') {
-        const p1 = players[0];
-        const p2 = players.find(p => p.id !== p1.id);
-        if (p2) {
-            event.effect(p1, p2);
-            dom.eventDescription.innerHTML = event.description(p1, p2);
-            if (!p1.isBot) {
-                setTimeout(() => showModal({ title: "Vision Secrète", message: `Vous avez vu le rôle de <b>${p2.name}</b> : <b>${p2.role}</b>. Gardez cette information pour vous !`, buttons: [{text: "Compris"}]}), 500);
-            }
-        }
-    } else if (event.id === 'paranoia' || event.id === 'revolution') {
-        event.effect();
-        dom.eventDescription.innerHTML = event.description();
-    } else {
+    // Single-player events
+    const singlePlayerEvents = ['doubleVote', 'silence', 'amnesia'];
+    // Two-player events
+    const twoPlayerEvents = ['oracle', 'interrogation'];
+
+    if (singlePlayerEvents.includes(event.id)) {
         const p1 = players[0];
         event.effect(p1);
         dom.eventDescription.innerHTML = event.description(p1);
+    } else if (twoPlayerEvents.includes(event.id)) {
+        const p1 = players[0];
+        const p2 = players[1];
+        event.effect(p1, p2);
+        dom.eventDescription.innerHTML = event.description(p1, p2);
+    } else if (event.id === 'motTabou') {
+        const allHints = [...(state.wordPair.hintsA || []), ...(state.wordPair.hintsB || [])];
+        const tabooWord = allHints.length > 0 ? allHints[rand(allHints.length)] : "mot";
+        event.effect(tabooWord);
+        dom.eventDescription.innerHTML = event.description(tabooWord);
+    } else { // Global events like 'paranoia', 'revolution'
+        event.effect();
+        dom.eventDescription.innerHTML = event.description();
     }
     
     sounds.event();
@@ -1077,8 +1166,9 @@
 
     startRound() {
         this.cleanup();
-        state.players.forEach(p => { p.votes = 0; p.hintGiven = false; p.doubleVote = false; p.silenced = false; p.amnesia = false; });
+        state.players.forEach(p => { p.votes = 0; p.hintGiven = false; p.doubleVote = false; p.silenced = false; p.amnesia = false; p.voteDisabled = false; });
         state.paranoia = false;
+        state.tabooWord = null;
         this.votes = {};
         this.turnOrder = shuffle(alive());
         this.turnIndex = 0;
@@ -1191,6 +1281,12 @@
     processHint(player, hint) {
         if (this.timerId) clearInterval(this.timerId);
         player.hintGiven = true;
+
+        if (state.tabooWord && hint.toLowerCase().includes(state.tabooWord)) {
+            showModal({title: "Mot Tabou !", message: `<b>${player.name}</b> a utilisé le mot tabou ! En pénélité, son vote sera annulé ce tour.`});
+            player.voteDisabled = true;
+        }
+
         dom.gameContentArea.innerHTML = `<p class="hint">${player.name} a donné l'indice :</p><div class="hint-text">"${hint}"</div>`;
         dom.actionBar.innerHTML = '';
         dom.actionBar.classList.remove('visible');
@@ -1283,8 +1379,11 @@
     }
 
     castVote(target, cardElement) {
-        const potentialVoters = alive().filter(p => !p.isBot && !this.votes[p.id]);
-        if (potentialVoters.length === 0) return;
+        const potentialVoters = alive().filter(p => !p.isBot && !this.votes[p.id] && !p.voteDisabled);
+        if (potentialVoters.length === 0) {
+            showModal({title:"Vote", message:"Tous les joueurs humains pouvant voter ont voté."});
+            return;
+        }
 
         let voterSelectionHTML = '';
         potentialVoters.forEach(v => {
