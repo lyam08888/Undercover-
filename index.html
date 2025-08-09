@@ -1518,15 +1518,17 @@
         show('setup');
     };
 
-    dom.tipsBtn.onclick = () => {
-        sounds.click();
-        const randomTip = TIPS[rand(TIPS.length)];
-        showModal({
-            title: "💡 Astuce du Jeu",
-            message: randomTip,
-            buttons: [{text: "Super !"}]
-        });
-    };
+    if (dom.tipsBtn) {
+        dom.tipsBtn.onclick = () => {
+            sounds.click();
+            const randomTip = TIPS[rand(TIPS.length)];
+            showModal({
+                title: "💡 Astuce du Jeu",
+                message: randomTip,
+                buttons: [{text: "Super !"}]
+            });
+        };
+    }
 
     dom.btnReset.onclick = () => showModal({ title: "Nouvelle partie ?", message: "Toute la progression sera perdue. Voulez-vous vraiment recommencer ?", buttons: [{ text: "Annuler", class: "ghost" }, { text: "Oui, recommencer", class: "danger", onClick: () => { initSetup(); show('home'); } }] });
     dom.btnHelp.onclick = () => showModal({ title: "Règles du jeu", message: `<p>La majorité (<b>Civils</b>) reçoit le mot A, la minorité (<b>Undercover</b>) le mot B. Personne ne connaît son rôle au début. Donnez des indices, puis votez pour éliminer un joueur.</p><p><b>Modes de jeu :</b><br><b>- Classique:</b> Jeu oral, sans timer ni événements.<br><b>- Dynamique:</b> Avec timer et événements aléatoires.<br><b>- Révolution:</b> Événements plus fréquents et intenses.</p><p><b>L'Innocent</b> : Ce joueur n'a aucun mot. S'il est éliminé, il doit deviner le mot des Civils pour gagner seul.</p><p><b>Victoire</b> : Les Civils gagnent quand il n’y a plus d’Undercover. Les Undercover gagnent quand ils sont aussi nombreux ou plus que les autres.</p>`, buttons: [{ text: "Compris !", class: "" }] });
