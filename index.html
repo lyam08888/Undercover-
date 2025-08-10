@@ -45,7 +45,7 @@
   }
   .app{
     width: 100%;
-    height: 100vh; /* Use viewport height to solve mobile screen issue */
+    height: 100dvh; /* Use dynamic viewport height to solve mobile screen issue */
     display:flex;
     flex-direction:column; 
     position: relative; 
@@ -472,7 +472,7 @@
     <!-- HOME -->
     <section id="screen-home" class="screen active">
       <button id="home-sound-toggle" class="icon-btn">🔇</button>
-      <div class="center" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center; padding: 3rem 1rem;">
+      <div class="center" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 3rem 1rem; gap: 2.5rem;">
             <div class="title-container" style="position: relative; display: flex; flex-direction: column; align-items: center;">
               <div class="home-logo-container">
                 <svg id="home-logo" class="home-logo" viewBox="0 0 200 80" width="150">
