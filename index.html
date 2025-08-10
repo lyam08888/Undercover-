@@ -744,7 +744,7 @@
 
     if (!nextScreen || (currentScreen && currentScreen === nextScreen) || state.isNavigating) return;
 
-    const useSlideAnimation = (state._activeScreen === 'home' && screenId === 'setup');
+    const useSlideAnimation = false;
 
     if (useSlideAnimation) {
         state.isNavigating = true;
