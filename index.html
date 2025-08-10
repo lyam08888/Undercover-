@@ -47,13 +47,10 @@
     width: 100%;
     max-width:480px;
     height: 100%;
-    max-height: 900px;
     display:flex;
     flex-direction:column; 
     position: relative; 
     background: var(--bg);
-    border-left: 1px solid var(--border);
-    border-right: 1px solid var(--border);
     overflow: hidden;
     box-shadow: 0 0 60px rgba(0,0,0,0.4);
   }
@@ -127,7 +124,10 @@
   .pass-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; flex: 1; user-select: none;}
   .reveal-card-wrapper { perspective: 1500px; }
   .reveal-card {
-    width: 300px; height: 420px; border-radius: var(--r);
+    width: 85vw;
+    max-width: 300px;
+    aspect-ratio: 5 / 7;
+    border-radius: var(--r);
     background: linear-gradient(165deg, var(--surface), #21262d);
     cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 1.5rem; text-align: center;
@@ -231,7 +231,7 @@
 
   /* Home Screen */
   .home-title {
-    font-size: 3.2rem;
+    font-size: clamp(2rem, 10vw, 3.2rem);
     font-weight: 800;
     text-align: center;
     letter-spacing: -1.5px;
@@ -360,7 +360,7 @@
         <div class="setup-step active" data-step="1">
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Mode de Jeu</h1>
-                <div class="setup-options" style="display: flex; gap: .75rem; margin-top: 1rem;">
+                <div class="row" style="margin-top: 1rem;">
                     <div id="mode-classic" class="option-card"><div class="icon">☕</div><div class="label">Classique</div><div class="value">Oral, avec timer</div></div>
                     <div id="mode-dynamic" class="option-card active"><div class="icon">⚡</div><div class="label">Dynamique</div><div class="value">Timer & Événements</div></div>
                     <div id="mode-revolution" class="option-card"><div class="icon">💥</div><div class="label">Révolution</div><div class="value">Événements intenses</div></div>
