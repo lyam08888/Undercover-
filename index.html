@@ -186,7 +186,7 @@
   .option-card.active { background: var(--surface-light); border-color: var(--accent); }
   .option-card .icon { font-size: 1.5rem; }
   .option-card .label { font-size: .9rem; font-weight: 600; }
-  .option-card .value { font-size: .8rem; color: var(--muted); }
+  .option-card .value, .option-card .description { font-size: .8rem; color: var(--muted); line-height: 1.4; }
 
   .theme-list {
     display: flex;
@@ -450,15 +450,15 @@
         <div class="setup-step active" data-step="1">
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Mode de Jeu</h1>
-                <div class="row" style="margin-top: 1rem;">
-                    <div id="mode-classic" class="option-card"><div class="icon">☕</div><div class="label">Classique</div><div class="value">Oral, avec timer</div></div>
-                    <div id="mode-dynamic" class="option-card active"><div class="icon">⚡</div><div class="label">Dynamique</div><div class="value">Timer & Événements</div></div>
-                    <div id="mode-revolution" class="option-card"><div class="icon">💥</div><div class="label">Révolution</div><div class="value">Événements intenses</div></div>
-                    <div id="mode-fast" class="option-card"><div class="icon">⏱️</div><div class="label">Rapide</div><div class="value">Timers courts</div></div>
-                    <div id="mode-mystery" class="option-card"><div class="icon">🕵️</div><div class="label">Mystère</div><div class="value">Rôles cachés</div></div>
-                    <div id="mode-folie" class="option-card"><div class="icon">🤪</div><div class="label">Folie</div><div class="value">Vitesse & Événements</div></div>
-                    <div id="mode-traitre" class="option-card"><div class="icon">😈</div><div class="label">Traître</div><div class="value">Un civil gagnant seul</div></div>
-                    <div id="mode-double" class="option-card"><div class="icon">🎭</div><div class="label">Espion Double</div><div class="value">Change de camp</div></div>
+                <div class="row" style="margin-top: 1rem; align-items: stretch;">
+                    <div id="mode-classic" class="option-card"><div class="icon">☕</div><div class="label">Classique</div><div class="description">L'expérience originale. Pas d'événements, juste du bluff et de la déduction.</div></div>
+                    <div id="mode-dynamic" class="option-card active"><div class="icon">⚡</div><div class="label">Dynamique</div><div class="description">Des événements aléatoires peuvent survenir et pimenter la partie.</div></div>
+                    <div id="mode-revolution" class="option-card"><div class="icon">💥</div><div class="label">Révolution</div><div class="description">Un mode chaotique où les rôles peuvent s'inverser à tout moment !</div></div>
+                    <div id="mode-fast" class="option-card"><div class="icon">⏱️</div><div class="label">Rapide</div><div class="description">Pour des parties éclair. Les tours et les votes sont bien plus courts.</div></div>
+                    <div id="mode-mystery" class="option-card"><div class="icon">🕵️</div><div class="label">Mystère</div><div class="description">Les rôles des joueurs éliminés ne sont pas révélés. Paranoïa garantie.</div></div>
+                    <div id="mode-folie" class="option-card"><div class="icon">🤪</div><div class="label">Folie</div><div class="description">Le mode le plus rapide avec un événement garanti à chaque tour.</div></div>
+                    <div id="mode-traitre" class="option-card"><div class="icon">😈</div><div class="label">Traître</div><div class="description">Active le rôle Traître, qui doit éliminer tout le monde pour gagner.</div></div>
+                    <div id="mode-double" class="option-card"><div class="icon">🎭</div><div class="label">Espion Double</div><div class="description">Active le rôle Espion Double, qui change de camp s'il est démasqué.</div></div>
                 </div>
             </div>
         </div>
@@ -2255,7 +2255,7 @@
     }
 
     dom.btnReset.onclick = () => showModal({ title: "Nouvelle partie ?", message: "Toute la progression sera perdue. Voulez-vous vraiment recommencer ?", buttons: [{ text: "Annuler", class: "ghost" }, { text: "Oui, recommencer", class: "danger", onClick: () => { initSetup(); show('home'); } }] });
-    dom.btnHelp.onclick = () => showModal({ title: "Règles du jeu", message: `<p>La majorité (<b>Civils</b>) reçoit le mot A, la minorité (<b>Undercover</b>) le mot B. Personne ne connaît son rôle au début. Donnez des indices, puis votez pour éliminer un joueur.</p><p><b>Modes de jeu :</b><br><b>- Classique:</b> Jeu oral, sans timer ni événements.<br><b>- Dynamique:</b> Avec timer et événements aléatoires.<br><b>- Révolution:</b> Événements plus fréquents et intenses.</p><p><b>L'Innocent</b> : Ce joueur n'a aucun mot. S'il est éliminé, il doit deviner le mot des Civils pour gagner seul.</p><p><b>Victoire</b> : Les Civils gagnent quand il n’y a plus d’Undercover. Les Undercover gagnent quand ils sont aussi nombreux ou plus que les autres.</p>`, buttons: [{ text: "Compris !", class: "" }] });
+    dom.btnHelp.onclick = () => showModal({ title: "Règles du jeu", message: `<p>La majorité (<b>Civils</b>) reçoit un mot, la minorité (<b>Undercover</b>) en reçoit un autre, légèrement différent. À tour de rôle, donnez un indice d'un mot pour faire deviner votre mot à votre équipe. Après le tour, votez pour éliminer un agent suspect.</p><p><b>Modes de jeu :</b></p><ul style="text-align: left; padding-left: 20px; margin-bottom: 1rem;"><li><strong>Classique :</strong> L'expérience de base, sans événements.</li><li><strong>Dynamique :</strong> Des événements aléatoires pimentent la partie.</li><li><strong>Révolution :</strong> Un mode chaotique où les rôles peuvent s'inverser !</li><li><strong>Rapide :</strong> Des tours et des votes plus courts pour des parties rapides.</li><li><strong>Mystère :</strong> Les rôles des joueurs éliminés restent secrets.</li></ul><p><b>Rôles Spéciaux :</b></p><ul style="text-align: left; padding-left: 20px;"><li><strong>Innocent :</strong> Gagne s'il est éliminé et devine le mot des Civils.</li><li><strong>Jester :</strong> Gagne s'il parvient à se faire éliminer par le vote.</li><li><strong>Agent Blanc :</strong> Si les Undercover sont éliminés, il doit deviner le mot des Civils pour gagner.</li></ul><p><b>Victoire :</b> Les <b>Civils</b> gagnent quand tous les Undercover sont éliminés. Les <b>Undercover</b> gagnent quand ils sont aussi nombreux que les autres joueurs restants.</p>`, buttons: [{ text: "Compris !", class: "" }] });
     dom.btnNewWord.onclick = () => showModal({ title: "Nouveau mot ?", message: "Voulez-vous vraiment relancer une manche avec un nouveau mot et les mêmes joueurs ?", buttons: [{ text: "Annuler", class: "ghost" }, { text: "Oui, relancer", class: "warn", onClick: () => startGame(true) }] });
 
     dom.homeSoundToggle.onclick = () => {
