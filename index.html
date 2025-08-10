@@ -557,7 +557,19 @@
         <!-- Step 5: Options -->
         <div class="setup-step" data-step="5">
             <div class="card">
-                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Options & Rôles Spéciaux</h1>
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Options Générales</h1>
+                <div id="game-options-container" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Sound Option will be dynamically inserted here -->
+                </div>
+                 <div class="tip-box" style="margin-top: 1rem;">
+                    Configurez ici les options générales de la partie. Les rôles spéciaux seront configurés à l'étape suivante.
+                </div>
+            </div>
+        </div>
+        <!-- Step 5: Special Roles -->
+        <div class="setup-step" data-step="5">
+            <div class="card">
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2-3.5 3.5 3.5 3.5 3.5-3.5Z"/><path d="m2 12 3.5 3.5 3.5-3.5-3.5-3.5Z"/><path d="m12 22 3.5-3.5-3.5-3.5-3.5 3.5Z"/><path d="M22 12 18.5 8.5 15 12l3.5 3.5Z"/></svg>Rôles Spéciaux</h1>
                 <div id="special-roles-container" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
                     <button id="configure-roles-btn" class="input-like" style="text-align: left; display: flex; justify-content: space-between; align-items: center; width: 100%; padding: .75rem 1rem; font-size: 1rem; color:var(--ink); background:var(--bg); border:1px solid var(--border); border-radius:8px; outline:none; transition: all .2s ease; cursor: pointer;">
                         <span id="configure-roles-label">Aucun rôle spécial</span>
@@ -979,9 +991,11 @@
       'intro-text-container', 'intro-text', 'intro-buttons', 'intro-continue-btn', 'intro-skip-btn',
       'theme-select', 'theme-description', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
 
+
       'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc', 'option-traitre', 'option-double',
       'option-comm-oral', 'option-comm-ecrit',
       'game-mode-select', 'game-mode-description',
+
       'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header', 'home-sound-toggle',
       'turn-display', 'game-content-area', 'lastword-prompt', 'lastword-grid',
       'event-icon', 'event-title', 'event-description',
@@ -1264,6 +1278,40 @@
     }
   }
 
+  function renderGameOptions() {
+    const container = dom.gameOptionsContainer;
+    container.innerHTML = '';
+    const soundOption = GAME_OPTIONS.find(opt => opt.id === 'sound');
+    if (soundOption) {
+        const optionEl = document.createElement('div');
+        optionEl.className = 'theme-item'; // Re-using style
+        optionEl.style.cursor = 'pointer';
+        optionEl.style.alignItems = 'center';
+
+        const soundState = state.settings.sound;
+        optionEl.innerHTML = `
+            <div class="icon">${soundOption.icon}</div>
+            <div class="details">
+                <div class="label">${soundOption.label}</div>
+                <div class="description" style="font-size: .8rem;">${soundOption.description}</div>
+            </div>
+            <span class="value" style="margin-left: auto; font-weight: 600; color: var(--muted);">${soundState ? 'Activé' : 'Désactivé'}</span>
+        `;
+
+        optionEl.onclick = () => {
+            state.settings.sound = !state.settings.sound;
+            if (state.settings.sound) {
+                initAudio();
+            }
+            sounds.click();
+            optionEl.querySelector('.value').textContent = state.settings.sound ? 'Activé' : 'Désactivé';
+            dom.homeSoundToggle.textContent = state.settings.sound ? '🔊' : '🔇';
+            toggleBackgroundMusic();
+        };
+        container.appendChild(optionEl);
+    }
+  }
+
   // ---------- IMAGE & AVATAR ----------
   function fileToDataURL(file, maxW=520, maxH=520){
     return new Promise((resolve,reject)=>{
@@ -1357,7 +1405,7 @@
 
   function showOptionsModal() {
     let modalHtml = '<div class="theme-list" style="padding-right: 0; max-height: 60vh; overflow-y: auto;">';
-    GAME_OPTIONS.forEach(option => {
+    GAME_OPTIONS.filter(opt => opt.id !== 'sound').forEach(option => {
         const isChecked = state.settings[option.id];
         modalHtml += `
             <label for="modal-option-${option.id}" class="theme-item" style="cursor: pointer; flex-direction: row; align-items: center; gap: 1rem; user-select: none;">
@@ -1387,12 +1435,6 @@
                         }
                     });
                     updateOptionsButton();
-
-                    if(state.settings.sound) {
-                        initAudio();
-                    }
-                    toggleBackgroundMusic();
-                    dom.homeSoundToggle.textContent = state.settings.sound ? '🔊' : '🔇';
                 }
             }
         ]
@@ -1469,6 +1511,7 @@
 
     setupAgentNames = shuffle([...RANDOM_AGENT_NAMES]);
     
+    renderGameOptions();
     renderThemeSelection();
     updateThemeDetails(); // Initial call
 
