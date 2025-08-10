@@ -433,6 +433,8 @@
                     <div id="mode-dynamic" class="option-card active"><div class="icon">⚡</div><div class="label">Dynamique</div><div class="value">Timer & Événements</div></div>
                     <div id="mode-revolution" class="option-card"><div class="icon">💥</div><div class="label">Révolution</div><div class="value">Événements intenses</div></div>
                     <div id="mode-fast" class="option-card"><div class="icon">⏱️</div><div class="label">Rapide</div><div class="value">Timers courts</div></div>
+                    <div id="mode-mystery" class="option-card"><div class="icon">🕵️</div><div class="label">Mystère</div><div class="value">Rôles cachés</div></div>
+                    <div id="mode-folie" class="option-card"><div class="icon">🤪</div><div class="label">Folie</div><div class="value">Vitesse & Événements</div></div>
                 </div>
             </div>
         </div>
@@ -639,6 +641,21 @@
       {a:"Main",b:"Pied", hintsA:["doigts", "saisir", "bras"], hintsB:["orteils", "marcher", "jambe"]},
       {a:"Oeil",b:"Oreille", hintsA:["vision", "regarder", "couleur"], hintsB:["audition", "écouter", "son"]},
       {a:"Poumon",b:"Estomac", hintsA:["respiration", "air", "cage thoracique"], hintsB:["digestion", "nourriture", "acide"]},
+    ],
+    "Super-Héros & Vilains": [
+      {a:"Batman", b:"Joker", hintsA:["chevalier", "noir", "gotham"], hintsB:["clown", "crime", "rire"]},
+      {a:"Superman", b:"Lex Luthor", hintsA:["kryptonite", "voler", "clark kent"], hintsB:["génie", "riche", "chauve"]},
+      {a:"Spider-Man", b:"Green Goblin", hintsA:["toile", "araignée", "peter parker"], hintsB:["bouffon", "planeur", "osborn"]},
+    ],
+    "Expressions Françaises": [
+      {a:"Avoir la frite", b:"Tomber dans les pommes", hintsA:["énergie", "forme", "patate"], hintsB:["évanouir", "malaise", "fruit"]},
+      {a:"Pleuvoir des cordes", b:"Faire un temps de chien", hintsA:["pluie", "intensité", "ficelle"], hintsB:["mauvais", "météo", "animal"]},
+      {a:"Poser un lapin", b:"Donner sa langue au chat", hintsA:["attendre", "rendez-vous", "absent"], hintsB:["sécher", "deviner", "animal"]},
+    ],
+    "Philosophie": [
+      {a:"Socrate", b:"Platon", hintsA:["maïeutique", "dialogue", "ciguë"], hintsB:["allégorie", "caverne", "académie"]},
+      {a:"Descartes", b:"Pascal", hintsA:["doute", "cogito", "méthode"], hintsB:["pari", "pensées", "roseau"]},
+      {a:"Kant", b:"Nietzsche", hintsA:["impératif", "catégorique", "critique"], hintsB:["surhomme", "éternel retour", "zarathoustra"]},
     ]
   };
   const RANDOM_AGENT_NAMES = ["Spectre", "Vipère", "Corbeau", "Ombre", "Fantôme", "Loup", "Cobra", "Phénix", "Tigre", "Faucon", "Mirage", "Zodiac"];
@@ -653,7 +670,7 @@
     "En mode Révolution, préparez-vous à tout ! Les rôles peuvent changer à tout moment.",
     "N'ayez pas peur de voter contre quelqu'un qui semble sûr de lui, c'est peut-être une tactique !"
   ];
-  const THEME_ICONS = { "Culture Pop": "🍿", "Vie Quotidienne": "🏠", "Gastronomie": "🍔", "Culture G & Arts": "🎨", "Lieux & Voyages": "✈️", "Animaux & Nature": "🐾", "Science & Tech": "🔬", "Sport": "⚽", "Culture Algérienne": "🇩🇿", "Mots Piégés & Absurdes": "🤪", "Histoire & Mythologie": "📜", "Marques Célèbres": "®️", "Corps Humain": "🧬", "random": "🎲" };
+  const THEME_ICONS = { "Culture Pop": "🍿", "Vie Quotidienne": "🏠", "Gastronomie": "🍔", "Culture G & Arts": "🎨", "Lieux & Voyages": "✈️", "Animaux & Nature": "🐾", "Science & Tech": "🔬", "Sport": "⚽", "Culture Algérienne": "🇩🇿", "Mots Piégés & Absurdes": "🤪", "Histoire & Mythologie": "📜", "Marques Célèbres": "®️", "Corps Humain": "🧬", "Super-Héros & Vilains": "🦸", "Expressions Françaises": "🗣️", "Philosophie": "🤔", "random": "🎲" };
   const THEME_DESCRIPTIONS = {
     "Culture Pop": "Films, séries, jeux... Testez votre culture geek et populaire.",
     "Vie Quotidienne": "Des objets et situations de tous les jours. L'ordinaire devient suspect.",
@@ -668,6 +685,9 @@
     "Histoire & Mythologie": "Remontez le temps et côtoyez les légendes. Blufferez-vous les dieux ?",
     "Marques Célèbres": "Logos, slogans, produits... La société de consommation est un champ de mines.",
     "Corps Humain": "Un voyage intime et déroutant au cœur de notre propre biologie.",
+    "Super-Héros & Vilains": "Incarnez les plus grands héros et leurs pires ennemis. Le bien triomphera-t-il ?",
+    "Expressions Françaises": "Saurez-vous déjouer les pièges de la langue française ? Un thème pour les amoureux des mots.",
+    "Philosophie": "Pensez, donc bluffez. Un thème pour les esprits qui n'ont pas peur des grands concepts.",
     "random": "Laissez le destin choisir pour vous. Un thème surprise pour chaque partie."
   };
 
@@ -696,7 +716,7 @@
       'screen-home', 'screen-setup', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
       'theme-list', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
       'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc',
-      'mode-classic', 'mode-dynamic', 'mode-revolution', 'mode-fast',
+      'mode-classic', 'mode-dynamic', 'mode-revolution', 'mode-fast', 'mode-mystery', 'mode-folie',
       'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header',
       'turn-display', 'game-content-area', 'lastword-prompt', 'lastword-grid',
       'event-icon', 'event-title', 'event-description',
@@ -998,8 +1018,9 @@
             el.classList.toggle('active', state.settings[key]);
             el.querySelector('.value').textContent = state.settings[key] ? 'Activé' : 'Désactivé';
         });
-        ['classic', 'dynamic', 'revolution', 'fast'].forEach(mode => {
-            if(dom[`mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`]) dom[`mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`].classList.toggle('active', state.settings.gameMode === mode);
+        ['classic', 'dynamic', 'revolution', 'fast', 'mystery', 'folie'].forEach(mode => {
+            const domKey = `mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
+            if(dom[domKey]) dom[domKey].classList.toggle('active', state.settings.gameMode === mode);
         });
     };
     updateOptionCards();
@@ -1038,8 +1059,9 @@
             updateOptionCards();
         };
     });
-    ['classic', 'dynamic', 'revolution', 'fast'].forEach(mode => {
-        const modeEl = dom[`mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`];
+    ['classic', 'dynamic', 'revolution', 'fast', 'mystery', 'folie'].forEach(mode => {
+        const domKey = `mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
+        const modeEl = dom[domKey];
         if (modeEl) {
             modeEl.onclick = () => {
                 state.settings.gameMode = mode;
@@ -1051,7 +1073,12 @@
 
   // ---------- GAME FLOW ----------
   function startGame(isNewWord = false){
-    const { playerCount, botCount, undercoverCount, innocent, jester, agentBlanc } = state.settings;
+    const { playerCount, botCount, undercoverCount, agentBlanc, gameMode } = state.settings;
+    let { innocent, jester } = state.settings; // Make them mutable
+    if (gameMode === 'mystery') {
+        innocent = false;
+        jester = false;
+    }
     const n = playerCount + botCount;
     if (n < state.minPlayers) { showModal({title:"Pas assez de joueurs", message:`Il faut au moins ${state.minPlayers} agents au total (humains + bots).`, buttons:[{text:"OK"}]}); return; }
     
@@ -1172,21 +1199,33 @@
     sounds.eliminate();
     player.alive = false; 
     state.lastEliminated = player;
-    dom.revealTitle.textContent = `${player.name} est éliminé·e`;
-    dom.revealPhoto.innerHTML = avatarHTML(player);
-    let roleText = 'Rôle : Civil';
-    if(player.role === 'undercover') roleText = 'Rôle : Undercover';
-    if(player.role === 'innocent') roleText = 'Rôle : Innocent';
-    if(player.role === 'jester') roleText = 'Rôle : Jester';
-    if(player.role === 'agentBlanc') roleText = 'Rôle : Agent Blanc';
-    dom.roleBadge.textContent = roleText;
-    dom.revealedWord.innerHTML = player.word && player.role !== 'innocent' ? `Mot : <b>${player.word}</b>` : 'Ce joueur n\'avait pas de mot.';
+
+    if (state.settings.gameMode === 'mystery') {
+        dom.revealTitle.textContent = `${player.name} est éliminé·e`;
+        dom.revealPhoto.innerHTML = avatarHTML(player);
+        dom.roleBadge.textContent = 'Rôle : ???';
+        dom.revealedWord.innerHTML = 'Le rôle et le mot de cet agent restent secrets...';
+    } else {
+        dom.revealTitle.textContent = `${player.name} est éliminé·e`;
+        dom.revealPhoto.innerHTML = avatarHTML(player);
+        let roleText = 'Rôle : Civil';
+        if(player.role === 'undercover') roleText = 'Rôle : Undercover';
+        if(player.role === 'innocent') roleText = 'Rôle : Innocent';
+        if(player.role === 'jester') roleText = 'Rôle : Jester';
+        if(player.role === 'agentBlanc') roleText = 'Rôle : Agent Blanc';
+        dom.roleBadge.textContent = roleText;
+        dom.revealedWord.innerHTML = player.word && player.role !== 'innocent' ? `Mot : <b>${player.word}</b>` : 'Ce joueur n'avait pas de mot.';
+    }
     
     show('reveal');
   }
 
   function handlePostElimination() {
     const player = state.lastEliminated;
+    if (state.settings.gameMode === 'mystery') {
+        showLastWordScreen();
+        return;
+    }
     if (player.role === 'jester') {
         endGame('jester');
         return;
@@ -1444,7 +1483,15 @@
 
   function triggerRandomEvent() {
     const mode = state.settings.gameMode;
-    if (mode === 'classic' || Math.random() > (mode === 'revolution' ? 0.7 : 0.4)) {
+    if (mode === 'classic') {
+        state._gameController.continueFromEvent();
+        return;
+    }
+
+    // For other modes, determine probability of an event.
+    // dynamic, fast, mystery = 40% | revolution = 70% | folie = 100%
+    const eventProbability = (mode === 'revolution') ? 0.7 : ((mode === 'folie') ? 1.0 : 0.4);
+    if (Math.random() > eventProbability) {
         state._gameController.continueFromEvent();
         return;
     }
@@ -1499,8 +1546,8 @@
         this.timerId = null;
         this.timeLeft = 0;
         this.votes = {};
-        this.turnTimerDuration = state.settings.gameMode === 'fast' ? 10 : 20; // seconds
-        this.voteTimerDuration = state.settings.gameMode === 'fast' ? 15 : 30; // seconds
+        this.turnTimerDuration = (state.settings.gameMode === 'fast' || state.settings.gameMode === 'folie') ? 10 : 20; // seconds
+        this.voteTimerDuration = (state.settings.gameMode === 'fast' || state.settings.gameMode === 'folie') ? 15 : 30; // seconds
     }
 
     cleanup() {
