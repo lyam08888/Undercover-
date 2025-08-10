@@ -538,14 +538,9 @@
         <!-- Step 4: Options -->
         <div class="setup-step" data-step="4">
             <div class="card">
-                <h1 style="font-size: 1.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Options de la partie</h1>
-                <div class="setup-options" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: .75rem; align-content: center; flex: 1;">
-                    <div id="option-sound" class="option-card"><div class="icon">🔊</div><div class="label">Sons</div><div class="value">Désactivé</div></div>
-                    <div id="option-innocent" class="option-card"><div class="icon">😇</div><div class="label">Innocent</div><div class="value">Désactivé</div></div>
-                    <div id="option-jester" class="option-card"><div class="icon">🃏</div><div class="label">Jester</div><div class="value">Désactivé</div></div>
-                    <div id="option-agent-blanc" class="option-card"><div class="icon">🕵️</div><div class="label">Agent Blanc</div><div class="value">Désactivé</div></div>
-                    <div id="option-traitre" class="option-card"><div class="icon">😈</div><div class="label">Traître</div><div class="value">Désactivé</div></div>
-                    <div id="option-double" class="option-card"><div class="icon">🎭</div><div class="label">Espion Double</div><div class="value">Désactivé</div></div>
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Options & Rôles Spéciaux</h1>
+                <div id="options-list" class="theme-list" style="flex: 1; overflow-y: auto;">
+                    <!-- Options will be rendered here by JavaScript -->
                 </div>
             </div>
         </div>
@@ -921,6 +916,14 @@
     'traitre': { icon: '😈', label: 'Traître', description: 'Un mode de jeu avancé avec le rôle "Traître". Ce Civil doit se faire passer pour un Undercover et tenter d\'éliminer tout le monde (Civils et Undercover) pour gagner seul.' },
     'double': { icon: '🎭', label: 'Espion Double', description: 'Introduit le rôle "Espion Double". Cet agent commence comme Undercover, mais s\'il est éliminé, il change de camp et rejoint les Civils, gardant son mot secret.' }
   };
+  const GAME_OPTIONS = [
+    { id: 'sound', icon: '🔊', label: 'Ambiance Sonore', description: 'Active ou désactive les effets sonores et la musique pour une immersion totale.' },
+    { id: 'innocent', icon: '😇', label: 'Innocent', description: 'Un agent sans mot secret. S\'il est éliminé, il doit deviner le mot des Civils pour gagner seul.' },
+    { id: 'jester', icon: '🃏', label: 'Jester', description: 'Le bouffon du roi. Son seul but est de se faire éliminer par les autres joueurs pour remporter la partie.' },
+    { id: 'agentBlanc', icon: '🕵️', label: 'Agent Blanc', description: 'Un Civil spécial. Si les Undercover sont tous éliminés, il doit deviner leur mot pour gagner seul.' },
+    { id: 'traitre', icon: '😈', label: 'Traître', description: 'Un Civil qui connaît le mot des Undercover. Il gagne seul s\'il parvient à éliminer tous les autres agents.' },
+    { id: 'doubleAgent', icon: '🎭', label: 'Espion Double', description: 'Commence comme Undercover. S\'il est éliminé, il change de camp et rejoint les Civils pour les aider.' }
+  ];
 
   // ---------- DOM & STATE ----------
   const dom = {};
@@ -1324,6 +1327,27 @@
     dom.playersSetup.querySelectorAll('input[data-file]').forEach(inp=>inp.onchange=async(e)=>{ const i=parseInt(e.target.dataset.file,10); const file=e.target.files?.[0]; if(!file)return; try{const d=await fileToDataURL(file);(state.players[i]||={id:i+1}).photo=d;renderPlayerSetup();}catch{showModal({title:"Erreur",message:"Impossible de charger la photo.",buttons:[{text:"OK"}]})}});
   }
 
+  function renderOptionsList() {
+    const container = document.getElementById('options-list');
+    container.innerHTML = '';
+    GAME_OPTIONS.forEach(option => {
+        const item = document.createElement('div');
+        item.className = 'theme-item';
+        item.dataset.optionId = option.id;
+        if (state.settings[option.id]) {
+            item.classList.add('active');
+        }
+        item.innerHTML = `
+            <div class="icon">${option.icon}</div>
+            <div class="details">
+                <div class="label">${option.label}</div>
+                <div class="description">${option.description}</div>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+  }
+
   function renderThemeSelection() {
     const themeSelect = dom.themeSelect;
     if (themeSelect.options.length > 0) return; // Populate only once
@@ -1460,17 +1484,7 @@
     dom.botNum.textContent = state.settings.botCount;
     renderPlayerSetup();
     
-    const updateOptionCards = () => {
-        ['sound', 'innocent', 'jester', 'agentBlanc', 'traitre', 'doubleAgent'].forEach(key => {
-            const domKey = `option${key.charAt(0).toUpperCase() + key.slice(1)}`;
-            const el = dom[domKey];
-            if (!el) return;
-            el.classList.toggle('active', state.settings[key]);
-            el.querySelector('.value').textContent = state.settings[key] ? 'Activé' : 'Désactivé';
-        });
-        updateModeDetails();
-    };
-    updateOptionCards();
+    renderOptionsList(); // Initial render
 
     const updateTotalPlayerCount = () => {
         const total = state.settings.playerCount + state.settings.botCount;
@@ -1496,21 +1510,25 @@
     dom.minusBot.onclick = ()=>{ sounds.click(); state.settings.botCount = clamp(state.settings.botCount - 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
     dom.plusBot.onclick  = ()=>{ sounds.click(); state.settings.botCount = clamp(state.settings.botCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
 
-    ['sound', 'innocent', 'jester', 'agentBlanc', 'traitre', 'doubleAgent'].forEach(key => {
-        const domKey = `option${key.charAt(0).toUpperCase() + key.slice(1)}`;
-        const el = dom[domKey];
-        if (!el) return;
-        el.onclick = () => {
-            state.settings[key] = !state.settings[key];
-            if(key==='sound' && state.settings.sound) { initAudio(); }
+    document.getElementById('options-list').addEventListener('click', (e) => {
+        const target = e.target.closest('.theme-item');
+        if (!target) return;
+
+        const optionId = target.dataset.optionId;
+        if (optionId) {
+            state.settings[optionId] = !state.settings[optionId];
+
+            if(optionId === 'sound' && state.settings.sound) {
+                initAudio();
+            }
             sounds.click();
-            updateOptionCards();
-            if (key === 'sound') {
-              // Keep music in sync
+            renderOptionsList(); // Re-render to update active class
+
+            if (optionId === 'sound') {
               dom.homeSoundToggle.textContent = state.settings.sound ? '🔊' : '🔇';
               toggleBackgroundMusic();
             }
-        };
+        }
     });
   }
 
