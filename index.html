@@ -511,15 +511,9 @@
         <div class="setup-step active" data-step="1">
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Mode de Jeu</h1>
-                <div class="row" style="margin-top: 1rem;">
-                    <div id="mode-classic" class="option-card"><div class="icon">☕</div><div class="label">Classique</div><div class="value">Jeu parlé, sans événements. Idéal pour une partie simple et directe.</div></div>
-                    <div id="mode-dynamic" class="option-card active"><div class="icon">⚡</div><div class="label">Dynamique</div><div class="value">L'expérience équilibrée. Des événements aléatoires pour pimenter la partie.</div></div>
-                    <div id="mode-revolution" class="option-card"><div class="icon">💥</div><div class="label">Révolution</div><div class="value">Événements fréquents et un mode 'Révolution' qui peut inverser les rôles. Chaos garanti !</div></div>
-                    <div id="mode-fast" class="option-card"><div class="icon">⏱️</div><div class="label">Rapide</div><div class="value">Tours et votes plus courts pour des parties rapides et sous haute tension.</div></div>
-                    <div id="mode-mystery" class="option-card"><div class="icon">🕵️</div><div class="label">Mystère</div><div class="value">Le rôle des agents éliminés reste secret. Le doute plane jusqu'à la fin.</div></div>
-                    <div id="mode-folie" class="option-card"><div class="icon">🤪</div><div class="label">Folie</div><div class="value">Un événement à chaque tour et des timers très courts. Un mode intense et imprévisible.</div></div>
-                    <div id="mode-traitre" class="option-card"><div class="icon">😈</div><div class="label">Traître</div><div class="value">À jouer avec le rôle 'Traître'. Un Civil qui gagne seul en éliminant tous les autres.</div></div>
-                    <div id="mode-double" class="option-card"><div class="icon">🎭</div><div class="label">Espion Double</div><div class="value">À jouer avec l' 'Espion Double'. Un agent qui change de camp s'il est démasqué.</div></div>
+                <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                    <select id="game-mode-select" class="input-like" style="width: 100%; padding: .75rem 1rem; font-size: 1rem; color:var(--ink); background:var(--bg); border:1px solid var(--border); border-radius:8px; outline:none; transition: all .2s ease; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e6edf3%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.6-3.6%205.4-7.9%205.4-12.9%200-5-1.9-9.4-5.4-12.7z%22/%3E%3C/svg%3E'); background-repeat: no-repeat, repeat; background-position: right .7em top 50%, 0 0; background-size: .65em auto, 100%;"></select>
+                    <div id="game-mode-description" class="tip-box" style="text-align: left; min-height: 80px;"></div>
                 </div>
             </div>
         </div>
@@ -832,6 +826,17 @@
     "random": "Laissez le destin choisir pour vous. Un thème surprise pour chaque partie."
   };
 
+  const GAME_MODES = {
+    'classic': { icon: '☕', label: 'Classique', description: 'Jeu parlé, sans événements. Idéal pour une partie simple et directe.' },
+    'dynamic': { icon: '⚡', label: 'Dynamique', description: 'L\'expérience équilibrée. Des événements aléatoires pour pimenter la partie.' },
+    'revolution': { icon: '💥', label: 'Révolution', description: 'Événements fréquents et un mode \'Révolution\' qui peut inverser les rôles. Chaos garanti !' },
+    'fast': { icon: '⏱️', label: 'Rapide', description: 'Tours et votes plus courts pour des parties rapides et sous haute tension.' },
+    'mystery': { icon: '🕵️', label: 'Mystère', description: 'Le rôle des agents éliminés reste secret. Le doute plane jusqu\'à la fin.' },
+    'folie': { icon: '🤪', label: 'Folie', description: 'Un événement à chaque tour et des timers très courts. Un mode intense et imprévisible.' },
+    'traitre': { icon: '😈', label: 'Traître', description: 'À jouer avec le rôle \'Traître\'. Un Civil qui gagne seul en éliminant tous les autres.' },
+    'double': { icon: '🎭', label: 'Espion Double', description: 'À jouer avec l\' \'Espion Double\'. Un agent qui change de camp s\'il est démasqué.' }
+  };
+
   // ---------- DOM & STATE ----------
   const dom = {};
   let setupAgentNames = [];
@@ -860,7 +865,7 @@
       'intro-text-container', 'intro-text', 'intro-buttons', 'intro-continue-btn', 'intro-skip-btn',
       'theme-list', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
       'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc', 'option-traitre', 'option-double',
-      'mode-classic', 'mode-dynamic', 'mode-revolution', 'mode-fast', 'mode-mystery', 'mode-folie', 'mode-traitre', 'mode-double',
+      'game-mode-select', 'game-mode-description',
       'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header', 'home-sound-toggle',
       'turn-display', 'game-content-area', 'lastword-prompt', 'lastword-grid',
       'event-icon', 'event-title', 'event-description',
@@ -1275,6 +1280,53 @@
     
     renderThemeSelection();
 
+    const gameModeSelect = dom.gameModeSelect;
+    const gameModeDescription = dom.gameModeDescription;
+
+    if (gameModeSelect.options.length === 0) { // Populate only once
+        Object.entries(GAME_MODES).forEach(([key, mode]) => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = `${mode.icon} ${mode.label}`;
+            gameModeSelect.appendChild(option);
+        });
+    }
+
+    const updateModeDetails = () => {
+        const selectedMode = state.settings.gameMode;
+        const modeData = GAME_MODES[selectedMode];
+        if (modeData) {
+            gameModeDescription.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="font-size: 1.5rem;">${modeData.icon}</span>
+                    <div>
+                        <span style="font-weight: 700; color: var(--ink); display: block; font-size: 1.1rem;">${modeData.label}</span>
+                        <span style="font-size: 0.9rem; color: var(--muted);">${modeData.description}</span>
+                    </div>
+                </div>`;
+            gameModeDescription.classList.remove('tip-box');
+            gameModeDescription.style.cssText = `
+                text-align: left;
+                min-height: 80px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                padding: 1rem;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+            `;
+        }
+        if (gameModeSelect.value !== selectedMode) {
+            gameModeSelect.value = selectedMode;
+        }
+    };
+
+    gameModeSelect.onchange = () => {
+        state.settings.gameMode = gameModeSelect.value;
+        sounds.click();
+        updateModeDetails();
+    };
+
     // Load saved players
     const savedPlayers = JSON.parse(localStorage.getItem('undercoverPlayers') || '[]');
     state.settings.playerCount = savedPlayers.length > 0 ? savedPlayers.length : 4;
@@ -1286,17 +1338,13 @@
     
     const updateOptionCards = () => {
         ['sound', 'innocent', 'jester', 'agentBlanc', 'traitre', 'doubleAgent'].forEach(key => {
-            // Correctly constructs dom property name like 'optionInnocent' or 'optionAgentBlanc'
             const domKey = `option${key.charAt(0).toUpperCase() + key.slice(1)}`;
             const el = dom[domKey];
             if (!el) return;
             el.classList.toggle('active', state.settings[key]);
             el.querySelector('.value').textContent = state.settings[key] ? 'Activé' : 'Désactivé';
         });
-        ['classic', 'dynamic', 'revolution', 'fast', 'mystery', 'folie', 'traitre', 'double'].forEach(mode => {
-            const domKey = `mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
-            if(dom[domKey]) dom[domKey].classList.toggle('active', state.settings.gameMode === mode);
-        });
+        updateModeDetails();
     };
     updateOptionCards();
 
@@ -1340,34 +1388,13 @@
             }
         };
     });
-    ['classic', 'dynamic', 'revolution', 'fast', 'mystery', 'folie', 'traitre', 'double'].forEach(mode => {
-        const domKey = `mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
-        const modeEl = dom[domKey];
-        if (modeEl) {
-            modeEl.onclick = () => {
-                sounds.click();
-                state.settings.gameMode = mode;
-                updateOptionCards();
-            };
-        }
-    });
   }
 
   // ---------- GAME FLOW ----------
   function showSummary() {
     // 1. Populate Mode
     const modeEl = dom.summaryMode;
-    const modeData = {
-      classic: { icon: '☕', label: 'Classique' },
-      dynamic: { icon: '⚡', label: 'Dynamique' },
-      revolution: { icon: '💥', label: 'Révolution' },
-      fast: { icon: '⏱️', label: 'Rapide' },
-      mystery: { icon: '🕵️', label: 'Mystère' },
-      folie: { icon: '🤪', label: 'Folie' },
-      traitre: { icon: '😈', label: 'Traître' },
-      'double': { icon: '🎭', label: 'Espion Double' }
-    };
-    const currentMode = modeData[state.settings.gameMode] || { icon: '💥', label: state.settings.gameMode };
+    const currentMode = GAME_MODES[state.settings.gameMode] || { icon: '💥', label: state.settings.gameMode };
     modeEl.querySelector('.icon').textContent = currentMode.icon;
     modeEl.querySelector('.label').textContent = currentMode.label;
 
