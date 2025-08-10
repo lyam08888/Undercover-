@@ -1814,7 +1814,7 @@
         if(this.timerId) clearInterval(this.timerId);
         this.timerId = null;
 
-        alive().filter(p => p.isBot).forEach(bot => {
+        /* alive().filter(p => p.isBot).forEach(bot => {
             if(!this.votes[bot.id]) {
                 const targetId = this.getBotVote(bot);
                 if (targetId) {
@@ -1825,7 +1825,7 @@
                     if (targets.length > 0) this.votes[bot.id] = { targetId: targets[rand(targets.length)].id, isDouble: !!bot.doubleVote };
                 }
             }
-        });
+        }); */
         
         state.lastVotes = {};
         Object.entries(this.votes).forEach(([voterId, voteData]) => {
