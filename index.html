@@ -58,9 +58,8 @@
   .icon-btn{background: transparent; border:none; color:var(--muted); padding:.5rem; border-radius:50%; display:inline-flex;align-items:center; cursor:pointer; transition: all .2s ease;}
   .icon-btn:hover, .icon-btn:focus { color:var(--ink); background: var(--surface); }
   main{flex:1; display:flex;flex-direction:column; overflow: hidden; height: 100%; position: relative;}
-  .screen{position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; padding:1rem; overflow-y:auto;
-    opacity:0; visibility:hidden; transition: opacity .3s ease, transform .3s ease; transform: scale(0.98); animation-fill-mode: both;}
-  .screen.active{opacity:1; visibility:visible; transform: scale(1);}
+  .screen{position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; padding:1rem; overflow-y:auto; opacity:0; visibility:hidden; animation-fill-mode: both;}
+  .screen.active{opacity:1; visibility:visible;}
   .screen.slide-out { animation: slideOut .3s ease-out forwards; }
   .screen.slide-in { animation: slideIn .3s ease-in forwards; }
   .card{background:var(--surface); border-radius:var(--r); padding:1.2rem; border: 1px solid var(--border); animation: fadeInUp .4s .1s both;}
@@ -156,6 +155,19 @@
   .player-vote-card .name { font-weight: 600; font-size: 0.9rem; }
   .player-vote-card.disabled { opacity: 0.6; cursor: not-allowed; }
 
+  /* Setup Steps */
+  .setup-step {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+  }
+  .setup-step.active { opacity: 1; visibility: visible; }
+
   /* Setup Options */
   .option-card {
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem;
@@ -244,6 +256,15 @@
     from { text-shadow: 0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow); }
     to { text-shadow: 0 0 20px var(--accent-glow), 0 0 30px var(--accent-glow), 0 0 5px var(--accent); }
   }
+
+  @keyframes slide-out-left { from { transform: translateX(0); opacity: 1; } to { transform: translateX(-100%); opacity: 0; } }
+  @keyframes slide-in-right { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes slide-out-right { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+  @keyframes slide-in-left { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  .slide-out-left { animation: slide-out-left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+  .slide-in-right { animation: slide-in-right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+  .slide-out-right { animation: slide-out-right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+  .slide-in-left { animation: slide-in-left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
 </style>
 </head>
 <body>
@@ -274,7 +295,7 @@
     <!-- SETUP -->
     <section id="screen-setup" class="screen">
         <!-- Step 1: Mode -->
-        <div class="setup-step" data-step="1">
+        <div class="setup-step active" data-step="1">
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Mode de Jeu</h1>
                 <div class="setup-options" style="display: flex; gap: .75rem; margin-top: 1rem;">
@@ -510,7 +531,7 @@
     lastEliminated: null, lastVotes: {}, lastSuspect: null,
     tabooWord: null,
     maxPlayers: 12, minPlayers: 3,
-    setupStep: 1,
+    setupStep: 1, isNavigating: false,
     _activeScreen: 'home', _gameController: null, _currentEvent: null
   };
 
@@ -541,18 +562,47 @@
   const alive = ()=> state.players.filter(p=>p.alive);
   const clamp = (n,min,max)=> Math.max(min, Math.min(max, n));
   
-  function show(screenId, direction = 'forward'){ 
+  function show(screenId, direction = 'forward'){
     const currentScreen = dom.screens[state._activeScreen];
     const nextScreen = dom.screens[screenId];
 
-    if (currentScreen && nextScreen && currentScreen !== nextScreen) {
-        currentScreen.classList.remove('active');
-        nextScreen.classList.add('active');
-    } else if (nextScreen) {
-        Object.values(dom.screens).forEach(s => s.classList.remove('active'));
-        nextScreen.classList.add('active');
+    if (!nextScreen || (currentScreen && currentScreen === nextScreen) || state.isNavigating) return;
+    state.isNavigating = true;
+
+    const outClass = direction === 'forward' ? 'slide-out-left' : 'slide-out-right';
+    const inClass = direction === 'forward' ? 'slide-in-right' : 'slide-in-left';
+
+    const animationPromises = [];
+
+    if (currentScreen) {
+        currentScreen.classList.add(outClass);
+        animationPromises.push(new Promise(resolve => {
+            currentScreen.addEventListener('animationend', function handler(e) {
+                if (e.target === currentScreen) {
+                    currentScreen.classList.remove('active', outClass);
+                    currentScreen.removeEventListener('animationend', handler);
+                    resolve();
+                }
+            });
+        }));
     }
-    
+
+    nextScreen.classList.add('active');
+    nextScreen.classList.add(inClass);
+    animationPromises.push(new Promise(resolve => {
+        nextScreen.addEventListener('animationend', function handler(e) {
+            if (e.target === nextScreen) {
+                nextScreen.classList.remove(inClass);
+                nextScreen.removeEventListener('animationend', handler);
+                resolve();
+            }
+        });
+    }));
+
+    Promise.all(animationPromises).then(() => {
+        state.isNavigating = false;
+    });
+
     state._activeScreen = screenId;
     dom.gameHeader.style.display = ['home', 'setup'].includes(screenId) ? 'none' : 'block';
     updateActionBar(screenId);
@@ -574,11 +624,12 @@
     }
     dom.modalActions.innerHTML = '';
     if (config.buttons && config.buttons.length > 0) {
-        config.buttons.forEach(btnConfig => {
+        config.buttons.forEach((btnConfig, i) => {
             const button = document.createElement('button');
             button.className = `btn ${btnConfig.class || ''}`;
             button.textContent = btnConfig.text;
             button.style.flex = 1;
+            button.style.animation = `fadeInUp .4s ${150 + i * 60}ms both`;
             button.onclick = () => {
                 const inputValue = config.input ? dom.modalInput.value : null;
                 if (btnConfig.onClick) btnConfig.onClick(inputValue);
@@ -634,11 +685,54 @@
   }
 
   // ---------- SETUP ----------
-  function showSetupStep(step) {
-    state.setupStep = clamp(step, 1, 5);
-    document.querySelectorAll('.setup-step').forEach(el => {
-        el.style.display = el.dataset.step == state.setupStep ? 'block' : 'none';
+  function showSetupStep(step, direction = 'forward') {
+    const fromStep = state.setupStep;
+    const toStep = clamp(step, 1, 5);
+    if (fromStep === toStep || state.isNavigating) return;
+
+    state.isNavigating = true;
+
+    const currentStepEl = document.querySelector(`.setup-step[data-step="${fromStep}"]`);
+    const nextStepEl = document.querySelector(`.setup-step[data-step="${toStep}"]`);
+
+    if (!nextStepEl) {
+        state.isNavigating = false;
+        return;
+    }
+
+    const outClass = direction === 'forward' ? 'slide-out-left' : 'slide-out-right';
+    const inClass = direction === 'forward' ? 'slide-in-right' : 'slide-in-left';
+
+    const animationPromises = [];
+
+    if (currentStepEl) {
+        currentStepEl.classList.add(outClass);
+        animationPromises.push(new Promise(resolve => {
+            currentStepEl.addEventListener('animationend', function handler(e) {
+                if (e.target === currentStepEl) {
+                    currentStepEl.classList.remove('active', outClass);
+                    currentStepEl.removeEventListener('animationend', handler);
+                    resolve();
+                }
+            }, { once: true });
+        }));
+    }
+
+    nextStepEl.classList.add('active', inClass);
+    animationPromises.push(new Promise(resolve => {
+        nextStepEl.addEventListener('animationend', function handler(e) {
+            if (e.target === nextStepEl) {
+                nextStepEl.classList.remove(inClass);
+                nextStepEl.removeEventListener('animationend', handler);
+                resolve();
+            }
+        }, { once: true });
+    }));
+
+    Promise.all(animationPromises).then(() => {
+        state.isNavigating = false;
     });
+    state.setupStep = toStep;
     updateActionBar('setup');
   }
 
@@ -670,29 +764,32 @@
 
   function renderThemeSelection() {
       dom.themeGrid.innerHTML = '';
-      const createThemeCard = (name, value) => {
+      const themes = [['Aléatoire', 'random'], ...Object.keys(THEME_DATA).map(t => [t,t])];
+
+      themes.forEach(([name, value], i) => {
           const card = document.createElement('div');
           card.className = 'theme-card';
           card.dataset.theme = value;
           if (state.settings.theme === value) card.classList.add('active');
           card.innerHTML = `<div class="icon">${THEME_ICONS[value] || '✨'}</div><div class="label">${name}</div>`;
+          card.style.animation = `fadeInUp .4s ${i * 30}ms both`;
           card.onclick = () => {
               state.settings.theme = value;
               sounds.click();
               dom.themeGrid.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
               card.classList.add('active');
           };
-          return card;
-      };
-      dom.themeGrid.appendChild(createThemeCard('Aléatoire', 'random'));
-      for (const themeName in THEME_DATA) {
-          dom.themeGrid.appendChild(createThemeCard(themeName, themeName));
-      }
+          dom.themeGrid.appendChild(card);
+      });
   }
 
   function initSetup(){
     state.setupStep = 1;
-    showSetupStep(1);
+    document.querySelectorAll('.setup-step').forEach(el => {
+        el.classList.toggle('active', el.dataset.step === '1');
+    });
+    updateActionBar('setup');
+
     setupAgentNames = shuffle([...RANDOM_AGENT_NAMES]);
     
     renderThemeSelection();
@@ -927,9 +1024,10 @@
     dom.lastwordPrompt.innerHTML = `<b>${player.name}</b>, avant de partir, désignez un joueur que vous trouvez suspect.`;
     const grid = dom.lastwordGrid;
     grid.innerHTML = '';
-    alive().forEach(p => {
+    alive().forEach((p, i) => {
         const card = document.createElement('div');
         card.className = 'player-vote-card';
+        card.style.animation = `fadeInUp .4s ${i * 50}ms both`;
         card.innerHTML = `${avatarHTML(p)}<div class="name">${p.name}</div>`;
         card.onclick = () => {
             state.lastSuspect = p.id;
@@ -1009,22 +1107,23 @@
     
     if (Object.keys(state.lastVotes).length > 0) {
         dom.voteRevealContainer.style.display = 'block';
-        let voteHtml = '';
-        for(const voterId in state.lastVotes) {
+        dom.voteRevealDetails.innerHTML = '';
+        Object.keys(state.lastVotes).forEach((voterId, i) => {
             const voter = byId(parseInt(voterId));
             const target = byId(state.lastVotes[voterId]);
             if(voter && target) {
                 const isSuspect = state.lastSuspect === parseInt(voterId);
-                voteHtml += `
-                    <div class="vote-reveal-grid">
+                const gridItem = document.createElement('div');
+                gridItem.className = 'vote-reveal-grid';
+                gridItem.style.animation = `fadeInUp .4s ${i * 75}ms both`;
+                gridItem.innerHTML = `
                         <div class="vote-reveal-item"><div class="avatar">${avatarHTML(voter)}</div><div class="name">${voter.name}</div></div>
                         <div class="vote-arrow ${isSuspect ? 'suspect' : ''}">→</div>
                         <div class="vote-reveal-item"><div class="avatar">${avatarHTML(target)}</div><div class="name">${target.name}</div></div>
-                    </div>
-                `;
+                    `;
+                dom.voteRevealDetails.appendChild(gridItem);
             }
-        }
-        dom.voteRevealDetails.innerHTML = voteHtml;
+        });
     } else {
         dom.voteRevealContainer.style.display = 'none';
     }
@@ -1046,7 +1145,7 @@
             }
         }
     }}],
-    end: [{ text: 'Menu principal', class: 'ghost', flex: 1, action: () => { initSetup(); show('home'); } }, { text: 'Rejouer', class: '', flex: 2, action: () => { state.players.forEach(p=>{ p.alive=true; }); startGame(true); }}]
+    end: [{ text: 'Menu principal', class: 'ghost', flex: 1, action: () => { initSetup(); show('home', 'backward'); } }, { text: 'Rejouer', class: '', flex: 2, action: () => { state.players.forEach(p=>{ p.alive=true; }); startGame(true); }}]
   };
 
   function updateActionBar(screenId) {
@@ -1055,34 +1154,39 @@
       
       if (screenId === 'setup') {
           bar.classList.add('visible');
+          let i = 0;
           if (state.setupStep > 1) {
               const backBtn = document.createElement('button');
               backBtn.className = 'btn ghost';
               backBtn.textContent = '← Précédent';
-              backBtn.onclick = () => showSetupStep(state.setupStep - 1);
+              backBtn.onclick = () => showSetupStep(state.setupStep - 1, 'backward');
+              backBtn.style.animation = `fadeInUp .4s ${i * 60}ms both`;
+              i++;
               bar.appendChild(backBtn);
           }
           const nextBtn = document.createElement('button');
           nextBtn.className = 'btn';
           if (state.setupStep < 5) {
               nextBtn.textContent = 'Suivant →';
-              nextBtn.onclick = () => showSetupStep(state.setupStep + 1);
+              nextBtn.onclick = () => showSetupStep(state.setupStep + 1, 'forward');
           } else {
               nextBtn.textContent = 'Lancer la mission';
               nextBtn.onclick = () => startGame(false);
           }
+          nextBtn.style.animation = `fadeInUp .4s ${i * 60}ms both`;
           bar.appendChild(nextBtn);
           return;
       }
 
       const screenActions = actions[screenId];
       if (screenActions) {
-          screenActions.forEach(config => {
+          screenActions.forEach((config, i) => {
               const button = document.createElement('button');
               button.className = `btn ${config.class || ''}`;
               button.textContent = config.text;
               if (config.flex) button.style.flex = config.flex;
               button.onclick = config.action;
+              button.style.animation = `fadeInUp .4s ${i * 60}ms both`;
               bar.appendChild(button);
           });
           bar.classList.add('visible');
@@ -1401,10 +1505,11 @@
         const grid = dom.gameContentArea.querySelector('.player-grid-vote');
         if (!grid) return;
         grid.innerHTML = '';
-        alive().forEach(player => {
+        alive().forEach((player, i) => {
             const card = document.createElement('div');
             card.className = 'player-vote-card';
             card.dataset.playerId = player.id;
+            card.style.animation = `fadeInUp .4s ${i * 50}ms both`;
             
             const voterIDs = Object.keys(this.votes).map(id => parseInt(id));
             const humanVoters = alive().filter(p => !p.isBot).map(p => p.id);
