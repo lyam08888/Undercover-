@@ -403,7 +403,7 @@
     <!-- HOME -->
     <section id="screen-home" class="screen active">
     <div class="center" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center; padding: 3rem 1rem;">
-            <div class="title-container" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center;">
+            <div class="title-container" style="position: relative; display: flex; flex-direction: column; align-items: center;">
               <div class="home-logo-container">
                 <svg id="home-logo" class="home-logo" viewBox="0 0 200 80" width="150">
                     <g fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
@@ -1214,7 +1214,7 @@
         if(player.role === 'jester') roleText = 'Rôle : Jester';
         if(player.role === 'agentBlanc') roleText = 'Rôle : Agent Blanc';
         dom.roleBadge.textContent = roleText;
-        dom.revealedWord.innerHTML = player.word && player.role !== 'innocent' ? `Mot : <b>${player.word}</b>` : 'Ce joueur n'avait pas de mot.';
+        dom.revealedWord.innerHTML = player.word && player.role !== 'innocent' ? `Mot : <b>${player.word}</b>` : `Ce joueur n'avait pas de mot.`;
     }
     
     show('reveal');
