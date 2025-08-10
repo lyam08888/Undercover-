@@ -1453,6 +1453,8 @@
         }
     };
 
+    updateModeDetails();
+
     gameModeSelect.onchange = () => {
         state.settings.gameMode = gameModeSelect.value;
         sounds.click();
@@ -1587,27 +1589,42 @@
     show('summary');
 
     // 6. Start countdown
-    let countdown = 5;
+    let countdown = 30;
     const countdownEl = dom.summaryCountdown;
     let countdownInterval;
 
-    const updateCountdown = () => {
-        if (countdown > 0) {
-            countdownEl.textContent = `La mission commence dans ${countdown}...`;
-            sounds.countdown();
-        } else {
-            countdownEl.textContent = 'Lancement !';
-            clearInterval(countdownInterval);
-            // 7. Transition to next screen
-            if (state.settings.playerCount > 0) {
-                show('pass');
-                renderRevealCard();
-            } else {
-                state._gameController.startRound();
-            }
-        }
-        countdown--;
+    const proceedToGame = () => {
+      clearInterval(countdownInterval);
+      if (state.settings.playerCount > 0) {
+        show('pass');
+        renderRevealCard();
+      } else {
+        if (state._gameController) state._gameController.startRound();
+      }
     };
+
+    const updateCountdown = () => {
+      if (countdown > 0) {
+        countdownEl.textContent = `La mission commence dans ${countdown}...`;
+        sounds.countdown();
+        countdown--;
+      } else {
+        countdownEl.textContent = 'Lancement !';
+        proceedToGame();
+      }
+    };
+
+    // Add a skip button
+    const skipButton = document.createElement('button');
+    skipButton.textContent = 'Passer (lancement immédiat)';
+    skipButton.className = 'btn ghost';
+    skipButton.style.marginTop = '0.5rem';
+    skipButton.style.animation = 'fadeInUp .5s 1.2s both';
+    skipButton.onclick = () => {
+        sounds.click();
+        proceedToGame();
+    };
+    countdownEl.parentElement.appendChild(skipButton);
 
     updateCountdown(); // Initial call
     countdownInterval = setInterval(updateCountdown, 1000);
@@ -2549,6 +2566,23 @@
     getDOMElements();
     initSetup();
     show('home');
+
+    // --- ZOOM PREVENTION ---
+    document.addEventListener('touchmove', function(e) {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(e) {
+      const now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+    // --------------------
 
     function createFloatingWord() {
       const titleContainer = document.querySelector('.title-container');
