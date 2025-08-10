@@ -788,7 +788,6 @@
     document.querySelectorAll('.setup-step').forEach(el => {
         el.classList.toggle('active', el.dataset.step === '1');
     });
-    updateActionBar('setup');
 
     setupAgentNames = shuffle([...RANDOM_AGENT_NAMES]);
     
