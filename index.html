@@ -283,6 +283,14 @@
     }
   }
 
+  #home-sound-toggle {
+    position: absolute;
+    top: 1.5rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    z-index: 10;
+  }
+
   .confetti-particle {
     position: fixed;
     width: 10px;
@@ -402,7 +410,8 @@
   <main>
     <!-- HOME -->
     <section id="screen-home" class="screen active">
-    <div class="center" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center; padding: 3rem 1rem;">
+      <button id="home-sound-toggle" class="icon-btn">🔇</button>
+      <div class="center" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center; padding: 3rem 1rem;">
             <div class="title-container" style="position: relative; display: flex; flex-direction: column; align-items: center;">
               <div class="home-logo-container">
                 <svg id="home-logo" class="home-logo" viewBox="0 0 200 80" width="150">
@@ -717,7 +726,7 @@
       'theme-list', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
       'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc',
       'mode-classic', 'mode-dynamic', 'mode-revolution', 'mode-fast', 'mode-mystery', 'mode-folie',
-      'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header',
+      'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header', 'home-sound-toggle',
       'turn-display', 'game-content-area', 'lastword-prompt', 'lastword-grid',
       'event-icon', 'event-title', 'event-description',
       'revealPhoto', 'revealTitle', 'roleBadge', 'revealedWord', 'winnerBanner', 'summary', 'actionBar',
@@ -2114,6 +2123,21 @@
     dom.btnReset.onclick = () => showModal({ title: "Nouvelle partie ?", message: "Toute la progression sera perdue. Voulez-vous vraiment recommencer ?", buttons: [{ text: "Annuler", class: "ghost" }, { text: "Oui, recommencer", class: "danger", onClick: () => { initSetup(); show('home'); } }] });
     dom.btnHelp.onclick = () => showModal({ title: "Règles du jeu", message: `<p>La majorité (<b>Civils</b>) reçoit le mot A, la minorité (<b>Undercover</b>) le mot B. Personne ne connaît son rôle au début. Donnez des indices, puis votez pour éliminer un joueur.</p><p><b>Modes de jeu :</b><br><b>- Classique:</b> Jeu oral, sans timer ni événements.<br><b>- Dynamique:</b> Avec timer et événements aléatoires.<br><b>- Révolution:</b> Événements plus fréquents et intenses.</p><p><b>L'Innocent</b> : Ce joueur n'a aucun mot. S'il est éliminé, il doit deviner le mot des Civils pour gagner seul.</p><p><b>Victoire</b> : Les Civils gagnent quand il n’y a plus d’Undercover. Les Undercover gagnent quand ils sont aussi nombreux ou plus que les autres.</p>`, buttons: [{ text: "Compris !", class: "" }] });
     dom.btnNewWord.onclick = () => showModal({ title: "Nouveau mot ?", message: "Voulez-vous vraiment relancer une manche avec un nouveau mot et les mêmes joueurs ?", buttons: [{ text: "Annuler", class: "ghost" }, { text: "Oui, relancer", class: "warn", onClick: () => startGame(true) }] });
+
+    dom.homeSoundToggle.onclick = () => {
+        state.settings.sound = !state.settings.sound;
+        if (state.settings.sound) {
+            initAudio();
+        }
+        sounds.click();
+        dom.homeSoundToggle.textContent = state.settings.sound ? '🔊' : '🔇';
+        // also update the setup screen button to stay in sync
+        const soundOptionCard = dom.optionSound;
+        if(soundOptionCard) {
+          soundOptionCard.classList.toggle('active', state.settings.sound);
+          soundOptionCard.querySelector('.value').textContent = state.settings.sound ? 'Activé' : 'Désactivé';
+        }
+    };
 
     dom.btnShowMyCard.onclick = () => {
         let currentPlayer, context = '';
