@@ -431,6 +431,19 @@
         </div>
     </section>
 
+    <!-- INTRO -->
+    <section id="screen-intro" class="screen">
+        <div class="center" style="justify-content: center; text-align: center; padding: 2rem;">
+            <div id="intro-text-container" style="min-height: 120px; display: flex; align-items: center; justify-content: center;">
+                <h2 id="intro-text" style="font-size: 1.75rem; font-weight: 700; animation: fadeIn .5s forwards;">Votre mission, si vous l'acceptez...</h2>
+            </div>
+            <div id="intro-buttons" style="margin-top: 3rem; opacity: 0; transition: opacity .5s ease .5s; width: 100%; max-width: 320px;">
+                <button id="intro-continue-btn" class="btn">J'ai compris</button>
+                <button id="intro-skip-btn" class="btn ghost" style="margin-top: .75rem;">Passer</button>
+            </div>
+        </div>
+    </section>
+
     <!-- SETUP -->
     <section id="screen-setup" class="screen">
         <!-- Step 1: Mode -->
@@ -751,7 +764,8 @@
 
   const getDOMElements = () => {
     const ids = [
-      'screen-home', 'screen-setup', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
+      'screen-home', 'screen-intro', 'screen-setup', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
+      'intro-text-container', 'intro-text', 'intro-buttons', 'intro-continue-btn', 'intro-skip-btn',
       'theme-list', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
       'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc', 'option-traitre', 'option-double',
       'mode-classic', 'mode-dynamic', 'mode-revolution', 'mode-fast', 'mode-mystery', 'mode-folie', 'mode-traitre', 'mode-double',
@@ -764,7 +778,7 @@
     ];
     ids.forEach(id => dom[id.replace(/-(\w)/g, (m, g) => g.toUpperCase())] = document.getElementById(id));
     dom.screens = {
-        home: dom.screenHome, setup: dom.screenSetup, pass: dom.screenPass, game: dom.screenGame,
+        home: dom.screenHome, intro: dom.screenIntro, setup: dom.screenSetup, pass: dom.screenPass, game: dom.screenGame,
         reveal: dom.screenReveal, end: dom.screenEnd, lastword: dom.screenLastword, event: dom.screenEvent
     };
   };
@@ -1711,6 +1725,59 @@
     show('event');
   }
 
+  // ---------- INTRO SEQUENCE ----------
+  let introTimeout;
+  function startIntroSequence() {
+    show('intro');
+
+    const phrases = [
+        "Dans ce jeu, il y a deux équipes...",
+        "Les <b>CIVILS</b>, qui sont la majorité.",
+        "Et les <b>UNDERCOVER</b>, des infiltrés.",
+        "Chaque équipe reçoit un mot secret, légèrement différent.",
+        "Votre objectif : démasquer l'équipe adverse.",
+        "À tour de rôle, donnez un indice d'un seul mot.",
+        "Soyez malins. Ne vous faites pas démasquer.",
+        "Après les indices, vous voterez pour éliminer un agent.",
+        "Prêts ? La mission commence."
+    ];
+
+    let phraseIndex = 0;
+    const introTextEl = dom.introText;
+    const introButtonsEl = dom.introButtons;
+
+    // Reset buttons to initial state
+    dom.introContinueBtn.textContent = 'J\'ai compris';
+    dom.introSkipBtn.style.display = 'block';
+
+    function nextPhrase() {
+        if (phraseIndex >= phrases.length) {
+            introTextEl.innerHTML = "Bonne chance, agent.";
+            introTextEl.classList.remove('intro-text-animation');
+            introButtonsEl.style.opacity = '1';
+            dom.introContinueBtn.textContent = 'Commencer la configuration';
+            dom.introSkipBtn.style.display = 'none';
+            return;
+        }
+
+        introTextEl.innerHTML = phrases[phraseIndex];
+        introTextEl.classList.remove('intro-text-animation');
+        void introTextEl.offsetWidth;
+        introTextEl.classList.add('intro-text-animation');
+
+        phraseIndex++;
+
+        introTimeout = setTimeout(nextPhrase, 2800);
+    }
+
+    setTimeout(() => {
+        introButtonsEl.style.opacity = '1';
+    }, 500);
+
+    // Start the sequence after the initial title has been shown
+    introTimeout = setTimeout(nextPhrase, 2000);
+  }
+
   // ---------- GAME CONTROLLER CLASS ----------
   class GameController {
     constructor() {
@@ -2160,8 +2227,19 @@
 
         // Delay screen transition to let the effect play
         setTimeout(() => {
-            show('setup');
+            startIntroSequence();
         }, 150);
+    };
+
+    dom.introContinueBtn.onclick = () => {
+        sounds.click();
+        clearTimeout(introTimeout);
+        show('setup');
+    };
+    dom.introSkipBtn.onclick = () => {
+        sounds.click();
+        clearTimeout(introTimeout);
+        show('setup');
     };
 
     if (dom.tipsBtn) {
