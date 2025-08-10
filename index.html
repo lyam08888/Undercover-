@@ -1502,24 +1502,33 @@
     let list = THEME_DATA[themeKey];
     state.wordPair = list[rand(list.length)];
 
-    const oldPlayers = isNewWord ? state.players.filter(p => !p.isBot) : [];
+    const sourcePlayers = state.players; // Keep a reference
+    const newPlayers = [];
     const humanPlayersToSave = [];
-    state.players = [];
     const botNames = shuffle(["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliett", "Kilo", "Lima"]);
     if (setupAgentNames.length < playerCount) setupAgentNames = shuffle([...RANDOM_AGENT_NAMES]);
     
     for(let i=0; i<playerCount; i++) {
-        const existingPlayer = isNewWord && oldPlayers[i] ? oldPlayers[i] : (state.players[i] || {});
-        const name = (document.querySelector(`#playersSetup input[data-idx="${i}"]`)?.value || '').trim() || existingPlayer.name || setupAgentNames.pop() || `Agent ${i+1}`;
+        const existingPlayer = (isNewWord ? sourcePlayers.filter(p => !p.isBot) : sourcePlayers)[i] || {};
+        let name;
+        if (isNewWord) {
+            // On replay, trust the state, not the DOM
+            name = existingPlayer.name || setupAgentNames.pop() || `Agent ${i+1}`;
+        } else {
+            // On new game, trust the DOM (as it might have been edited)
+            name = (document.querySelector(`#playersSetup input[data-idx="${i}"]`)?.value || '').trim() || existingPlayer.name || setupAgentNames.pop() || `Agent ${i+1}`;
+        }
         const photo = existingPlayer?.photo || null;
-        state.players.push({ id: i+1, name, photo, isBot: false, alive: true });
+        newPlayers.push({ id: i+1, name, photo, isBot: false, alive: true });
         humanPlayersToSave.push({id: i+1, name, photo});
     }
     localStorage.setItem('undercoverPlayers', JSON.stringify(humanPlayersToSave));
 
     for(let i=0; i<botCount; i++) {
-        state.players.push({ id: playerCount + i + 1, name: `Bot ${botNames[i]}`, photo: null, isBot: true, alive: true });
+        newPlayers.push({ id: playerCount + i + 1, name: `Bot ${botNames[i]}`, photo: null, isBot: true, alive: true });
     }
+
+    state.players = newPlayers;
 
     const p_ids = shuffle(state.players.map(p=>p.id));
     let assigned_roles = 0;
@@ -1791,7 +1800,7 @@
             }
         }
     }}],
-    end: [{ text: 'Menu principal', class: 'ghost', flex: 1, action: () => { initSetup(); show('home', 'backward'); } }, { text: 'Rejouer', class: '', flex: 2, action: () => { state.players.forEach(p=>{ p.alive=true; }); startGame(true); }}]
+    end: [{ text: 'Menu principal', class: 'ghost', flex: 1, action: () => { initSetup(); show('home', 'backward'); } }, { text: 'Rejouer', class: '', flex: 2, action: () => { startGame(true); }}]
   };
 
   function updateActionBar(screenId) {
