@@ -343,6 +343,48 @@
   .reveal-card-info { animation: fadeInUp .5s .5s both; }
   .winner-banner { animation: zoomIn .5s cubic-bezier(0.25, 2.5, 0.5, 1) both; }
 
+  /* Intro Screen */
+  .intro-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    gap: 2rem;
+    padding: 1rem;
+  }
+  .intro-text-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100px; /* Adjust as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .intro-text {
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.6;
+    max-width: 45ch;
+    margin: 0;
+    position: absolute;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  }
+  .intro-text.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .intro-actions {
+      opacity: 0;
+      transition: opacity .5s ease .5s;
+  }
+  .intro-actions.visible {
+      opacity: 1;
+  }
+
   @keyframes title-glow {
     from { text-shadow: 0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow); }
     to { text-shadow: 0 0 20px var(--accent-glow), 0 0 30px var(--accent-glow), 0 0 5px var(--accent); }
@@ -419,6 +461,26 @@
                 <button id="start-game-btn" class="btn" style="width: 100%; padding: 1rem 2rem;">Commencer à jouer</button>
             </div>
         <div class="tip-box" style="animation: fadeInUp .5s .5s both; max-width: 380px;">Le but est simple : les Civils doivent démasquer les Undercover, et les Undercover doivent survivre !</div>
+        </div>
+    </section>
+
+    <!-- INTRO -->
+    <section id="screen-intro" class="screen">
+        <div class="intro-container">
+            <div class="intro-text-wrapper">
+                <p class="intro-text" id="intro-text-1">Bienvenue, agents.</p>
+                <p class="intro-text" id="intro-text-2">Votre mission : démasquer les imposteurs.</p>
+                <p class="intro-text" id="intro-text-3">La majorité d'entre vous, les <b>Civils</b>, partagera un mot secret.</p>
+                <p class="intro-text" id="intro-text-4">Les autres, les <b>Undercover</b>, auront un mot légèrement différent.</p>
+                <p class="intro-text" id="intro-text-5">À chaque tour, donnez un indice d'un seul mot. Soyez malin.</p>
+                <p class="intro-text" id="intro-text-6">Après discussion, votez pour éliminer un suspect.</p>
+                <p class="intro-text" id="intro-text-7">Les Civils gagnent en éliminant tous les Undercover.</p>
+                <p class="intro-text" id="intro-text-8">Les Undercover gagnent s'ils deviennent majoritaires.</p>
+                <p class="intro-text" id="intro-text-9" style="font-weight: 800; color: var(--accent);">Bonne chance.</p>
+            </div>
+            <div class="intro-actions" style="opacity: 0; transition: opacity .5s ease .5s;">
+                 <button id="skip-intro-btn" class="btn ghost">Passer l'introduction</button>
+            </div>
         </div>
     </section>
 
@@ -713,11 +775,11 @@
 
   const getDOMElements = () => {
     const ids = [
-      'screen-home', 'screen-setup', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
+      'screen-home', 'screen-intro', 'screen-setup', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
       'theme-list', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
       'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc',
       'mode-classic', 'mode-dynamic', 'mode-revolution', 'mode-fast', 'mode-mystery', 'mode-folie',
-      'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header',
+      'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'skip-intro-btn', 'tips-btn', 'game-header',
       'turn-display', 'game-content-area', 'lastword-prompt', 'lastword-grid',
       'event-icon', 'event-title', 'event-description',
       'revealPhoto', 'revealTitle', 'roleBadge', 'revealedWord', 'winnerBanner', 'summary', 'actionBar',
@@ -726,7 +788,7 @@
     ];
     ids.forEach(id => dom[id.replace(/-(\w)/g, (m, g) => g.toUpperCase())] = document.getElementById(id));
     dom.screens = {
-        home: dom.screenHome, setup: dom.screenSetup, pass: dom.screenPass, game: dom.screenGame,
+        home: dom.screenHome, intro: dom.screenIntro, setup: dom.screenSetup, pass: dom.screenPass, game: dom.screenGame,
         reveal: dom.screenReveal, end: dom.screenEnd, lastword: dom.screenLastword, event: dom.screenEvent
     };
   };
@@ -801,7 +863,7 @@
     }
 
     state._activeScreen = screenId;
-    dom.gameHeader.style.display = ['home', 'setup'].includes(screenId) ? 'none' : 'block';
+    dom.gameHeader.style.display = ['home', 'setup', 'intro'].includes(screenId) ? 'none' : 'block';
     updateActionBar(screenId);
     const inGame = ['pass', 'game', 'reveal', 'lastword', 'event'].includes(screenId);
     dom.btnNewWord.style.display = inGame ? 'inline-flex' : 'none';
@@ -1178,6 +1240,51 @@
             };
         }
     });
+  }
+
+  // ---------- INTRO SEQUENCE ----------
+  let introTimeout;
+  function startIntro() {
+      show('intro');
+
+      const texts = document.querySelectorAll('.intro-text');
+      const skipButton = dom.skipIntroBtn;
+      const actions = document.querySelector('.intro-actions');
+      let currentIndex = 0;
+
+      const showNextText = () => {
+          if (currentIndex > 0) {
+              texts[currentIndex - 1].classList.remove('visible');
+          }
+          if (currentIndex < texts.length) {
+              texts[currentIndex].classList.add('visible');
+              currentIndex++;
+              introTimeout = setTimeout(showNextText, 2500); // 2.5s per line
+          } else {
+              // End of intro
+              clearTimeout(introTimeout);
+              setTimeout(() => show('setup'), 500);
+          }
+      };
+
+      const skipIntro = () => {
+          clearTimeout(introTimeout);
+          show('setup');
+          skipButton.removeEventListener('click', skipIntro);
+      };
+
+      // Reset state
+      texts.forEach(t => t.classList.remove('visible'));
+      actions.classList.remove('visible');
+
+      // Start sequence
+      showNextText();
+
+      // Show skip button after a short delay
+      setTimeout(() => {
+          actions.classList.add('visible');
+          skipButton.addEventListener('click', skipIntro, { once: true });
+      }, 3000);
   }
 
   // ---------- GAME FLOW ----------
@@ -2095,7 +2202,7 @@
 
         // Delay screen transition to let the effect play
         setTimeout(() => {
-            show('setup');
+            startIntro();
         }, 150);
     };
 
