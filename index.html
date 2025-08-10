@@ -137,7 +137,10 @@
   }
   .reveal-card .icon { font-size: 3rem; margin-bottom: 1rem; color: var(--accent); transition: transform .3s ease; }
   .reveal-card .text { font-weight: 600; font-size: 1rem; }
-  .reveal-card.flipped { transform: rotateY(180deg); }
+  .reveal-card.flipped {
+    transform: rotateY(180deg);
+    box-shadow: 0 0 25px var(--accent-glow), 0 0 40px var(--accent-glow);
+  }
   .card-face { position: absolute; top:0; left:0; width:100%; height:100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; }
   .card-back { transform: rotateY(180deg); }
   .word-big { font-size: 2rem; font-weight: 800; color: var(--accent); }
@@ -273,7 +276,7 @@
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    animation: title-shimmer 6s linear infinite;
+    animation: title-shimmer 6s linear infinite, title-glow 1.5s ease-in-out infinite alternate;
   }
   .home-title .accent { color: inherit; } /* Inherit the gradient */
 
@@ -884,6 +887,7 @@
     const nextScreen = dom.screens[screenId];
 
     if (!nextScreen || (currentScreen && currentScreen === nextScreen) || state.isNavigating) return;
+    sounds.transition();
 
     const useSlideAnimation = false;
 
@@ -1079,6 +1083,7 @@
 
   // Placeholder sound paths from Kenney.nl. User can replace these files.
   const soundConfig = {
+    'music': 'assets/music.ogg', // Remplacez par votre musique de fond
     'launch': 'assets/launch.ogg',
     'click': 'assets/click.ogg',
     'flip': 'assets/flip.ogg',
@@ -1086,7 +1091,10 @@
     'timer': 'assets/timer.ogg',
     'win': 'assets/win.ogg',
     'lose': 'assets/lose.ogg',
-    'eliminate': 'assets/eliminate.ogg'
+    'eliminate': 'assets/eliminate.ogg',
+    'transition': 'assets/click.ogg',
+    'vote': 'assets/flip.ogg',
+    'countdown': 'assets/timer.ogg'
   };
 
   const audioManager = new AudioManager(soundConfig);
@@ -1100,7 +1108,10 @@
     win: ()=> audioManager.play('win'),
     lose: ()=> audioManager.play('lose'),
     tick: (fast=false)=> { if (fast && !audioManager.activeLoop) audioManager.play('timer', true); },
-    event: ()=> audioManager.play('event')
+    event: ()=> audioManager.play('event'),
+    transition: ()=> audioManager.play('transition'),
+    vote: ()=> audioManager.play('vote'),
+    countdown: ()=> audioManager.play('countdown')
   };
 
   function initAudio() {
@@ -1108,6 +1119,15 @@
       audioManager.init();
     }
     audioManager.resumeContext();
+  }
+
+  function toggleBackgroundMusic() {
+    if (!audioManager.isInitialized) return;
+    if (state.settings.sound) {
+        audioManager.play('music', true);
+    } else {
+        audioManager.stopLoop();
+    }
   }
 
   function haptic(type = 'light') {
@@ -1306,6 +1326,11 @@
             if(key==='sound' && state.settings.sound) { initAudio(); }
             sounds.click();
             updateOptionCards();
+            if (key === 'sound') {
+              // Keep music in sync
+              dom.homeSoundToggle.textContent = state.settings.sound ? '🔊' : '🔇';
+              toggleBackgroundMusic();
+            }
         };
     });
     ['classic', 'dynamic', 'revolution', 'fast', 'mystery', 'folie', 'traitre', 'double'].forEach(mode => {
@@ -1393,6 +1418,7 @@
     const updateCountdown = () => {
         if (countdown > 0) {
             countdownEl.textContent = `La mission commence dans ${countdown}...`;
+            sounds.countdown();
         } else {
             countdownEl.textContent = 'Lancement !';
             clearInterval(countdownInterval);
@@ -2194,6 +2220,7 @@
     }
 
     castVote(target, cardElement) {
+        sounds.vote();
         const potentialVoters = alive().filter(p => !p.isBot && !this.votes[p.id] && !p.voteDisabled);
         if (potentialVoters.length === 0) {
             showModal({title:"Vote", message:"Tous les joueurs humains pouvant voter ont voté."});
@@ -2342,7 +2369,7 @@
       const titleContainer = document.querySelector('.title-container');
       if (!titleContainer) return;
 
-      const words = ["Secret", "Agent", "Vote", "Civil", "Undercover", "Bluff", "Indice", "Mission", "Révolution"];
+      const words = ["Secret", "Agent", "Vote", "Civil", "Undercover", "Bluff", "Indice", "Mission", "Révolution", "Traître", "Innocent", "Jester", "Mystère", "Alliance", "Trahison"];
       const word = words[Math.floor(Math.random() * words.length)];
 
       const span = document.createElement('span');
@@ -2444,6 +2471,7 @@
           soundOptionCard.classList.toggle('active', state.settings.sound);
           soundOptionCard.querySelector('.value').textContent = state.settings.sound ? 'Activé' : 'Désactivé';
         }
+        toggleBackgroundMusic();
     };
 
     dom.btnShowMyCard.onclick = () => {
