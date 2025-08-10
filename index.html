@@ -299,7 +299,7 @@
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Mode de Jeu</h1>
                 <div class="setup-options" style="display: flex; gap: .75rem; margin-top: 1rem;">
-                    <div id="mode-classic" class="option-card"><div class="icon">☕</div><div class="label">Classique</div><div class="value">Oral, sans timer</div></div>
+                    <div id="mode-classic" class="option-card"><div class="icon">☕</div><div class="label">Classique</div><div class="value">Oral, avec timer</div></div>
                     <div id="mode-dynamic" class="option-card active"><div class="icon">⚡</div><div class="label">Dynamique</div><div class="value">Timer & Événements</div></div>
                     <div id="mode-revolution" class="option-card"><div class="icon">💥</div><div class="label">Révolution</div><div class="value">Événements intenses</div></div>
                     <div id="mode-fast" class="option-card"><div class="icon">⏱️</div><div class="label">Rapide</div><div class="value">Timers courts</div></div>
@@ -1361,11 +1361,9 @@
         dom.gameContentArea.innerHTML = `<div class="center"><p class="hint">Donnez un indice sur votre mot...</p></div>`;
         
         const mode = state.settings.gameMode;
-        if (mode !== 'classic') {
-            this.timeLeft = this.turnTimerDuration;
-            this.timerId = setInterval(() => this.updateTurnTimer(currentPlayer), 1000);
-            this.updateTurnTimer(currentPlayer);
-        }
+        this.timeLeft = this.turnTimerDuration;
+        this.timerId = setInterval(() => this.updateTurnTimer(currentPlayer), 1000);
+        this.updateTurnTimer(currentPlayer);
 
         const actionBar = dom.actionBar;
         actionBar.innerHTML = '';
@@ -1395,7 +1393,7 @@
             const hintBtn = document.createElement('button');
             hintBtn.className = 'btn';
             
-            if (state.settings.botCount === 0 && mode !== 'classic') {
+            if (mode === 'classic' || state.settings.botCount === 0) {
                 hintBtn.textContent = "Indice Donné (oral)";
                 hintBtn.onclick = () => this.processHint(currentPlayer, "(oral)");
             } else {
@@ -1419,7 +1417,7 @@
 
     renderTurnDisplay(player) {
         dom.turnDisplay.style.display = 'flex';
-        const timerHTML = state.settings.gameMode !== 'classic' ? `<div class="turn-player-avatar">${avatarHTML(player)}<svg class="turn-timer-ring" viewBox="0 0 36 36"><circle class="turn-timer-circle" cx="18" cy="18" r="15.9155" stroke-dasharray="100, 100" stroke-dashoffset="100"></circle></svg></div>` : `<div class="turn-player-avatar">${avatarHTML(player)}</div>`;
+        const timerHTML = `<div class="turn-player-avatar">${avatarHTML(player)}<svg class="turn-timer-ring" viewBox="0 0 36 36"><circle class="turn-timer-circle" cx="18" cy="18" r="15.9155" stroke-dasharray="100, 100" stroke-dashoffset="100"></circle></svg></div>`;
         dom.turnDisplay.innerHTML = `
             ${timerHTML}
             <div class="turn-player-name">Tour ${state.round} : Au tour de <b>${player.name}</b></div>
@@ -1475,7 +1473,7 @@
         dom.turnDisplay.style.display = 'none';
         
         this.timeLeft = this.voteTimerDuration;
-        const timerDisplayHTML = state.settings.gameMode !== 'classic' ? `<div class="vote-timer-display">${this.timeLeft}</div>` : '';
+        const timerDisplayHTML = `<div class="vote-timer-display">${this.timeLeft}</div>`;
         dom.gameContentArea.innerHTML = `
             <div style="text-align:center;">
                 <h2>Vote Final !</h2>
@@ -1485,9 +1483,7 @@
             <div class="player-grid-vote"></div>
         `;
         this.renderVoteGrid();
-        if (state.settings.gameMode !== 'classic') {
-            this.timerId = setInterval(() => this.updateVoteTimer(), 1000);
-        }
+        this.timerId = setInterval(() => this.updateVoteTimer(), 1000);
         
         const actionBar = dom.actionBar;
         actionBar.innerHTML = '';
