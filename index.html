@@ -438,9 +438,10 @@
   /* Summary Animation */
   #screen-summary.active #summary-title { animation: fadeInUp .5s .2s both; }
   #screen-summary.active #summary-grid { animation: fadeInUp .5s .4s both; }
-  #screen-summary.active #summary-roles { animation: fadeInUp .5s .6s both; }
-  #screen-summary.active #summary-players { animation: fadeInUp .5s .8s both; }
-  #screen-summary.active #summary-countdown { animation: fadeInUp .5s 1s both; }
+  #screen-summary.active #summary-interaction { animation: fadeInUp .5s .6s both; }
+  #screen-summary.active #summary-roles { animation: fadeInUp .5s .8s both; }
+  #screen-summary.active #summary-players { animation: fadeInUp .5s 1s both; }
+  #screen-summary.active #summary-countdown { animation: fadeInUp .5s 1.2s both; }
 
   @media (min-width: 501px) {
     .app {
@@ -527,16 +528,35 @@
                 </div>
             </div>
         </div>
-        <!-- Step 3: Agents -->
+        <!-- Step 3: Interaction Mode -->
         <div class="setup-step" data-step="3">
+            <div class="card">
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h10z"></path><path d="M7 11h10"></path><path d="M7 16h10"></path><path d="M11 3v18"></path></svg>Mode d'Interaction</h1>
+                <div class="row" style="margin-top:1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div id="interaction-mode-oral" class="option-card active">
+                        <div class="icon" style="font-size: 2rem;">🗣️</div>
+                        <div class="label">Oral</div>
+                        <div class="value">Les indices sont donnés à voix haute.</div>
+                    </div>
+                    <div id="interaction-mode-written" class="option-card">
+                        <div class="icon" style="font-size: 2rem;">✍️</div>
+                        <div class="label">Écrit</div>
+                        <div class="value">Les indices sont saisis dans l'app.</div>
+                    </div>
+                </div>
+                 <p class="hint" style="margin-top: auto; text-align: center; padding-top: 1rem;">Choisissez comment les joueurs donneront leurs indices. Le mode oral est plus rapide et convivial, le mode écrit garde une trace et peut être plus stratégique.</p>
+            </div>
+        </div>
+        <!-- Step 4: Agents -->
+        <div class="setup-step" data-step="4">
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Paramétrez les agents</h1>
                 <div class="row" style="margin-top:1rem"><div class="pill" style="flex:1.5"><span><b>Agents Humains</b> (0–12)</span><div class="numstep"><button id="minus" class="step-btn">−</button><div id="playerNum" class="counter">4</div><button id="plus" class="step-btn">+</button></div></div><div class="pill" style="flex:1"><span>Bots IA</span><div class="numstep"><button id="minusBot" class="step-btn">−</button><div id="botNum" class="counter">0</div><button id="plusBot" class="step-btn">+</button></div></div></div>
                 <p class="hint" style="margin-top: auto; text-align: center; padding-top: 1rem;">Le nombre total d'agents (humains + bots) doit être entre 3 et 12.</p>
             </div>
         </div>
-        <!-- Step 4: Options -->
-        <div class="setup-step" data-step="4">
+        <!-- Step 5: Options -->
+        <div class="setup-step" data-step="5">
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Options & Rôles Spéciaux</h1>
                 <div id="options-list" class="theme-list" style="flex: 1; overflow-y: auto;">
@@ -544,8 +564,8 @@
                 </div>
             </div>
         </div>
-        <!-- Step 5: Players -->
-        <div class="setup-step" data-step="5">
+        <!-- Step 6: Players -->
+        <div class="setup-step" data-step="6">
             <div class="card">
                 <h1 style="font-size: 1.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Agents Humains</h1>
                 <div id="playersSetup" class="players" style="flex: 1; overflow-y: auto;"></div>
@@ -567,6 +587,11 @@
                     <h3>Thème</h3>
                     <p><span class="icon"></span> <span class="label"></span></p>
                 </div>
+            </div>
+
+            <div id="summary-interaction" class="summary-card" style="width: 100%;">
+                <h3>Mode d'Interaction</h3>
+                <p><span class="icon"></span> <span class="label"></span></p>
             </div>
 
             <div id="summary-roles" class="summary-card" style="width: 100%;">
@@ -932,7 +957,8 @@
     players: [], wordPair: null,
     settings: { 
         gameMode: 'dynamic', // classic, dynamic, revolution
-        theme: 'Culture Pop', 
+        theme: 'Culture Pop',
+        interactionMode: 'oral', // oral, written
         playerCount: 4, botCount: 0, 
         undercoverCount: 1, 
         sound:false, innocent:false, jester: false, agentBlanc: false,
@@ -949,10 +975,11 @@
   const getDOMElements = () => {
     const ids = [
       'screen-home', 'screen-intro', 'screen-setup', 'screen-summary', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
-      'summary-title', 'summary-grid', 'summary-mode', 'summary-theme', 'summary-roles', 'summary-players', 'summary-countdown',
+      'summary-title', 'summary-grid', 'summary-mode', 'summary-theme', 'summary-interaction', 'summary-roles', 'summary-players', 'summary-countdown',
       'intro-text-container', 'intro-text', 'intro-buttons', 'intro-continue-btn', 'intro-skip-btn',
       'theme-select', 'theme-description', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
       'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc', 'option-traitre', 'option-double',
+      'interaction-mode-oral', 'interaction-mode-written',
       'game-mode-select', 'game-mode-description', 'btn-random-mode', 'btn-random-theme',
       'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header', 'home-sound-toggle',
       'turn-display', 'game-content-area', 'lastword-prompt', 'lastword-grid',
@@ -1252,7 +1279,7 @@
   // ---------- SETUP ----------
   function showSetupStep(step, direction = 'forward') {
     const fromStep = state.setupStep;
-    const toStep = clamp(step, 1, 5);
+    const toStep = clamp(step, 1, 6);
     if (fromStep === toStep || state.isNavigating) return;
 
     state.isNavigating = true;
@@ -1530,6 +1557,19 @@
             }
         }
     });
+
+    dom.interactionModeOral.onclick = () => {
+        sounds.click();
+        state.settings.interactionMode = 'oral';
+        dom.interactionModeOral.classList.add('active');
+        dom.interactionModeWritten.classList.remove('active');
+    };
+    dom.interactionModeWritten.onclick = () => {
+        sounds.click();
+        state.settings.interactionMode = 'written';
+        dom.interactionModeWritten.classList.add('active');
+        dom.interactionModeOral.classList.remove('active');
+    };
   }
 
   // ---------- GAME FLOW ----------
@@ -1545,6 +1585,12 @@
     const themeName = state.settings.theme === 'random' ? 'Aléatoire' : state.settings.theme;
     themeEl.querySelector('.icon').textContent = THEME_ICONS[state.settings.theme] || '✨';
     themeEl.querySelector('.label').textContent = themeName;
+
+    // Populate Interaction Mode
+    const interactionEl = dom.summaryInteraction;
+    const isOral = state.settings.interactionMode === 'oral';
+    interactionEl.querySelector('.icon').textContent = isOral ? '🗣️' : '✍️';
+    interactionEl.querySelector('.label').textContent = isOral ? 'Oral' : 'Écrit';
 
     // 3. Populate Special Roles
     const rolesContainer = dom.summaryRoles.querySelector('.roles-pills');
@@ -1963,7 +2009,7 @@
           }
           const nextBtn = document.createElement('button');
           nextBtn.className = 'btn';
-          if (state.setupStep < 5) {
+          if (state.setupStep < 6) {
               nextBtn.textContent = 'Suivant →';
               nextBtn.onclick = () => { sounds.click(); showSetupStep(state.setupStep + 1, 'forward'); };
           } else {
@@ -2252,10 +2298,10 @@
             const hintBtn = document.createElement('button');
             hintBtn.className = 'btn';
             
-            if (mode === 'classic' || state.settings.botCount === 0) {
+            if (state.settings.interactionMode === 'oral') {
                 hintBtn.textContent = "Indice Donné (oral)";
                 hintBtn.onclick = () => this.processHint(currentPlayer, "(oral)");
-            } else {
+            } else { // written
                 hintBtn.textContent = "Donner l'indice";
                 if (currentPlayer.silenced) hintBtn.textContent = "Mimer l'indice";
                 hintBtn.onclick = () => {
