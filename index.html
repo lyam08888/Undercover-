@@ -510,7 +510,7 @@
         <!-- Step 1: Mode -->
         <div class="setup-step active" data-step="1">
             <div class="card">
-                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Mode de Jeu</h1>
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Mode de Jeu <button id="btn-random-mode" class="icon-btn" title="Mode aléatoire" style="font-size: 1.5rem; margin-left: auto;">🎲</button></h1>
                 <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
                     <select id="game-mode-select" class="input-like" style="width: 100%; padding: .75rem 1rem; font-size: 1rem; color:var(--ink); background:var(--bg); border:1px solid var(--border); border-radius:8px; outline:none; transition: all .2s ease; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e6edf3%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.6-3.6%205.4-7.9%205.4-12.9%200-5-1.9-9.4-5.4-12.7z%22/%3E%3C/svg%3E'); background-repeat: no-repeat, repeat; background-position: right .7em top 50%, 0 0; background-size: .65em auto, 100%;"></select>
                     <div id="game-mode-description" class="tip-box" style="text-align: left; min-height: 80px;"></div>
@@ -520,7 +520,7 @@
         <!-- Step 2: Mission -->
         <div class="setup-step" data-step="2">
             <div class="card">
-                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a2.4 2.4 0 0 1 3 0L8 20l3-3a2.4 2.4 0 0 1 3 0L19.5 20a2.4 2.4 0 0 1 0-3L17 15l3-3a2.4 2.4 0 0 0 0-3L15 4l-3 3a2.4 2.4 0 0 0-3 0L4 4a2.4 2.4 0 0 0 0 3l3 3-2.5 2.5a2.4 2.4 0 0 0 0 3Z"/></svg>Choisissez un thème</h1>
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a2.4 2.4 0 0 1 3 0L8 20l3-3a2.4 2.4 0 0 1 3 0L19.5 20a2.4 2.4 0 0 1 0-3L17 15l3-3a2.4 2.4 0 0 0 0-3L15 4l-3 3a2.4 2.4 0 0 0-3 0L4 4a2.4 2.4 0 0 0 0 3l3 3-2.5 2.5a2.4 2.4 0 0 0 0 3Z"/></svg>Choisissez un thème<button id="btn-random-theme" class="icon-btn" title="Thème aléatoire" style="font-size: 1.5rem; margin-left: auto;">🎲</button></h1>
                 <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
                     <select id="theme-select" class="input-like" style="width: 100%; padding: .75rem 1rem; font-size: 1rem; color:var(--ink); background:var(--bg); border:1px solid var(--border); border-radius:8px; outline:none; transition: all .2s ease; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e6edf3%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.6-3.6%205.4-7.9%205.4-12.9%200-5-1.9-9.4-5.4-12.7z%22/%3E%3C/svg%3E'); background-repeat: no-repeat, repeat; background-position: right .7em top 50%, 0 0; background-size: .65em auto, 100%;"></select>
                     <div id="theme-description" class="tip-box" style="text-align: left; min-height: 80px;"></div>
@@ -950,7 +950,7 @@
       'intro-text-container', 'intro-text', 'intro-buttons', 'intro-continue-btn', 'intro-skip-btn',
       'theme-select', 'theme-description', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
       'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc', 'option-traitre', 'option-double',
-      'game-mode-select', 'game-mode-description',
+      'game-mode-select', 'game-mode-description', 'btn-random-mode', 'btn-random-theme',
       'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header', 'home-sound-toggle',
       'turn-display', 'game-content-area', 'lastword-prompt', 'lastword-grid',
       'event-icon', 'event-title', 'event-description',
@@ -1433,6 +1433,22 @@
         state.settings.gameMode = gameModeSelect.value;
         sounds.click();
         updateModeDetails();
+    };
+
+    dom.btnRandomMode.onclick = () => {
+        sounds.click();
+        const modes = Object.keys(GAME_MODES);
+        const randomMode = modes[rand(modes.length)];
+        state.settings.gameMode = randomMode;
+        updateModeDetails();
+    };
+
+    dom.btnRandomTheme.onclick = () => {
+        sounds.click();
+        const themes = Object.keys(THEME_DATA);
+        const randomTheme = themes[rand(themes.length)];
+        state.settings.theme = randomTheme;
+        updateThemeDetails();
     };
 
     // Load saved players
