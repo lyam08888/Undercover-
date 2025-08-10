@@ -188,33 +188,38 @@
   .option-card .label { font-size: .9rem; font-weight: 600; }
   .option-card .value { font-size: .8rem; color: var(--muted); }
 
-  .theme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: .75rem; margin-top: 1rem; }
-  .theme-card {
+  .theme-list {
     display: flex;
     flex-direction: column;
+    gap: .75rem;
+    margin-top: 1rem;
+    overflow-y: auto;
+    padding-right: .5rem; /* For scrollbar */
+  }
+  .theme-item {
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.8rem;
-    text-align: center;
+    gap: 1rem;
+    padding: 1rem;
+    text-align: left;
     border: 1px solid var(--border);
     border-radius: 12px;
     cursor: pointer;
     transition: all .2s ease;
-    background: var(--bg); /* To contrast with parent .card */
-    aspect-ratio: 1 / 1;
+    background: var(--bg);
   }
-  .theme-card:hover {
+  .theme-item:hover {
     transform: translateY(-3px);
     border-color: var(--accent);
   }
-  .theme-card.active {
+  .theme-item.active {
     background: var(--surface-light);
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-glow);
     transform: translateY(-3px);
   }
-  .theme-card .icon {
+  .theme-item .icon {
     font-size: 1.5rem;
     line-height: 1;
     background: var(--surface);
@@ -222,11 +227,20 @@
     border-radius: 8px;
     display: grid;
     place-items: center;
+    flex-shrink: 0;
   }
-  .theme-card .label {
-    font-size: .9rem;
+  .theme-item .details {
+    display: flex;
+    flex-direction: column;
+  }
+  .theme-item .label {
+    font-size: 1rem;
     font-weight: 700;
-    margin-top: 0;
+  }
+  .theme-item .description {
+    font-size: .85rem;
+    color: var(--muted);
+    line-height: 1.4;
   }
 
   /* Home Screen */
@@ -426,7 +440,7 @@
         <div class="setup-step" data-step="2">
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a2.4 2.4 0 0 1 3 0L8 20l3-3a2.4 2.4 0 0 1 3 0L19.5 20a2.4 2.4 0 0 1 0-3L17 15l3-3a2.4 2.4 0 0 0 0-3L15 4l-3 3a2.4 2.4 0 0 0-3 0L4 4a2.4 2.4 0 0 0 0 3l3 3-2.5 2.5a2.4 2.4 0 0 0 0 3Z"/></svg>Choisissez un thème</h1>
-                <div id="theme-grid" style="margin-top: 1rem; flex: 1;"></div>
+                <div id="theme-list" style="margin-top: 1rem; flex: 1;"></div>
             </div>
         </div>
         <!-- Step 3: Agents -->
@@ -640,6 +654,22 @@
     "N'ayez pas peur de voter contre quelqu'un qui semble sûr de lui, c'est peut-être une tactique !"
   ];
   const THEME_ICONS = { "Culture Pop": "🍿", "Vie Quotidienne": "🏠", "Gastronomie": "🍔", "Culture G & Arts": "🎨", "Lieux & Voyages": "✈️", "Animaux & Nature": "🐾", "Science & Tech": "🔬", "Sport": "⚽", "Culture Algérienne": "🇩🇿", "Mots Piégés & Absurdes": "🤪", "Histoire & Mythologie": "📜", "Marques Célèbres": "®️", "Corps Humain": "🧬", "random": "🎲" };
+  const THEME_DESCRIPTIONS = {
+    "Culture Pop": "Films, séries, jeux... Testez votre culture geek et populaire.",
+    "Vie Quotidienne": "Des objets et situations de tous les jours. L'ordinaire devient suspect.",
+    "Gastronomie": "Un festin de mots. Idéal pour les gourmets et les fins gourmets.",
+    "Culture G & Arts": "Mettez vos connaissances à l'épreuve. De l'art à l'histoire.",
+    "Lieux & Voyages": "Explorez le monde à travers des mots. Une invitation à l'évasion.",
+    "Animaux & Nature": "La faune et la flore comme vous ne les avez jamais vues. Soyez rusé.",
+    "Science & Tech": "Du laboratoire à votre poche, un thème pour les esprits brillants.",
+    "Sport": "Compétition, équipes, règles... Un terrain de jeu pour les stratèges.",
+    "Culture Algérienne": "Spécialités, traditions et expressions. Un voyage au cœur de l'Algérie.",
+    "Mots Piégés & Absurdes": "Des paires improbables pour des parties pleines de rebondissements.",
+    "Histoire & Mythologie": "Remontez le temps et côtoyez les légendes. Blufferez-vous les dieux ?",
+    "Marques Célèbres": "Logos, slogans, produits... La société de consommation est un champ de mines.",
+    "Corps Humain": "Un voyage intime et déroutant au cœur de notre propre biologie.",
+    "random": "Laissez le destin choisir pour vous. Un thème surprise pour chaque partie."
+  };
 
   // ---------- DOM & STATE ----------
   const dom = {};
@@ -664,7 +694,7 @@
   const getDOMElements = () => {
     const ids = [
       'screen-home', 'screen-setup', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
-      'theme-grid', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
+      'theme-list', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
       'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc',
       'mode-classic', 'mode-dynamic', 'mode-revolution', 'mode-fast',
       'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header',
@@ -910,23 +940,33 @@
   }
 
   function renderThemeSelection() {
-      dom.themeGrid.innerHTML = '';
+      dom.themeList.innerHTML = '';
       const themes = [['Aléatoire', 'random'], ...Object.keys(THEME_DATA).map(t => [t,t])];
 
       themes.forEach(([name, value], i) => {
-          const card = document.createElement('div');
-          card.className = 'theme-card';
-          card.dataset.theme = value;
-          if (state.settings.theme === value) card.classList.add('active');
-          card.innerHTML = `<div class="icon">${THEME_ICONS[value] || '✨'}</div><div class="label">${name}</div>`;
-          card.style.animation = `fadeInUp .4s ${i * 30}ms both`;
-          card.onclick = () => {
+          const item = document.createElement('div');
+          item.className = 'theme-item';
+          item.dataset.theme = value;
+          if (state.settings.theme === value) item.classList.add('active');
+
+          const description = THEME_DESCRIPTIONS[value] || "Aucune description pour ce thème.";
+
+          item.innerHTML = `
+            <div class="icon">${THEME_ICONS[value] || '✨'}</div>
+            <div class="details">
+              <div class="label">${name}</div>
+              <div class="description">${description}</div>
+            </div>
+          `;
+
+          item.style.animation = `fadeInUp .4s ${i * 40}ms both`;
+          item.onclick = () => {
               state.settings.theme = value;
               sounds.click();
-              dom.themeGrid.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
-              card.classList.add('active');
+              dom.themeList.querySelectorAll('.theme-item').forEach(c => c.classList.remove('active'));
+              item.classList.add('active');
           };
-          dom.themeGrid.appendChild(card);
+          dom.themeList.appendChild(item);
       });
   }
 
