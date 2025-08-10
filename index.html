@@ -9,6 +9,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <meta name="theme-color" content="#0D1117">
 <style>
+  #tsparticles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
   :root{
     --bg: #0D1117;
     --surface: #161B22;
@@ -222,8 +230,58 @@
   }
 
   /* Home Screen */
-  .home-title { font-size: 3rem; font-weight: 800; text-align: center; letter-spacing: -1px; }
-  .home-title .accent { color: var(--accent); animation: title-glow 2s alternate infinite ease-in-out; }
+  .home-title {
+    font-size: 3.2rem;
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: -1.5px;
+    background: linear-gradient(90deg, var(--accent), #fff, var(--danger), var(--accent));
+    background-size: 300% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: title-shimmer 6s linear infinite;
+  }
+  .home-title .accent { color: inherit; } /* Inherit the gradient */
+
+  @keyframes title-shimmer {
+    to {
+        background-position: -300% center;
+    }
+  }
+
+  .confetti-particle {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    animation: confetti-burst 0.9s ease-out forwards;
+  }
+
+  @keyframes confetti-burst {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+  }
+
+  .floating-word {
+    position: absolute;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--muted);
+    opacity: 0;
+    animation: float-and-fade 5s ease-in-out forwards;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 0;
+  }
+
+  @keyframes float-and-fade {
+    0% { transform: translateY(20px) scale(0.8); opacity: 0; }
+    20%, 80% { transform: translateY(-20px) scale(1); opacity: 0.6; }
+    100% { transform: translateY(-60px) scale(0.7); opacity: 0; }
+  }
 
   /* Vote Reveal */
   .vote-reveal-grid { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; margin-top: 1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
@@ -266,8 +324,10 @@
   .slide-out-right { animation: slide-out-right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
   .slide-in-left { animation: slide-in-left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@3.4.0/tsparticles.bundle.min.js"></script>
 </head>
 <body>
+<div id="tsparticles"></div>
 <div class="app">
   <header id="game-header">
     <div class="bar">
@@ -284,7 +344,9 @@
     <!-- HOME -->
     <section id="screen-home" class="screen active">
         <div class="center" style="gap: .5rem;">
-            <h1 class="home-title" style="animation: fadeInUp .5s .1s both;">Undercover<span class="accent"> 3.0</span></h1>
+            <div class="title-container" style="position: relative; z-index: 1;">
+              <h1 class="home-title" style="animation: fadeInUp .5s .1s both;">Undercover<span class="accent"> 3.0</span></h1>
+            </div>
             <div style="animation: fadeInUp .5s .3s both; display: flex; flex-direction: column; gap: .75rem; margin-top: 2rem; width: 80%; max-width: 300px;">
                 <button id="start-game-btn" class="btn" style="width: 100%; padding: 1rem 2rem;">Commencer à jouer</button>
             </div>
@@ -1688,10 +1750,71 @@
     getDOMElements();
     initSetup();
     show('home');
+
+    function createFloatingWord() {
+      const titleContainer = document.querySelector('.title-container');
+      if (!titleContainer) return;
+
+      const words = ["Secret", "Agent", "Vote", "Civil", "Undercover", "Bluff", "Indice", "Mission", "Révolution"];
+      const word = words[Math.floor(Math.random() * words.length)];
+
+      const span = document.createElement('span');
+      span.className = 'floating-word';
+      span.textContent = word;
+
+      const containerRect = titleContainer.getBoundingClientRect();
+      const x = Math.random() * (containerRect.width * 1.4) - (containerRect.width * 0.2);
+      const y = Math.random() * (containerRect.height * 1.6) - (containerRect.height * 0.3);
+
+      span.style.left = `${x}px`;
+      span.style.top = `${y}px`;
+      span.style.animationDelay = `${Math.random() * 2}s`;
+
+      titleContainer.appendChild(span);
+
+      setTimeout(() => {
+          span.remove();
+      }, 5000);
+    }
     
-    dom.startGameBtn.onclick = () => {
+    // Start floating words effect if on home screen
+    if (dom.screenHome.classList.contains('active')) {
+        setInterval(createFloatingWord, 1200);
+    }
+
+    dom.startGameBtn.onclick = (e) => {
         sounds.click();
-        show('setup');
+
+        // Confetti burst effect
+        const btn = e.currentTarget;
+        const rect = btn.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+
+        for (let i = 0; i < 40; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'confetti-particle';
+            document.body.appendChild(particle);
+
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 120 + 50;
+            const targetX = Math.cos(angle) * distance;
+            const targetY = Math.sin(angle) * distance;
+
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            const randomColor = `hsl(${Math.random() * 360}, 90%, 65%)`;
+            particle.style.backgroundColor = randomColor;
+            particle.style.setProperty('--x', `${targetX}px`);
+            particle.style.setProperty('--y', `${targetY}px`);
+
+            setTimeout(() => particle.remove(), 900);
+        }
+
+        // Delay screen transition to let the effect play
+        setTimeout(() => {
+            show('setup');
+        }, 150);
     };
 
     if (dom.tipsBtn) {
@@ -1752,6 +1875,67 @@
   }
 
   document.addEventListener('DOMContentLoaded', init);
+
+  // Particle effect initialization
+  if (window.tsParticles) {
+    tsParticles.load("tsparticles", {
+      fpsLimit: 60,
+      interactivity: {
+        events: {
+          onHover: {
+            enable: true,
+            mode: "repulse"
+          },
+          resize: true
+        },
+        modes: {
+          repulse: {
+            distance: 100,
+            duration: 0.4
+          }
+        }
+      },
+      particles: {
+        color: {
+          value: "#ffffff"
+        },
+        links: {
+          color: "#ffffff",
+          distance: 150,
+          enable: true,
+          opacity: 0.1,
+          width: 1
+        },
+        move: {
+          direction: "none",
+          enable: true,
+          outModes: {
+            default: "out"
+          },
+          random: false,
+          speed: 1,
+          straight: false
+        },
+        number: {
+          density: {
+            enable: true,
+            area: 800
+          },
+          value: 80
+        },
+        opacity: {
+          value: 0.1
+        },
+        shape: {
+          type: "circle"
+        },
+        size: {
+          value: { min: 1, max: 3 }
+        }
+      },
+      detectRetina: true
+    });
+  }
 })();
 </script>
 </body>
