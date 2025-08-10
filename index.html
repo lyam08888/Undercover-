@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Undercover 3.0 - Révolution</title>
+<title>Undercover - Révolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -230,6 +230,25 @@
   }
 
   /* Home Screen */
+  .home-logo-container {
+    perspective: 800px;
+    margin-bottom: -1rem; /* Pull title up */
+  }
+  .home-logo {
+    width: 120px;
+    height: auto;
+    opacity: 0;
+    transform: rotateX(-90deg) translateY(50px);
+    animation: unfold-in 1s cubic-bezier(0.16, 1, 0.3, 1) .2s forwards;
+  }
+
+  @keyframes unfold-in {
+    to {
+      opacity: 1;
+      transform: rotateX(0deg) translateY(0);
+    }
+  }
+
   .home-title {
     font-size: clamp(2rem, 10vw, 3.2rem);
     font-weight: 800;
@@ -324,6 +343,22 @@
   .slide-out-right { animation: slide-out-right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
   .slide-in-left { animation: slide-in-left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
 
+  @keyframes logo-transition-in {
+    from { transform: scale(0.5) rotate(-90deg); opacity: 0; }
+    to { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  @keyframes logo-transition-out {
+    from { transform: scale(1) rotate(0deg); opacity: 1; }
+    to { transform: scale(2) rotate(90deg); opacity: 0; }
+  }
+  @keyframes screen-fade-out {
+    to { opacity: 0; }
+  }
+  @keyframes screen-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
   @media (min-width: 501px) {
     .app {
       max-width: 480px;
@@ -341,7 +376,7 @@
 <div class="app">
   <header id="game-header">
     <div class="bar">
-      <div class="title">Undercover 3.0</div>
+      <div class="title">Undercover</div>
       <div class="spacer"></div>
       <button id="btnShowMyCard" class="icon-btn" title="Voir ma carte" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></button>
       <button id="btnNewWord" class="icon-btn" title="Nouveau mot" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>
@@ -354,8 +389,17 @@
     <!-- HOME -->
     <section id="screen-home" class="screen active">
     <div class="center" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center; padding: 3rem 1rem;">
-            <div class="title-container" style="position: relative; z-index: 1;">
-              <h1 class="home-title" style="animation: fadeInUp .5s .1s both;">Undercover<span class="accent"> 3.0</span></h1>
+            <div class="title-container" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center;">
+              <div class="home-logo-container">
+                <svg id="home-logo" class="home-logo" viewBox="0 0 200 80" width="150">
+                    <g fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M 30 60 Q 100 80 170 60" />
+                        <path d="M 50 58 C 50 30, 70 20, 100 20 C 130 20, 150 30, 150 58" />
+                        <path d="M 80 30 C 85 25, 115 25, 120 30" />
+                    </g>
+                </svg>
+              </div>
+              <h1 class="home-title" style="animation: fadeInUp .5s .6s both;">Undercover</h1>
             </div>
         <div style="animation: fadeInUp .5s .3s both; display: flex; flex-direction: column; gap: .75rem; width: 80%; max-width: 300px;">
                 <button id="start-game-btn" class="btn" style="width: 100%; padding: 1rem 2rem;">Commencer à jouer</button>
@@ -468,6 +512,16 @@
       </div>
     </section>
   </main>
+
+  <div id="transition-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg); display: none; place-items: center; z-index: 50;">
+    <svg id="transition-logo" viewBox="0 0 200 80" width="150" style="width: 120px; height: auto; stroke: var(--accent); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; fill: none;">
+        <g>
+            <path d="M 30 60 Q 100 80 170 60"></path>
+            <path d="M 50 58 C 50 30, 70 20, 100 20 C 130 20, 150 30, 150 58"></path>
+            <path d="M 80 30 C 85 25, 115 25, 120 30"></path>
+        </g>
+    </svg>
+  </div>
 
   <div id="actionBar" class="action-bar"></div>
 </div>
@@ -639,41 +693,62 @@
     const nextScreen = dom.screens[screenId];
 
     if (!nextScreen || (currentScreen && currentScreen === nextScreen) || state.isNavigating) return;
-    state.isNavigating = true;
 
-    const outClass = direction === 'forward' ? 'slide-out-left' : 'slide-out-right';
-    const inClass = direction === 'forward' ? 'slide-in-right' : 'slide-in-left';
+    const useSlideAnimation = (state._activeScreen === 'home' && screenId === 'setup');
 
-    const animationPromises = [];
+    if (useSlideAnimation) {
+        state.isNavigating = true;
+        const outClass = 'slide-out-left';
+        const inClass = 'slide-in-right';
 
-    if (currentScreen) {
-        currentScreen.classList.add(outClass);
-        animationPromises.push(new Promise(resolve => {
-            currentScreen.addEventListener('animationend', function handler(e) {
-                if (e.target === currentScreen) {
-                    currentScreen.classList.remove('active', outClass);
-                    currentScreen.removeEventListener('animationend', handler);
-                    resolve();
-                }
+        if (currentScreen) {
+            currentScreen.classList.add(outClass);
+            currentScreen.addEventListener('animationend', () => {
+                currentScreen.classList.remove('active', outClass);
             }, { once: true });
-        }));
-    }
+        }
 
-    nextScreen.classList.add('active');
-    nextScreen.classList.add(inClass);
-    animationPromises.push(new Promise(resolve => {
-        nextScreen.addEventListener('animationend', function handler(e) {
-            if (e.target === nextScreen) {
-                nextScreen.classList.remove(inClass);
-                nextScreen.removeEventListener('animationend', handler);
-                resolve();
-            }
+        nextScreen.classList.add('active', inClass);
+        nextScreen.addEventListener('animationend', () => {
+            nextScreen.classList.remove(inClass);
+            state.isNavigating = false;
         }, { once: true });
-    }));
+    } else { // Use new logo transition for all other transitions
+        state.isNavigating = true;
+        const transitionOverlay = document.getElementById('transition-overlay');
+        const transitionLogo = document.getElementById('transition-logo');
 
-    Promise.all(animationPromises).then(() => {
-        state.isNavigating = false;
-    });
+        const sequence = async () => {
+            transitionOverlay.style.display = 'grid';
+
+            if (currentScreen) {
+                currentScreen.style.animation = 'screen-fade-out 0.3s ease-out forwards';
+                await new Promise(r => setTimeout(r, 300));
+                currentScreen.classList.remove('active');
+                currentScreen.style.animation = '';
+            }
+
+            transitionLogo.style.animation = 'logo-transition-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+            await new Promise(r => setTimeout(r, 400));
+            await new Promise(r => setTimeout(r, 200));
+            transitionLogo.style.animation = 'logo-transition-out 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+
+            nextScreen.style.opacity = 0;
+            nextScreen.classList.add('active');
+
+            await new Promise(r => setTimeout(r, 200));
+            nextScreen.style.animation = 'screen-fade-in 0.4s ease-in forwards';
+            await new Promise(r => setTimeout(r, 400));
+
+            // Cleanup
+            transitionOverlay.style.display = 'none';
+            transitionLogo.style.animation = '';
+            nextScreen.style.animation = '';
+            nextScreen.style.opacity = '';
+            state.isNavigating = false;
+        };
+        sequence();
+    }
 
     state._activeScreen = screenId;
     dom.gameHeader.style.display = ['home', 'setup'].includes(screenId) ? 'none' : 'block';
@@ -681,7 +756,7 @@
     const inGame = ['pass', 'game', 'reveal', 'lastword', 'event'].includes(screenId);
     dom.btnNewWord.style.display = inGame ? 'inline-flex' : 'none';
     dom.btnShowMyCard.style.display = inGame ? 'inline-flex' : 'none';
-  }
+}
   window.show = show; // Expose for testing
 
   // ---------- MODAL SYSTEM ----------
