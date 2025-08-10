@@ -1326,7 +1326,7 @@
 
     startRound() {
         this.cleanup();
-        state.players.forEach(p => { p.votes = 0; p.hintGiven = false; p.doubleVote = false; p.silenced = false; p.amnesia = false; p.voteDisabled = false; });
+        state.players.forEach(p => { p.votes = 0; p.hintGiven = false; p.doubleVote = false; p.silenced = false; p.amnesia = false; p.voteDisabled = false; p.roundHints = []; });
         state.paranoia = false;
         state.tabooWord = null;
         this.votes = {};
@@ -1373,13 +1373,22 @@
         if (currentPlayer.isBot) {
             setTimeout(() => {
                 let hint = "Hmm...";
-                if (currentPlayer.role === 'civil') {
-                    const hints = state.wordPair.hintsA || ["Civil"];
-                    hint = hints[rand(hints.length)];
-                } else if (currentPlayer.role === 'undercover') {
-                    const hints = state.wordPair.hintsB || ["Undercover"];
-                    hint = hints[rand(hints.length)];
+                const myHints = currentPlayer.role === 'civil' ? (state.wordPair.hintsA || []) : (state.wordPair.hintsB || []);
+                const allGivenHints = state.players.flatMap(p => p.roundHints || []);
+
+                let availableHints = myHints.filter(h => !allGivenHints.includes(h));
+                if (availableHints.length === 0 && myHints.length > 0) {
+                    // If all unique hints are used, just pick a random one from the original list
+                    availableHints = myHints;
                 }
+
+                if (availableHints.length > 0) {
+                    hint = availableHints[rand(availableHints.length)];
+                } else {
+                    // Fallback if no hints are defined
+                    hint = currentPlayer.role === 'civil' ? "Piste" : "Indice";
+                }
+
                 this.processHint(currentPlayer, hint);
             }, rand(2000) + 1000);
         } else {
@@ -1441,6 +1450,7 @@
     processHint(player, hint) {
         if (this.timerId) clearInterval(this.timerId);
         player.hintGiven = true;
+        player.roundHints.push(hint);
 
         if (state.tabooWord && hint.toLowerCase().includes(state.tabooWord)) {
             showModal({title: "Mot Tabou !", message: `<b>${player.name}</b> a utilisé le mot tabou ! En pénélité, son vote sera annulé ce tour.`});
@@ -1577,8 +1587,14 @@
 
         alive().filter(p => p.isBot).forEach(bot => {
             if(!this.votes[bot.id]) {
-                const targets = alive().filter(p => p.id !== bot.id);
-                if (targets.length > 0) this.votes[bot.id] = { targetId: targets[rand(targets.length)].id, isDouble: false };
+                const targetId = this.getBotVote(bot);
+                if (targetId) {
+                    this.votes[bot.id] = { targetId: targetId, isDouble: !!bot.doubleVote };
+                } else {
+                    // Fallback just in case getBotVote returns null
+                    const targets = alive().filter(p => p.id !== bot.id);
+                    if (targets.length > 0) this.votes[bot.id] = { targetId: targets[rand(targets.length)].id, isDouble: !!bot.doubleVote };
+                }
             }
         });
         
@@ -1614,6 +1630,63 @@
         }
     }
   }
+
+  GameController.prototype.getBotVote = function(bot) {
+    const targets = alive().filter(p => p.id !== bot.id);
+    if (targets.length === 0) return null;
+
+    const civilHints = state.wordPair.hintsA || [];
+    const undercoverHints = state.wordPair.hintsB || [];
+
+    let suspects = [];
+    let allies = []; // Players who seem to be on the same team
+
+    if (bot.role === 'civil') {
+        // Civil bot logic
+        targets.forEach(p => {
+            const p_hints = p.roundHints || [];
+            if (p_hints.some(h => undercoverHints.includes(h))) {
+                suspects.push(p); // This player gave a hint for the undercover word
+            } else if (p_hints.some(h => civilHints.includes(h))) {
+                allies.push(p); // This player gave a hint for the civil word
+            }
+        });
+
+        if (suspects.length > 0) {
+            // Vote for a suspect
+            return suspects[rand(suspects.length)].id;
+        }
+        // No clear suspects, vote for someone who is not a clear ally
+        const nonAllies = targets.filter(t => !allies.map(a => a.id).includes(t.id));
+        if (nonAllies.length > 0) {
+            return nonAllies[rand(nonAllies.length)].id;
+        }
+
+    } else if (bot.role === 'undercover') {
+        // Undercover bot logic
+        targets.forEach(p => {
+            const p_hints = p.roundHints || [];
+            if (p_hints.some(h => civilHints.includes(h))) {
+                suspects.push(p); // This player gave a hint for the civil word, so they are a target
+            } else if (p_hints.some(h => undercoverHints.includes(h))) {
+                allies.push(p); // This player gave a hint for the undercover word
+            }
+        });
+
+        if (suspects.length > 0) {
+            // Vote for a "suspect" (a civil)
+            return suspects[rand(suspects.length)].id;
+        }
+        // No clear civils to vote for, vote for someone who is not a clear ally
+        const nonAllies = targets.filter(t => !allies.map(a => a.id).includes(t.id));
+        if (nonAllies.length > 0) {
+            return nonAllies[rand(nonAllies.length)].id;
+        }
+    }
+
+    // Fallback for all cases: vote for a random player
+    return targets[rand(targets.length)].id;
+  };
 
   // ---------- INITIALIZATION ----------
   function init() {
