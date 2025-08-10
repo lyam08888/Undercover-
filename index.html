@@ -2246,7 +2246,11 @@
                     hint = currentPlayer.role === 'civil' ? "Piste" : "Indice";
                 }
 
-                this.processHint(currentPlayer, hint);
+                if (state.settings.communicationMode === 'oral') {
+                    this.processHint(currentPlayer, "(Le bot a donné son indice)");
+                } else {
+                    this.processHint(currentPlayer, hint);
+                }
             }, rand(2000) + 1000);
         } else {
             const hintBtn = document.createElement('button');
