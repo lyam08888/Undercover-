@@ -828,6 +828,7 @@
             button.style.flex = 1;
             button.style.animation = `fadeInUp .4s ${150 + i * 60}ms both`;
             button.onclick = () => {
+                sounds.click();
                 const inputValue = config.input ? dom.modalInput.value : null;
                 if (btnConfig.onClick) btnConfig.onClick(inputValue);
                 if (!config.preventClose) dom.modalTemplate.close();
@@ -840,33 +841,139 @@
   };
 
   // ---------- AUDIO & HAPTICS ----------
-  let audioCtx = null;
-  function initAudio(){ if(!audioCtx){ const Ctx = window.AudioContext || window.webkitAudioContext; if(Ctx){ audioCtx = new Ctx(); } } if(audioCtx && audioCtx.state==='suspended'){ audioCtx.resume(); } }
-  function beep(type='sine', freq=880, dur=0.1, vol=0.1){
-    if(!state.settings.sound || !audioCtx) return;
-    const t0 = audioCtx.currentTime;
-    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-    o.type=type; o.frequency.setValueAtTime(freq, t0);
-    g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.01);
-    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start(t0); o.stop(t0 + dur);
+  class AudioManager {
+    constructor(config) {
+      this.sounds = {};
+      this.audioCtx = null;
+      this.masterGain = null;
+      this.isInitialized = false;
+      this.soundConfigs = config;
+      this.activeLoop = null; // To keep track of the looping sound
+    }
+
+    init() {
+      if (this.isInitialized) return;
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) {
+          this.audioCtx = new Ctx();
+          this.masterGain = this.audioCtx.createGain();
+          this.masterGain.gain.value = 1;
+          this.masterGain.connect(this.audioCtx.destination);
+          this.isInitialized = true;
+          this.preload();
+        }
+      } catch (e) {
+        console.error("Web Audio API is not supported in this browser.");
+      }
+    }
+
+    // Must be called after a user interaction
+    resumeContext() {
+      if (this.audioCtx && this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume();
+      }
+    }
+
+    preload() {
+      if (!this.isInitialized) return;
+      Object.entries(this.soundConfigs).forEach(([key, path]) => {
+        // We will load sounds on demand for now, but preloading can be done here
+        // For simplicity, we'll just store the path
+        this.sounds[key] = { path: path, buffer: null };
+      });
+    }
+
+    async loadSound(key) {
+        if (!this.sounds[key] || this.sounds[key].buffer) {
+            return; // Already loaded or invalid key
+        }
+        try {
+            const response = await fetch(this.sounds[key].path);
+            const arrayBuffer = await response.arrayBuffer();
+            this.sounds[key].buffer = await this.audioCtx.decodeAudioData(arrayBuffer);
+        } catch (e) {
+            console.error(`Failed to load sound: ${key}`, e);
+        }
+    }
+
+    play(key, loop = false) {
+      if (!state.settings.sound || !this.isInitialized) return;
+      this.resumeContext();
+
+      const sound = this.sounds[key];
+      if (!sound) return;
+
+      const playSound = () => {
+        const source = this.audioCtx.createBufferSource();
+        source.buffer = sound.buffer;
+        source.connect(this.masterGain);
+        source.loop = loop;
+        source.start(0);
+
+        if (loop) {
+            if (this.activeLoop) {
+                this.activeLoop.stop();
+            }
+            this.activeLoop = source;
+        }
+      };
+
+      if (sound.buffer) {
+          playSound();
+      } else {
+          this.loadSound(key).then(() => {
+              if (sound.buffer) playSound();
+          });
+      }
+    }
+
+    stopLoop() {
+        if (this.activeLoop) {
+            this.activeLoop.stop();
+            this.activeLoop = null;
+        }
+    }
   }
+
+  // Placeholder sound paths from Kenney.nl. User can replace these files.
+  const soundConfig = {
+    'launch': 'assets/launch.ogg',
+    'click': 'assets/click.ogg',
+    'flip': 'assets/flip.ogg',
+    'event': 'assets/event.ogg',
+    'timer': 'assets/timer.ogg',
+    'win': 'assets/win.ogg',
+    'lose': 'assets/lose.ogg',
+    'eliminate': 'assets/eliminate.ogg'
+  };
+
+  const audioManager = new AudioManager(soundConfig);
+
+  // The old 'sounds' object is now replaced by calls to audioManager
+  const sounds = {
+    click: ()=> audioManager.play('click'),
+    flip: ()=> { audioManager.play('flip'); haptic('light'); },
+    start: ()=> audioManager.play('launch'),
+    eliminate: ()=> { audioManager.play('eliminate'); haptic('heavy'); },
+    win: ()=> audioManager.play('win'),
+    lose: ()=> audioManager.play('lose'),
+    tick: (fast=false)=> { if (fast && !audioManager.activeLoop) audioManager.play('timer', true); },
+    event: ()=> audioManager.play('event')
+  };
+
+  function initAudio() {
+    if (!audioManager.isInitialized) {
+      audioManager.init();
+    }
+    audioManager.resumeContext();
+  }
+
   function haptic(type = 'light') {
     if (navigator.vibrate) {
         navigator.vibrate(type === 'heavy' ? [50] : [20]);
     }
   }
-  const sounds = {
-    click: ()=> { beep('sine', 1200, 0.06); },
-    flip: ()=> { beep('sine', 900, 0.08); haptic('light'); },
-    start: ()=> { beep('sine', 740, 0.1); haptic('heavy'); },
-    eliminate: ()=> { beep('sawtooth', 420, 0.15, 0.08); haptic('heavy'); },
-    win: ()=> { beep('sine', 740, 0.1); setTimeout(()=>beep('sine', 880, 0.1),120); setTimeout(()=>beep('sine', 1046, 0.1),250); },
-    lose: ()=> { beep('sine', 440, 0.1); setTimeout(()=>beep('sine', 330, 0.1),120); },
-    tick: (fast=false)=> { if (!fast) beep('sine', 1000, 0.05, 0.05); },
-    event: ()=> { beep('sawtooth', 1500, 0.05); setTimeout(()=>beep('sawtooth', 1800, 0.1), 80); }
-  };
 
   // ---------- IMAGE & AVATAR ----------
   function fileToDataURL(file, maxW=520, maxH=520){
@@ -1044,10 +1151,10 @@
         renderPlayerSetup();
     };
 
-    dom.minus.onclick = ()=>{ state.settings.playerCount = clamp(state.settings.playerCount - 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
-    dom.plus.onclick  = ()=>{ state.settings.playerCount = clamp(state.settings.playerCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
-    dom.minusBot.onclick = ()=>{ state.settings.botCount = clamp(state.settings.botCount - 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
-    dom.plusBot.onclick  = ()=>{ state.settings.botCount = clamp(state.settings.botCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
+    dom.minus.onclick = ()=>{ sounds.click(); state.settings.playerCount = clamp(state.settings.playerCount - 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
+    dom.plus.onclick  = ()=>{ sounds.click(); state.settings.playerCount = clamp(state.settings.playerCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
+    dom.minusBot.onclick = ()=>{ sounds.click(); state.settings.botCount = clamp(state.settings.botCount - 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
+    dom.plusBot.onclick  = ()=>{ sounds.click(); state.settings.botCount = clamp(state.settings.botCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
 
     ['sound', 'innocent', 'jester', 'agentBlanc'].forEach(key => {
         const domKey = `option${key.charAt(0).toUpperCase() + key.slice(1)}`;
@@ -1055,7 +1162,8 @@
         if (!el) return;
         el.onclick = () => {
             state.settings[key] = !state.settings[key];
-            if(key==='sound' && state.settings.sound) { initAudio(); sounds.click(); }
+            if(key==='sound' && state.settings.sound) { initAudio(); }
+            sounds.click();
             updateOptionCards();
         };
     });
@@ -1064,6 +1172,7 @@
         const modeEl = dom[domKey];
         if (modeEl) {
             modeEl.onclick = () => {
+                sounds.click();
                 state.settings.gameMode = mode;
                 updateOptionCards();
             };
@@ -1384,7 +1493,7 @@
               const backBtn = document.createElement('button');
               backBtn.className = 'btn ghost';
               backBtn.textContent = '← Précédent';
-              backBtn.onclick = () => showSetupStep(state.setupStep - 1, 'backward');
+              backBtn.onclick = () => { sounds.click(); showSetupStep(state.setupStep - 1, 'backward'); };
               backBtn.style.animation = `fadeInUp .4s ${i * 60}ms both`;
               i++;
               bar.appendChild(backBtn);
@@ -1393,7 +1502,7 @@
           nextBtn.className = 'btn';
           if (state.setupStep < 5) {
               nextBtn.textContent = 'Suivant →';
-              nextBtn.onclick = () => showSetupStep(state.setupStep + 1, 'forward');
+              nextBtn.onclick = () => { sounds.click(); showSetupStep(state.setupStep + 1, 'forward'); };
           } else {
               nextBtn.textContent = 'Lancer la mission';
               nextBtn.onclick = () => startGame(false);
@@ -1553,6 +1662,7 @@
     cleanup() {
         if (this.timerId) clearInterval(this.timerId);
         this.timerId = null;
+        audioManager.stopLoop();
         dom.actionBar.innerHTML = '';
         dom.actionBar.classList.remove('visible');
     }
