@@ -645,7 +645,7 @@
                     currentScreen.removeEventListener('animationend', handler);
                     resolve();
                 }
-            });
+            }, { once: true });
         }));
     }
 
@@ -658,7 +658,7 @@
                 nextScreen.removeEventListener('animationend', handler);
                 resolve();
             }
-        });
+        }, { once: true });
     }));
 
     Promise.all(animationPromises).then(() => {
