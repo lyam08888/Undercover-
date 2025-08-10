@@ -566,8 +566,8 @@
                 </div>
             </div>
         </div>
-        <!-- Step 5: Special Roles -->
-        <div class="setup-step" data-step="5">
+        <!-- Step 6: Special Roles -->
+        <div class="setup-step" data-step="6">
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2-3.5 3.5 3.5 3.5 3.5-3.5Z"/><path d="m2 12 3.5 3.5 3.5-3.5-3.5-3.5Z"/><path d="m12 22 3.5-3.5-3.5-3.5-3.5 3.5Z"/><path d="M22 12 18.5 8.5 15 12l3.5 3.5Z"/></svg>Rôles Spéciaux</h1>
                 <div id="special-roles-container" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
@@ -581,8 +581,8 @@
                 </div>
             </div>
         </div>
-        <!-- Step 6: Players -->
-        <div class="setup-step" data-step="6">
+        <!-- Step 7: Players -->
+        <div class="setup-step" data-step="7">
             <div class="card">
                 <h1 style="font-size: 1.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Agents Humains</h1>
                 <div id="playersSetup" class="players" style="flex: 1; overflow-y: auto;"></div>
@@ -1329,7 +1329,7 @@
   // ---------- SETUP ----------
   function showSetupStep(step, direction = 'forward') {
     const fromStep = state.setupStep;
-    const toStep = clamp(step, 1, 6);
+    const toStep = clamp(step, 1, 7);
     if (fromStep === toStep || state.isNavigating) return;
 
     state.isNavigating = true;
@@ -2102,7 +2102,7 @@
           }
           const nextBtn = document.createElement('button');
           nextBtn.className = 'btn';
-          if (state.setupStep < 6) {
+          if (state.setupStep < 7) {
               nextBtn.textContent = 'Suivant →';
               nextBtn.onclick = () => { sounds.click(); showSetupStep(state.setupStep + 1, 'forward'); };
           } else {
