@@ -444,6 +444,8 @@
                     <div id="mode-fast" class="option-card"><div class="icon">⏱️</div><div class="label">Rapide</div><div class="value">Timers courts</div></div>
                     <div id="mode-mystery" class="option-card"><div class="icon">🕵️</div><div class="label">Mystère</div><div class="value">Rôles cachés</div></div>
                     <div id="mode-folie" class="option-card"><div class="icon">🤪</div><div class="label">Folie</div><div class="value">Vitesse & Événements</div></div>
+                    <div id="mode-traitre" class="option-card"><div class="icon">😈</div><div class="label">Traître</div><div class="value">Un civil gagnant seul</div></div>
+                    <div id="mode-double" class="option-card"><div class="icon">🎭</div><div class="label">Espion Double</div><div class="value">Change de camp</div></div>
                 </div>
             </div>
         </div>
@@ -471,6 +473,8 @@
                     <div id="option-innocent" class="option-card"><div class="icon">😇</div><div class="label">Innocent</div><div class="value">Désactivé</div></div>
                     <div id="option-jester" class="option-card"><div class="icon">🃏</div><div class="label">Jester</div><div class="value">Désactivé</div></div>
                     <div id="option-agent-blanc" class="option-card"><div class="icon">🕵️</div><div class="label">Agent Blanc</div><div class="value">Désactivé</div></div>
+                    <div id="option-traitre" class="option-card"><div class="icon">😈</div><div class="label">Traître</div><div class="value">Désactivé</div></div>
+                    <div id="option-double" class="option-card"><div class="icon">🎭</div><div class="label">Espion Double</div><div class="value">Désactivé</div></div>
                 </div>
             </div>
         </div>
@@ -665,6 +669,26 @@
       {a:"Socrate", b:"Platon", hintsA:["maïeutique", "dialogue", "ciguë"], hintsB:["allégorie", "caverne", "académie"]},
       {a:"Descartes", b:"Pascal", hintsA:["doute", "cogito", "méthode"], hintsB:["pari", "pensées", "roseau"]},
       {a:"Kant", b:"Nietzsche", hintsA:["impératif", "catégorique", "critique"], hintsB:["surhomme", "éternel retour", "zarathoustra"]},
+    ],
+    "Objets Insolites": [
+      {a:"Canard en caoutchouc", b:"Nain de jardin", hintsA:["bain", "flotte", "coin coin"], hintsB:["pelouse", "barbe", "chapeau pointu"]},
+      {a:"Boule à neige", b:"Pantin", hintsA:["souvenir", "secouer", "hiver"], hintsB:["marionnette", "fils", "bois"]},
+      {a:"Sablier", b:"Boussole", hintsA:["temps", "sable", "écoulement"], hintsB:["direction", "nord", "magnétique"]},
+    ],
+    "Films de Série B": [
+      {a:"Sharknado", b:"Le Blob", hintsA:["requin", "tornade", "catastrophe"], hintsB:["gelée", "extraterrestre", "dévore"]},
+      {a:"Plan 9 from Outer Space", b:"Mars Attacks!", hintsA:["aliens", "zombies", "pire film"], hintsB:["martiens", "humour noir", "lasers"]},
+      {a:"L'Attaque de la moussaka géante", b:"Killer Klowns from Outer Space", hintsA:["plat grec", "monstre", "absurde"], hintsB:["clowns", "tueurs", "espace"]},
+    ],
+    "Mythologie Urbaine": [
+      {a:"Bigfoot", b:"Monstre du Loch Ness", hintsA:["forêt", "singe", "empreinte"], hintsB:["lac", "écosse", "long cou"]},
+      {a:"Chupacabra", b:"Mothman", hintsA:["chèvre", "sang", "amérique latine"], hintsB:["ailes", "yeux rouges", "papillon"]},
+      {a:"Zone 51", b:"Triangle des Bermudes", hintsA:["désert", "ovni", "secret"], hintsB:["océan", "disparition", "navires"]},
+    ],
+    "Conflits Historiques": [
+      {a:"Guerre de Troie", b:"Guerres Médiques", hintsA:["cheval", "hélène", "achille"], hintsB:["perse", "marathon", "sparte"]},
+      {a:"Guerre des Deux-Roses", b:"Guerre de Cent Ans", hintsA:["angleterre", "lancastre", "york"], hintsB:["france", "jeanne d'arc", "longue"]},
+      {a:"Révolution française", b:"Révolution américaine", hintsA:["bastille", "guillotine", "louis xvi"], hintsB:["indépendance", "boston", "washington"]},
     ]
   };
   const RANDOM_AGENT_NAMES = ["Spectre", "Vipère", "Corbeau", "Ombre", "Fantôme", "Loup", "Cobra", "Phénix", "Tigre", "Faucon", "Mirage", "Zodiac"];
@@ -679,7 +703,7 @@
     "En mode Révolution, préparez-vous à tout ! Les rôles peuvent changer à tout moment.",
     "N'ayez pas peur de voter contre quelqu'un qui semble sûr de lui, c'est peut-être une tactique !"
   ];
-  const THEME_ICONS = { "Culture Pop": "🍿", "Vie Quotidienne": "🏠", "Gastronomie": "🍔", "Culture G & Arts": "🎨", "Lieux & Voyages": "✈️", "Animaux & Nature": "🐾", "Science & Tech": "🔬", "Sport": "⚽", "Culture Algérienne": "🇩🇿", "Mots Piégés & Absurdes": "🤪", "Histoire & Mythologie": "📜", "Marques Célèbres": "®️", "Corps Humain": "🧬", "Super-Héros & Vilains": "🦸", "Expressions Françaises": "🗣️", "Philosophie": "🤔", "random": "🎲" };
+  const THEME_ICONS = { "Culture Pop": "🍿", "Vie Quotidienne": "🏠", "Gastronomie": "🍔", "Culture G & Arts": "🎨", "Lieux & Voyages": "✈️", "Animaux & Nature": "🐾", "Science & Tech": "🔬", "Sport": "⚽", "Culture Algérienne": "🇩🇿", "Mots Piégés & Absurdes": "🤪", "Histoire & Mythologie": "📜", "Marques Célèbres": "®️", "Corps Humain": "🧬", "Super-Héros & Vilains": "🦸", "Expressions Françaises": "🗣️", "Philosophie": "🤔", "Objets Insolites": "🧸", "Films de Série B": "🎬", "Mythologie Urbaine": "🏙️", "Conflits Historiques": "⚔️", "random": "🎲" };
   const THEME_DESCRIPTIONS = {
     "Culture Pop": "Films, séries, jeux... Testez votre culture geek et populaire.",
     "Vie Quotidienne": "Des objets et situations de tous les jours. L'ordinaire devient suspect.",
@@ -697,6 +721,10 @@
     "Super-Héros & Vilains": "Incarnez les plus grands héros et leurs pires ennemis. Le bien triomphera-t-il ?",
     "Expressions Françaises": "Saurez-vous déjouer les pièges de la langue française ? Un thème pour les amoureux des mots.",
     "Philosophie": "Pensez, donc bluffez. Un thème pour les esprits qui n'ont pas peur des grands concepts.",
+    "Objets Insolites": "Des objets étranges et merveilleux. La créativité est votre meilleure arme.",
+    "Films de Série B": "Des nanars et des chefs-d'œuvre du cinéma de genre. Pour les cinéphiles avertis.",
+    "Mythologie Urbaine": "Légendes urbaines et créatures mystérieuses. La vérité est ailleurs.",
+    "Conflits Historiques": "Revivez les grandes batailles et les révolutions qui ont façonné notre monde.",
     "random": "Laissez le destin choisir pour vous. Un thème surprise pour chaque partie."
   };
 
@@ -710,7 +738,8 @@
         theme: 'Culture Pop', 
         playerCount: 4, botCount: 0, 
         undercoverCount: 1, 
-        sound:false, innocent:false, jester: false, agentBlanc: false
+        sound:false, innocent:false, jester: false, agentBlanc: false,
+        traitre: false, doubleAgent: false
     },
     round: 1, distributionIndex: 0,
     lastEliminated: null, lastVotes: {}, lastSuspect: null,
@@ -724,8 +753,8 @@
     const ids = [
       'screen-home', 'screen-setup', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
       'theme-list', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
-      'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc',
-      'mode-classic', 'mode-dynamic', 'mode-revolution', 'mode-fast', 'mode-mystery', 'mode-folie',
+      'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc', 'option-traitre', 'option-double',
+      'mode-classic', 'mode-dynamic', 'mode-revolution', 'mode-fast', 'mode-mystery', 'mode-folie', 'mode-traitre', 'mode-double',
       'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header', 'home-sound-toggle',
       'turn-display', 'game-content-area', 'lastword-prompt', 'lastword-grid',
       'event-icon', 'event-title', 'event-description',
@@ -1126,7 +1155,7 @@
     renderPlayerSetup();
     
     const updateOptionCards = () => {
-        ['sound', 'innocent', 'jester', 'agentBlanc'].forEach(key => {
+        ['sound', 'innocent', 'jester', 'agentBlanc', 'traitre', 'doubleAgent'].forEach(key => {
             // Correctly constructs dom property name like 'optionInnocent' or 'optionAgentBlanc'
             const domKey = `option${key.charAt(0).toUpperCase() + key.slice(1)}`;
             const el = dom[domKey];
@@ -1134,7 +1163,7 @@
             el.classList.toggle('active', state.settings[key]);
             el.querySelector('.value').textContent = state.settings[key] ? 'Activé' : 'Désactivé';
         });
-        ['classic', 'dynamic', 'revolution', 'fast', 'mystery', 'folie'].forEach(mode => {
+        ['classic', 'dynamic', 'revolution', 'fast', 'mystery', 'folie', 'traitre', 'double'].forEach(mode => {
             const domKey = `mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
             if(dom[domKey]) dom[domKey].classList.toggle('active', state.settings.gameMode === mode);
         });
@@ -1165,7 +1194,7 @@
     dom.minusBot.onclick = ()=>{ sounds.click(); state.settings.botCount = clamp(state.settings.botCount - 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
     dom.plusBot.onclick  = ()=>{ sounds.click(); state.settings.botCount = clamp(state.settings.botCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
 
-    ['sound', 'innocent', 'jester', 'agentBlanc'].forEach(key => {
+    ['sound', 'innocent', 'jester', 'agentBlanc', 'traitre', 'doubleAgent'].forEach(key => {
         const domKey = `option${key.charAt(0).toUpperCase() + key.slice(1)}`;
         const el = dom[domKey];
         if (!el) return;
@@ -1176,7 +1205,7 @@
             updateOptionCards();
         };
     });
-    ['classic', 'dynamic', 'revolution', 'fast', 'mystery', 'folie'].forEach(mode => {
+    ['classic', 'dynamic', 'revolution', 'fast', 'mystery', 'folie', 'traitre', 'double'].forEach(mode => {
         const domKey = `mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
         const modeEl = dom[domKey];
         if (modeEl) {
@@ -1204,7 +1233,9 @@
     const I = (n < 3) ? 0 : (innocent ? 1 : 0);
     const J = (n < 4) ? 0 : (jester ? 1 : 0);
     const AB = (n < 4) ? 0 : (agentBlanc ? 1 : 0);
-    const civils = n - U - I - J - AB;
+    const T = (n < 4) ? 0 : (state.settings.traitre ? 1 : 0);
+    const DA = (n < 5) ? 0 : (state.settings.doubleAgent ? 1 : 0);
+    const civils = n - U - I - J - AB - T - DA;
 
     if (civils < 1){ showModal({title:"Configuration invalide", message:"Configuration de rôles impossible. Essayez avec plus de joueurs ou moins de rôles spéciaux.", buttons:[{text:"OK"}]}); return; }
     
@@ -1244,6 +1275,8 @@
     if(I === 1 && p_ids.length > assigned_roles){ const p = byId(p_ids[assigned_roles]); p.role='innocent'; p.word = "???"; assigned_roles++; }
     if(J === 1 && p_ids.length > assigned_roles){ const p = byId(p_ids[assigned_roles]); p.role='jester'; p.word = "???"; assigned_roles++; }
     if(AB === 1 && p_ids.length > assigned_roles){ const p = byId(p_ids[assigned_roles]); p.role='agentBlanc'; p.word = "???"; assigned_roles++; }
+    if(T === 1 && p_ids.length > assigned_roles){ const p = byId(p_ids[assigned_roles]); p.role='traitre'; p.word = state.wordPair.a; assigned_roles++; }
+    if(DA === 1 && p_ids.length > assigned_roles){ const p = byId(p_ids[assigned_roles]); p.role='doubleAgent'; p.word = state.wordPair.b; p.originalRole = 'undercover'; assigned_roles++; }
     state.players.forEach(p => {
         if (!p.role) { p.role = 'civil'; p.word = state.wordPair.a; }
     });
@@ -1269,6 +1302,10 @@
         dom.secretWord.textContent = "Vous êtes le Jester";
     } else if (player.role === 'agentBlanc') {
         dom.secretWord.textContent = "Vous êtes l'Agent Blanc";
+    } else if (player.role === 'traitre') {
+        dom.secretWord.textContent = `Traître: ${player.word}`;
+    } else if (player.role === 'doubleAgent') {
+        dom.secretWord.textContent = `Double Agent: ${player.word}`;
     } else {
         dom.secretWord.textContent = player.word || "—";
     }
@@ -1331,6 +1368,8 @@
         if(player.role === 'innocent') roleText = 'Rôle : Innocent';
         if(player.role === 'jester') roleText = 'Rôle : Jester';
         if(player.role === 'agentBlanc') roleText = 'Rôle : Agent Blanc';
+        if(player.role === 'traitre') roleText = 'Rôle : Traître';
+        if(player.role === 'doubleAgent') roleText = 'Rôle : Espion Double';
         dom.roleBadge.textContent = roleText;
         dom.revealedWord.innerHTML = player.word && player.role !== 'innocent' ? `Mot : <b>${player.word}</b>` : `Ce joueur n'avait pas de mot.`;
     }
@@ -1346,6 +1385,12 @@
     }
     if (player.role === 'jester') {
         endGame('jester');
+        return;
+    }
+    if (player.role === 'doubleAgent') {
+        player.role = player.originalRole === 'undercover' ? 'civil' : 'undercover';
+        player.word = player.role === 'civil' ? state.wordPair.a : state.wordPair.b;
+        showModal({title: "L'Espion Double a changé de camp !", message: `${player.name} est maintenant du côté des ${player.role === 'civil' ? 'Civils' : 'Undercovers'} !`, buttons:[{text:"Continuer", onClick: checkVictory }]});
         return;
     }
     if (player.role === 'innocent') {
@@ -1388,6 +1433,12 @@
     const u_alive = alive().filter(p => p.role === 'undercover');
     const ab_alive = alive().filter(p => p.role === 'agentBlanc');
     const non_undercovers_alive = alive().filter(p => p.role !== 'undercover');
+    const traitre_alive = alive().find(p => p.role === 'traitre');
+
+    if (traitre_alive && alive().length === 2 && u_alive.length === 0) {
+        endGame('traitre');
+        return;
+    }
 
     // Undercover win condition
     if(u_alive.length >= non_undercovers_alive.length){
@@ -1432,6 +1483,7 @@
     else if(winner==='innocent'){ banner='Victoire de l\'Innocent !'; detail='Il a deviné le mot des civils !'; sounds.win(); }
     else if(winner==='jester'){ banner='Victoire du Jester !'; detail='Le Jester a réussi à se faire éliminer !'; sounds.win(); }
     else if(winner==='agentBlanc'){ banner='Victoire de l\'Agent Blanc !'; detail='L\'Agent Blanc a démasqué les Civils !'; sounds.win(); }
+    else if(winner==='traitre'){ banner='Victoire du Traître !'; detail='Le Traître a éliminé tous les autres.'; sounds.win(); }
     else { banner='Victoire des Undercover !'; detail='Ils ont atteint la parité ou sont les derniers en lice.'; sounds.lose(); }
     
     dom.winnerBanner.innerHTML = banner;
@@ -1440,11 +1492,15 @@
     const innocent = state.players.find(p=>p.role==='innocent');
     const jester = state.players.find(p=>p.role==='jester');
     const agentBlanc = state.players.find(p=>p.role==='agentBlanc');
+    const traitre = state.players.find(p=>p.role==='traitre');
+    const doubleAgent = state.players.find(p=>p.role==='doubleAgent');
     
     let summaryHtml = `${detail}<br><br><b>Civils (${state.wordPair.a})</b>: ${civils || 'aucun'}<br><b>Undercover (${state.wordPair.b})</b>: ${undercovers || 'aucun'}`;
     if (innocent) summaryHtml += `<br><b>Innocent</b>: ${innocent.name}`;
     if (jester) summaryHtml += `<br><b>Jester</b>: ${jester.name}`;
     if (agentBlanc) summaryHtml += `<br><b>Agent Blanc</b>: ${agentBlanc.name}`;
+    if (traitre) summaryHtml += `<br><b>Traître</b>: ${traitre.name}`;
+    if (doubleAgent) summaryHtml += `<br><b>Espion Double</b>: ${doubleAgent.name}`;
 
     dom.summary.innerHTML = summaryHtml;
     
