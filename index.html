@@ -381,6 +381,64 @@
     to { opacity: 1; }
   }
 
+  /* Summary Screen */
+  .summary-card {
+    background: var(--surface);
+    border-radius: var(--r);
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    width: 100%;
+  }
+  .summary-card h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+  .summary-card p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .summary-card .icon {
+    font-size: 1.5rem;
+  }
+  .roles-pills, .player-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+  .role-pill, .player-pill {
+    background: var(--bg);
+    padding: .4rem .8rem;
+    border-radius: 1rem;
+    font-size: .85rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+  }
+  .player-pill {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .player-pill .avatar {
+    width: 24px;
+    height: 24px;
+    font-size: .8rem;
+  }
+
+  /* Summary Animation */
+  #screen-summary.active #summary-title { animation: fadeInUp .5s .2s both; }
+  #screen-summary.active #summary-grid { animation: fadeInUp .5s .4s both; }
+  #screen-summary.active #summary-roles { animation: fadeInUp .5s .6s both; }
+  #screen-summary.active #summary-players { animation: fadeInUp .5s .8s both; }
+  #screen-summary.active #summary-countdown { animation: fadeInUp .5s 1s both; }
+
   @media (min-width: 501px) {
     .app {
       max-width: 480px;
@@ -497,6 +555,36 @@
                 <h1 style="font-size: 1.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Agents Humains</h1>
                 <div id="playersSetup" class="players" style="flex: 1; overflow-y: auto;"></div>
             </div>
+        </div>
+    </section>
+
+    <!-- SUMMARY -->
+    <section id="screen-summary" class="screen">
+        <div class="center" style="justify-content: flex-start; text-align: left; padding: 2rem 1.5rem; gap: 1.25rem; overflow-y: auto;">
+            <h1 id="summary-title" style="text-align: center; width: 100%; font-size: 1.75rem;">Récapitulatif de la Mission</h1>
+
+            <div id="summary-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%;">
+                <div id="summary-mode" class="summary-card">
+                    <h3>Mode de Jeu</h3>
+                    <p><span class="icon"></span> <span class="label"></span></p>
+                </div>
+                <div id="summary-theme" class="summary-card">
+                    <h3>Thème</h3>
+                    <p><span class="icon"></span> <span class="label"></span></p>
+                </div>
+            </div>
+
+            <div id="summary-roles" class="summary-card" style="width: 100%;">
+                <h3>Rôles Spéciaux Actifs</h3>
+                <div class="roles-pills"></div>
+            </div>
+
+            <div id="summary-players" class="summary-card" style="width: 100%;">
+                <h3>Agents Participants</h3>
+                <div class="player-list"></div>
+            </div>
+
+            <p id="summary-countdown" class="hint" style="text-align: center; width: 100%; margin-top: auto; padding-top: 1rem;">La mission commence dans 5...</p>
         </div>
     </section>
 
@@ -764,7 +852,8 @@
 
   const getDOMElements = () => {
     const ids = [
-      'screen-home', 'screen-intro', 'screen-setup', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
+      'screen-home', 'screen-intro', 'screen-setup', 'screen-summary', 'screen-pass', 'screen-game', 'screen-reveal', 'screen-end', 'screen-lastword', 'screen-event',
+      'summary-title', 'summary-grid', 'summary-mode', 'summary-theme', 'summary-roles', 'summary-players', 'summary-countdown',
       'intro-text-container', 'intro-text', 'intro-buttons', 'intro-continue-btn', 'intro-skip-btn',
       'theme-list', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
       'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc', 'option-traitre', 'option-double',
@@ -778,7 +867,7 @@
     ];
     ids.forEach(id => dom[id.replace(/-(\w)/g, (m, g) => g.toUpperCase())] = document.getElementById(id));
     dom.screens = {
-        home: dom.screenHome, intro: dom.screenIntro, setup: dom.screenSetup, pass: dom.screenPass, game: dom.screenGame,
+        home: dom.screenHome, intro: dom.screenIntro, setup: dom.screenSetup, summary: dom.screenSummary, pass: dom.screenPass, game: dom.screenGame,
         reveal: dom.screenReveal, end: dom.screenEnd, lastword: dom.screenLastword, event: dom.screenEvent
     };
   };
@@ -1233,6 +1322,95 @@
   }
 
   // ---------- GAME FLOW ----------
+  function showSummary() {
+    // 1. Populate Mode
+    const modeEl = dom.summaryMode;
+    const modeData = {
+      classic: { icon: '☕', label: 'Classique' },
+      dynamic: { icon: '⚡', label: 'Dynamique' },
+      revolution: { icon: '💥', label: 'Révolution' },
+      fast: { icon: '⏱️', label: 'Rapide' },
+      mystery: { icon: '🕵️', label: 'Mystère' },
+      folie: { icon: '🤪', label: 'Folie' },
+      traitre: { icon: '😈', label: 'Traître' },
+      'double': { icon: '🎭', label: 'Espion Double' }
+    };
+    const currentMode = modeData[state.settings.gameMode] || { icon: '💥', label: state.settings.gameMode };
+    modeEl.querySelector('.icon').textContent = currentMode.icon;
+    modeEl.querySelector('.label').textContent = currentMode.label;
+
+    // 2. Populate Theme
+    const themeEl = dom.summaryTheme;
+    const themeName = state.settings.theme === 'random' ? 'Aléatoire' : state.settings.theme;
+    themeEl.querySelector('.icon').textContent = THEME_ICONS[state.settings.theme] || '✨';
+    themeEl.querySelector('.label').textContent = themeName;
+
+    // 3. Populate Special Roles
+    const rolesContainer = dom.summaryRoles.querySelector('.roles-pills');
+    rolesContainer.innerHTML = '';
+    const specialRoles = [
+      { key: 'innocent', name: 'Innocent 😇' },
+      { key: 'jester', name: 'Jester 🃏' },
+      { key: 'agentBlanc', name: 'Agent Blanc 🕵️' },
+      { key: 'traitre', name: 'Traître 😈' },
+      { key: 'doubleAgent', name: 'Espion Double 🎭' }
+    ];
+    let activeRolesCount = 0;
+    specialRoles.forEach(role => {
+      if (state.settings[role.key]) {
+        const pill = document.createElement('div');
+        pill.className = 'role-pill';
+        pill.textContent = role.name;
+        rolesContainer.appendChild(pill);
+        activeRolesCount++;
+      }
+    });
+
+    if (activeRolesCount === 0) {
+      dom.summaryRoles.style.display = 'none';
+    } else {
+      dom.summaryRoles.style.display = 'block';
+    }
+
+    // 4. Populate Players
+    const playersContainer = dom.summaryPlayers.querySelector('.player-list');
+    playersContainer.innerHTML = '';
+    state.players.forEach(player => {
+      const pill = document.createElement('div');
+      pill.className = 'player-pill';
+      pill.innerHTML = `${avatarHTML(player)} <span>${player.name || 'Agent Anonyme'}</span>`;
+      playersContainer.appendChild(pill);
+    });
+
+    // 5. Show the screen
+    show('summary');
+
+    // 6. Start countdown
+    let countdown = 5;
+    const countdownEl = dom.summaryCountdown;
+    let countdownInterval;
+
+    const updateCountdown = () => {
+        if (countdown > 0) {
+            countdownEl.textContent = `La mission commence dans ${countdown}...`;
+        } else {
+            countdownEl.textContent = 'Lancement !';
+            clearInterval(countdownInterval);
+            // 7. Transition to next screen
+            if (state.settings.playerCount > 0) {
+                show('pass');
+                renderRevealCard();
+            } else {
+                state._gameController.startRound();
+            }
+        }
+        countdown--;
+    };
+
+    updateCountdown(); // Initial call
+    countdownInterval = setInterval(updateCountdown, 1000);
+  }
+
   function startGame(isNewWord = false){
     const { playerCount, botCount, undercoverCount, agentBlanc, gameMode } = state.settings;
     let { innocent, jester } = state.settings; // Make them mutable
@@ -1297,12 +1475,7 @@
 
     state._gameController = new GameController();
     
-    if (playerCount > 0) {
-        show('pass');
-        renderRevealCard();
-    } else { 
-        state._gameController.startRound();
-    }
+    showSummary();
   }
 
   function renderRevealCard(){
