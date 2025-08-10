@@ -527,16 +527,35 @@
                 </div>
             </div>
         </div>
-        <!-- Step 3: Agents -->
+        <!-- Step 3: Communication -->
         <div class="setup-step" data-step="3">
+            <div class="card">
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg>Mode de Communication</h1>
+                <p class="hint" style="margin-top: 0.5rem; text-align: center;">Comment donnerez-vous vos indices ?</p>
+                <div class="setup-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; align-content: center; flex: 1; margin-top: 1rem;">
+                    <div id="option-comm-oral" class="option-card active">
+                        <div class="icon">🗣️</div>
+                        <div class="label">Oral</div>
+                        <div class="value">Indices parlés à voix haute.</div>
+                    </div>
+                    <div id="option-comm-ecrit" class="option-card">
+                        <div class="icon">✍️</div>
+                        <div class="label">Écrit</div>
+                        <div class="value">Indices saisis dans l'app.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Step 4: Agents -->
+        <div class="setup-step" data-step="4">
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Paramétrez les agents</h1>
                 <div class="row" style="margin-top:1rem"><div class="pill" style="flex:1.5"><span><b>Agents Humains</b> (0–12)</span><div class="numstep"><button id="minus" class="step-btn">−</button><div id="playerNum" class="counter">4</div><button id="plus" class="step-btn">+</button></div></div><div class="pill" style="flex:1"><span>Bots IA</span><div class="numstep"><button id="minusBot" class="step-btn">−</button><div id="botNum" class="counter">0</div><button id="plusBot" class="step-btn">+</button></div></div></div>
                 <p class="hint" style="margin-top: auto; text-align: center; padding-top: 1rem;">Le nombre total d'agents (humains + bots) doit être entre 3 et 12.</p>
             </div>
         </div>
-        <!-- Step 4: Options -->
-        <div class="setup-step" data-step="4">
+        <!-- Step 5: Options -->
+        <div class="setup-step" data-step="5">
             <div class="card">
                 <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Options & Rôles Spéciaux</h1>
                 <div id="special-roles-container" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
@@ -550,8 +569,8 @@
                 </div>
             </div>
         </div>
-        <!-- Step 5: Players -->
-        <div class="setup-step" data-step="5">
+        <!-- Step 6: Players -->
+        <div class="setup-step" data-step="6">
             <div class="card">
                 <h1 style="font-size: 1.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Agents Humains</h1>
                 <div id="playersSetup" class="players" style="flex: 1; overflow-y: auto;"></div>
@@ -938,7 +957,8 @@
     players: [], wordPair: null,
     settings: { 
         gameMode: 'dynamic', // classic, dynamic, revolution
-        theme: 'Culture Pop', 
+        theme: 'Culture Pop',
+        communicationMode: 'oral', // oral, ecrit
         playerCount: 4, botCount: 0, 
         undercoverCount: 1, 
         sound:false, innocent:false, jester: false, agentBlanc: false,
@@ -958,9 +978,10 @@
       'summary-title', 'summary-grid', 'summary-mode', 'summary-theme', 'summary-roles', 'summary-players', 'summary-countdown',
       'intro-text-container', 'intro-text', 'intro-buttons', 'intro-continue-btn', 'intro-skip-btn',
       'theme-select', 'theme-description', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
-      'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard',
-      'configure-roles-btn', 'configure-roles-label', 'options-description',
-      'game-mode-select', 'game-mode-description', 'btn-random-mode', 'btn-random-theme',
+
+      'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc', 'option-traitre', 'option-double',
+      'option-comm-oral', 'option-comm-ecrit',
+      'game-mode-select', 'game-mode-description',
       'currentName', 'revealCard', 'secretWord', 'start-game-btn', 'tips-btn', 'game-header', 'home-sound-toggle',
       'turn-display', 'game-content-area', 'lastword-prompt', 'lastword-grid',
       'event-icon', 'event-title', 'event-description',
@@ -1259,7 +1280,7 @@
   // ---------- SETUP ----------
   function showSetupStep(step, direction = 'forward') {
     const fromStep = state.setupStep;
-    const toStep = clamp(step, 1, 5);
+    const toStep = clamp(step, 1, 6);
     if (fromStep === toStep || state.isNavigating) return;
 
     state.isNavigating = true;
@@ -1557,6 +1578,38 @@
     dom.plus.onclick  = ()=>{ sounds.click(); state.settings.playerCount = clamp(state.settings.playerCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
     dom.minusBot.onclick = ()=>{ sounds.click(); state.settings.botCount = clamp(state.settings.botCount - 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
     dom.plusBot.onclick  = ()=>{ sounds.click(); state.settings.botCount = clamp(state.settings.botCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
+
+
+    ['sound', 'innocent', 'jester', 'agentBlanc', 'traitre', 'doubleAgent'].forEach(key => {
+        const domKey = `option${key.charAt(0).toUpperCase() + key.slice(1)}`;
+        const el = dom[domKey];
+        if (!el) return;
+        el.onclick = () => {
+            state.settings[key] = !state.settings[key];
+            if(key==='sound' && state.settings.sound) { initAudio(); }
+            sounds.click();
+            updateOptionCards();
+            if (key === 'sound') {
+              // Keep music in sync
+              dom.homeSoundToggle.textContent = state.settings.sound ? '🔊' : '🔇';
+              toggleBackgroundMusic();
+            }
+        };
+    });
+
+    dom.optionCommOral.onclick = () => {
+        sounds.click();
+        state.settings.communicationMode = 'oral';
+        dom.optionCommOral.classList.add('active');
+        dom.optionCommEcrit.classList.remove('active');
+    };
+    dom.optionCommEcrit.onclick = () => {
+        sounds.click();
+        state.settings.communicationMode = 'ecrit';
+        dom.optionCommEcrit.classList.add('active');
+        dom.optionCommOral.classList.remove('active');
+    };
+
   }
 
   // ---------- GAME FLOW ----------
@@ -2005,7 +2058,7 @@
           }
           const nextBtn = document.createElement('button');
           nextBtn.className = 'btn';
-          if (state.setupStep < 5) {
+          if (state.setupStep < 6) {
               nextBtn.textContent = 'Suivant →';
               nextBtn.onclick = () => { sounds.click(); showSetupStep(state.setupStep + 1, 'forward'); };
           } else {
@@ -2288,16 +2341,20 @@
                     hint = currentPlayer.role === 'civil' ? "Piste" : "Indice";
                 }
 
-                this.processHint(currentPlayer, hint);
+                if (state.settings.communicationMode === 'oral') {
+                    this.processHint(currentPlayer, "(Le bot a donné son indice)");
+                } else {
+                    this.processHint(currentPlayer, hint);
+                }
             }, rand(2000) + 1000);
         } else {
             const hintBtn = document.createElement('button');
             hintBtn.className = 'btn';
             
-            if (mode === 'classic' || state.settings.botCount === 0) {
+            if (state.settings.communicationMode === 'oral') {
                 hintBtn.textContent = "Indice Donné (oral)";
                 hintBtn.onclick = () => this.processHint(currentPlayer, "(oral)");
-            } else {
+            } else { // ecrit
                 hintBtn.textContent = "Donner l'indice";
                 if (currentPlayer.silenced) hintBtn.textContent = "Mimer l'indice";
                 hintBtn.onclick = () => {
