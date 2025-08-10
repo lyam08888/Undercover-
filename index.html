@@ -45,7 +45,7 @@
   }
   .app{
     width: 100%;
-    height: 100vh; /* Use viewport height to solve mobile screen issue */
+    height: 100dvh; /* Use dynamic viewport height to solve mobile screen issue */
     display:flex;
     flex-direction:column; 
     position: relative; 
@@ -65,7 +65,7 @@
   .screen.active{opacity:1; visibility:visible; pointer-events: auto; z-index: 2;}
   .screen.slide-out { animation: slideOut .3s ease-out forwards; }
   .screen.slide-in { animation: slideIn .3s ease-in forwards; }
-  .card{background:var(--surface); border-radius:var(--r); padding:1.2rem; border: 1px solid var(--border); animation: fadeInUp .4s .1s both; display: flex; flex-direction: column; flex: 1;}
+  .card{background:var(--surface); border-radius:var(--r); padding:1.2rem; border: 1px solid var(--border); animation: fadeInUp .4s .1s both; display: flex; flex-direction: column;}
   h1{font-size:1.5rem;margin:0 0 1rem 0; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 0.5rem;}
   h2{font-size:1.1rem;margin:1.5rem 0 .75rem 0;color:var(--muted); font-weight: 700;}
   .row{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap}
@@ -472,7 +472,7 @@
     <!-- HOME -->
     <section id="screen-home" class="screen active">
       <button id="home-sound-toggle" class="icon-btn">🔇</button>
-      <div class="center" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center; padding: 3rem 1rem;">
+      <div class="center" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 3rem 1rem; gap: 2.5rem;">
             <div class="title-container" style="position: relative; display: flex; flex-direction: column; align-items: center;">
               <div class="home-logo-container">
                 <svg id="home-logo" class="home-logo" viewBox="0 0 200 80" width="150">
@@ -510,7 +510,7 @@
         <!-- Step 1: Mode -->
         <div class="setup-step active" data-step="1">
             <div class="card">
-                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Mode de Jeu</h1>
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Mode de Jeu <button id="btn-random-mode" class="icon-btn" title="Mode aléatoire" style="font-size: 1.5rem; margin-left: auto;">🎲</button></h1>
                 <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
                     <select id="game-mode-select" class="input-like" style="width: 100%; padding: .75rem 1rem; font-size: 1rem; color:var(--ink); background:var(--bg); border:1px solid var(--border); border-radius:8px; outline:none; transition: all .2s ease; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e6edf3%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.6-3.6%205.4-7.9%205.4-12.9%200-5-1.9-9.4-5.4-12.7z%22/%3E%3C/svg%3E'); background-repeat: no-repeat, repeat; background-position: right .7em top 50%, 0 0; background-size: .65em auto, 100%;"></select>
                     <div id="game-mode-description" class="tip-box" style="text-align: left; min-height: 80px;"></div>
@@ -520,7 +520,7 @@
         <!-- Step 2: Mission -->
         <div class="setup-step" data-step="2">
             <div class="card">
-                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a2.4 2.4 0 0 1 3 0L8 20l3-3a2.4 2.4 0 0 1 3 0L19.5 20a2.4 2.4 0 0 1 0-3L17 15l3-3a2.4 2.4 0 0 0 0-3L15 4l-3 3a2.4 2.4 0 0 0-3 0L4 4a2.4 2.4 0 0 0 0 3l3 3-2.5 2.5a2.4 2.4 0 0 0 0 3Z"/></svg>Choisissez un thème</h1>
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a2.4 2.4 0 0 1 3 0L8 20l3-3a2.4 2.4 0 0 1 3 0L19.5 20a2.4 2.4 0 0 1 0-3L17 15l3-3a2.4 2.4 0 0 0 0-3L15 4l-3 3a2.4 2.4 0 0 0-3 0L4 4a2.4 2.4 0 0 0 0 3l3 3-2.5 2.5a2.4 2.4 0 0 0 0 3Z"/></svg>Choisissez un thème<button id="btn-random-theme" class="icon-btn" title="Thème aléatoire" style="font-size: 1.5rem; margin-left: auto;">🎲</button></h1>
                 <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
                     <select id="theme-select" class="input-like" style="width: 100%; padding: .75rem 1rem; font-size: 1rem; color:var(--ink); background:var(--bg); border:1px solid var(--border); border-radius:8px; outline:none; transition: all .2s ease; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e6edf3%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.6-3.6%205.4-7.9%205.4-12.9%200-5-1.9-9.4-5.4-12.7z%22/%3E%3C/svg%3E'); background-repeat: no-repeat, repeat; background-position: right .7em top 50%, 0 0; background-size: .65em auto, 100%;"></select>
                     <div id="theme-description" class="tip-box" style="text-align: left; min-height: 80px;"></div>
@@ -557,14 +557,15 @@
         <!-- Step 5: Options -->
         <div class="setup-step" data-step="5">
             <div class="card">
-                <h1 style="font-size: 1.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Options de la partie</h1>
-                <div class="setup-options" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: .75rem; align-content: center; flex: 1;">
-                    <div id="option-sound" class="option-card"><div class="icon">🔊</div><div class="label">Sons</div><div class="value">Désactivé</div></div>
-                    <div id="option-innocent" class="option-card"><div class="icon">😇</div><div class="label">Innocent</div><div class="value">Désactivé</div></div>
-                    <div id="option-jester" class="option-card"><div class="icon">🃏</div><div class="label">Jester</div><div class="value">Désactivé</div></div>
-                    <div id="option-agent-blanc" class="option-card"><div class="icon">🕵️</div><div class="label">Agent Blanc</div><div class="value">Désactivé</div></div>
-                    <div id="option-traitre" class="option-card"><div class="icon">😈</div><div class="label">Traître</div><div class="value">Désactivé</div></div>
-                    <div id="option-double" class="option-card"><div class="icon">🎭</div><div class="label">Espion Double</div><div class="value">Désactivé</div></div>
+                <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Options & Rôles Spéciaux</h1>
+                <div id="special-roles-container" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                    <button id="configure-roles-btn" class="input-like" style="text-align: left; display: flex; justify-content: space-between; align-items: center; width: 100%; padding: .75rem 1rem; font-size: 1rem; color:var(--ink); background:var(--bg); border:1px solid var(--border); border-radius:8px; outline:none; transition: all .2s ease; cursor: pointer;">
+                        <span id="configure-roles-label">Aucun rôle spécial</span>
+                        <span style="color: var(--muted);">Configurer ▼</span>
+                    </button>
+                    <div id="options-description" class="tip-box" style="text-align: left; min-height: 80px;">
+                        Cliquez pour ajouter des rôles comme l'Innocent, le Jester, et plus encore pour pimenter vos parties. Chaque rôle ajoute de nouvelles conditions de victoire !
+                    </div>
                 </div>
             </div>
         </div>
@@ -907,39 +908,47 @@
   ];
   const THEME_ICONS = { "Culture Pop": "🍿", "Vie Quotidienne": "🏠", "Gastronomie": "🍔", "Culture G & Arts": "🎨", "Lieux & Voyages": "✈️", "Animaux & Nature": "🐾", "Science & Tech": "🔬", "Sport": "⚽", "Culture Algérienne": "🇩🇿", "Mots Piégés & Absurdes": "🤪", "Histoire & Mythologie": "📜", "Marques Célèbres": "®️", "Corps Humain": "🧬", "Super-Héros & Vilains": "🦸", "Expressions Françaises": "🗣️", "Philosophie": "🤔", "Objets Insolites": "🧸", "Films de Série B": "🎬", "Mythologie Urbaine": "🏙️", "Conflits Historiques": "⚔️", "random": "🎲" };
   const THEME_DESCRIPTIONS = {
-    "Culture Pop": "Films, séries, jeux... Testez votre culture geek et populaire.",
-    "Vie Quotidienne": "Des objets et situations de tous les jours. L'ordinaire devient suspect.",
-    "Gastronomie": "Un festin de mots. Idéal pour les gourmets et les fins gourmets.",
-    "Culture G & Arts": "Mettez vos connaissances à l'épreuve. De l'art à l'histoire.",
-    "Lieux & Voyages": "Explorez le monde à travers des mots. Une invitation à l'évasion.",
-    "Animaux & Nature": "La faune et la flore comme vous ne les avez jamais vues. Soyez rusé.",
-    "Science & Tech": "Du laboratoire à votre poche, un thème pour les esprits brillants.",
-    "Sport": "Compétition, équipes, règles... Un terrain de jeu pour les stratèges.",
-    "Culture Algérienne": "Spécialités, traditions et expressions. Un voyage au cœur de l'Algérie.",
-    "Mots Piégés & Absurdes": "Des paires improbables pour des parties pleines de rebondissements.",
-    "Histoire & Mythologie": "Remontez le temps et côtoyez les légendes. Blufferez-vous les dieux ?",
-    "Marques Célèbres": "Logos, slogans, produits... La société de consommation est un champ de mines.",
-    "Corps Humain": "Un voyage intime et déroutant au cœur de notre propre biologie.",
-    "Super-Héros & Vilains": "Incarnez les plus grands héros et leurs pires ennemis. Le bien triomphera-t-il ?",
-    "Expressions Françaises": "Saurez-vous déjouer les pièges de la langue française ? Un thème pour les amoureux des mots.",
-    "Philosophie": "Pensez, donc bluffez. Un thème pour les esprits qui n'ont pas peur des grands concepts.",
-    "Objets Insolites": "Des objets étranges et merveilleux. La créativité est votre meilleure arme.",
-    "Films de Série B": "Des nanars et des chefs-d'œuvre du cinéma de genre. Pour les cinéphiles avertis.",
-    "Mythologie Urbaine": "Légendes urbaines et créatures mystérieuses. La vérité est ailleurs.",
-    "Conflits Historiques": "Revivez les grandes batailles et les révolutions qui ont façonné notre monde.",
-    "random": "Laissez le destin choisir pour vous. Un thème surprise pour chaque partie."
+    "Culture Pop": "De Marvel à Star Wars, en passant par les derniers jeux vidéo et les séries du moment. Un thème parfait pour tester vos connaissances sur tout ce qui fait la culture populaire d'aujourd'hui.",
+    "Vie Quotidienne": "Les objets les plus banals peuvent cacher les plus grands secrets. Dans ce thème, la suspicion se niche dans les moindres détails de votre quotidien. Saurez-vous voir l'extraordinaire dans l'ordinaire ?",
+    "Gastronomie": "Un thème savoureux pour les gourmands et les gourmets. Des plats traditionnels aux ingrédients les plus fins, chaque mot est une invitation à la dégustation. Attention à ne pas être l'ingrédient secret de la recette adverse.",
+    "Culture G & Arts": "De la Joconde à Mozart, en passant par les grandes figures de la littérature. Ce thème mettra votre culture générale et artistique à rude épreuve. Le bluff est un art, à vous de le maîtriser.",
+    "Lieux & Voyages": "Faites vos valises pour un tour du monde express. Des capitales emblématiques aux merveilles naturelles, ce thème est une véritable invitation à l'évasion. Ne vous perdez pas en chemin.",
+    "Animaux & Nature": "Explorez la faune et la flore, des profondeurs de l'océan aux sommets des montagnes. Soyez aussi rusé qu'un renard et aussi observateur qu'un aigle pour démasquer vos adversaires.",
+    "Science & Tech": "Plongez au cœur de l'innovation, de l'ADN aux dernières avancées technologiques. Un thème pour les esprits logiques et les passionnés de science. La précision est votre meilleur atout.",
+    "Sport": "Que vous soyez fan de foot, de tennis ou de sports extrêmes, ce thème est fait pour vous. La compétition est lancée, et seuls les meilleurs stratèges remporteront la partie.",
+    "Culture Algérienne": "Un voyage authentique au cœur de l'Algérie. De la cuisine aux expressions locales, en passant par les lieux emblématiques. Un thème riche en saveurs et en traditions.",
+    "Mots Piégés & Absurdes": "Préparez-vous à des associations d'idées improbables et des mots qui vous mettront au défi. La logique est mise à rude épreuve, et la créativité est la clé pour ne pas se faire piéger.",
+    "Histoire & Mythologie": "Remontez le temps à la rencontre des figures historiques et des dieux de la mythologie. Un thème épique où chaque mot est une légende. Serez-vous à la hauteur de l'histoire ?",
+    "Marques Célèbres": "Logos, slogans, produits iconiques... Ce thème vous plonge dans l'univers impitoyable de la consommation. Votre sens de l'observation sera votre meilleure arme pour démasquer les infiltrés.",
+    "Corps Humain": "Un voyage fascinant et parfois déroutant à l'intérieur de notre propre corps. De la cellule à l'organe, chaque mot est une pièce du puzzle. Une connaissance intime est requise.",
+    "Super-Héros & Vilains": "Endossez le costume de votre héros ou vilain préféré. Dans cette bataille épique entre le bien et le mal, chaque indice est une démonstration de pouvoir. Que le meilleur camp gagne !",
+    "Expressions Françaises": "Mettez votre maîtrise de la langue de Molière à l'épreuve. Les expressions imagées et les proverbes sont autant de pièges à déjouer. Attention à ne pas tomber dans le panneau !",
+    "Philosophie": "Cogito, ergo sum... Pensez, donc bluffez. Un thème pour les esprits affûtés qui n'ont pas peur de jongler avec les grands concepts et les idées complexes. La vérité est une question de perspective.",
+    "Objets Insolites": "Des objets étranges, merveilleux ou complètement loufoques. L'imagination et la créativité sont vos meilleurs alliés pour naviguer dans ce cabinet de curiosités verbal.",
+    "Films de Série B": "Pour les cinéphiles qui n'ont pas peur des requins volants et des monstres en caoutchouc. Un hommage affectueux aux nanars et aux pépites du cinéma de genre. Le ridicule ne tue pas, mais il peut vous démasquer.",
+    "Mythologie Urbaine": "Du monstre du Loch Ness aux légendes du web, explorez les mythes modernes et les créatures qui hantent notre imaginaire collectif. La frontière entre le réel et la fiction est mince.",
+    "Conflits Historiques": "Revivez les grandes batailles, les révolutions et les événements qui ont façonné notre monde. Un thème pour les stratèges et les passionnés d'histoire, où chaque mot est un tournant décisif.",
+    "random": "Laissez le hasard décider pour vous ! Chaque partie est une nouvelle aventure avec un thème totalement aléatoire. Idéal pour ceux qui aiment les surprises et les défis imprévus."
   };
 
   const GAME_MODES = {
-    'classic': { icon: '☕', label: 'Classique', description: 'Jeu parlé, sans événements. Idéal pour une partie simple et directe.' },
-    'dynamic': { icon: '⚡', label: 'Dynamique', description: 'L\'expérience équilibrée. Des événements aléatoires pour pimenter la partie.' },
-    'revolution': { icon: '💥', label: 'Révolution', description: 'Événements fréquents et un mode \'Révolution\' qui peut inverser les rôles. Chaos garanti !' },
-    'fast': { icon: '⏱️', label: 'Rapide', description: 'Tours et votes plus courts pour des parties rapides et sous haute tension.' },
-    'mystery': { icon: '🕵️', label: 'Mystère', description: 'Le rôle des agents éliminés reste secret. Le doute plane jusqu\'à la fin.' },
-    'folie': { icon: '🤪', label: 'Folie', description: 'Un événement à chaque tour et des timers très courts. Un mode intense et imprévisible.' },
-    'traitre': { icon: '😈', label: 'Traître', description: 'À jouer avec le rôle \'Traître\'. Un Civil qui gagne seul en éliminant tous les autres.' },
-    'double': { icon: '🎭', label: 'Espion Double', description: 'À jouer avec l\' \'Espion Double\'. Un agent qui change de camp s\'il est démasqué.' }
+    'classic': { icon: '☕', label: 'Classique', description: 'L\'expérience pure d\'Undercover. Pas de timer, pas d\'événements, juste du bluff et de la déduction. Parfait pour découvrir le jeu ou pour les puristes qui aiment prendre leur temps.' },
+    'dynamic': { icon: '⚡', label: 'Dynamique', description: 'Le mode de jeu standard, parfaitement équilibré. Les tours sont rythmés par un timer et des événements aléatoires viennent pimenter la partie, créant des retournements de situation inattendus.' },
+    'revolution': { icon: '💥', label: 'Révolution', description: 'Le chaos total ! Les événements sont fréquents et un événement spécial "Révolution" peut survenir, inversant les rôles des Civils et des Undercover. Personne n\'est à l\'abri !' },
+    'fast': { icon: '⏱️', label: 'Rapide', description: 'Pour les agents qui n\'ont pas de temps à perdre. Les tours et les votes sont beaucoup plus courts, forçant des décisions rapides et instinctives. La pression est à son comble.' },
+    'mystery': { icon: '🕵️', label: 'Mystère', description: 'Le doute est omniprésent. Lorsqu\'un agent est éliminé, son rôle et son mot restent secrets jusqu\'à la fin de la partie. La paranoïa est votre seule alliée.' },
+    'folie': { icon: '🤪', label: 'Folie', description: 'Le mode le plus intense. Un événement aléatoire se produit à chaque tour et les timers sont extrêmement courts. C\'est rapide, imprévisible et totalement fou.' },
+    'traitre': { icon: '😈', label: 'Traître', description: 'Un mode de jeu avancé avec le rôle "Traître". Ce Civil doit se faire passer pour un Undercover et tenter d\'éliminer tout le monde (Civils et Undercover) pour gagner seul.' },
+    'double': { icon: '🎭', label: 'Espion Double', description: 'Introduit le rôle "Espion Double". Cet agent commence comme Undercover, mais s\'il est éliminé, il change de camp et rejoint les Civils, gardant son mot secret.' }
   };
+  const GAME_OPTIONS = [
+    { id: 'sound', icon: '🔊', label: 'Ambiance Sonore', description: 'Active ou désactive les effets sonores et la musique pour une immersion totale.' },
+    { id: 'innocent', icon: '😇', label: 'Innocent', description: 'Un agent sans mot secret. S\'il est éliminé, il doit deviner le mot des Civils pour gagner seul.' },
+    { id: 'jester', icon: '🃏', label: 'Jester', description: 'Le bouffon du roi. Son seul but est de se faire éliminer par les autres joueurs pour remporter la partie.' },
+    { id: 'agentBlanc', icon: '🕵️', label: 'Agent Blanc', description: 'Un Civil spécial. Si les Undercover sont tous éliminés, il doit deviner leur mot pour gagner seul.' },
+    { id: 'traitre', icon: '😈', label: 'Traître', description: 'Un Civil qui connaît le mot des Undercover. Il gagne seul s\'il parvient à éliminer tous les autres agents.' },
+    { id: 'doubleAgent', icon: '🎭', label: 'Espion Double', description: 'Commence comme Undercover. S\'il est éliminé, il change de camp et rejoint les Civils pour les aider.' }
+  ];
 
   // ---------- DOM & STATE ----------
   const dom = {};
@@ -969,6 +978,7 @@
       'summary-title', 'summary-grid', 'summary-mode', 'summary-theme', 'summary-roles', 'summary-players', 'summary-countdown',
       'intro-text-container', 'intro-text', 'intro-buttons', 'intro-continue-btn', 'intro-skip-btn',
       'theme-select', 'theme-description', 'minus', 'plus', 'playerNum', 'minusBot', 'plusBot', 'botNum', 'playersSetup',
+
       'btnReset', 'btnHelp', 'btnNewWord', 'btnShowMyCard', 'option-sound', 'option-innocent', 'option-jester', 'option-agent-blanc', 'option-traitre', 'option-double',
       'option-comm-oral', 'option-comm-ecrit',
       'game-mode-select', 'game-mode-description',
@@ -1345,6 +1355,65 @@
     dom.playersSetup.querySelectorAll('input[data-file]').forEach(inp=>inp.onchange=async(e)=>{ const i=parseInt(e.target.dataset.file,10); const file=e.target.files?.[0]; if(!file)return; try{const d=await fileToDataURL(file);(state.players[i]||={id:i+1}).photo=d;renderPlayerSetup();}catch{showModal({title:"Erreur",message:"Impossible de charger la photo.",buttons:[{text:"OK"}]})}});
   }
 
+  function showOptionsModal() {
+    let modalHtml = '<div class="theme-list" style="padding-right: 0; max-height: 60vh; overflow-y: auto;">';
+    GAME_OPTIONS.forEach(option => {
+        const isChecked = state.settings[option.id];
+        modalHtml += `
+            <label for="modal-option-${option.id}" class="theme-item" style="cursor: pointer; flex-direction: row; align-items: center; gap: 1rem; user-select: none;">
+                <input type="checkbox" id="modal-option-${option.id}" data-option-id="${option.id}" ${isChecked ? 'checked' : ''} style="width: 20px; height: 20px; flex-shrink: 0; accent-color: var(--accent);">
+                <div class="icon">${option.icon}</div>
+                <div class="details">
+                    <div class="label">${option.label}</div>
+                    <div class="description" style="font-size: .8rem;">${option.description}</div>
+                </div>
+            </label>
+        `;
+    });
+    modalHtml += '</div>';
+
+    showModal({
+        title: "Options & Rôles Spéciaux",
+        message: modalHtml,
+        buttons: [
+            {
+                text: "Terminé",
+                class: "",
+                onClick: () => {
+                    document.querySelectorAll('#modal-template input[type="checkbox"]').forEach(checkbox => {
+                        const optionId = checkbox.dataset.optionId;
+                        if (optionId in state.settings) {
+                            state.settings[optionId] = checkbox.checked;
+                        }
+                    });
+                    updateOptionsButton();
+
+                    if(state.settings.sound) {
+                        initAudio();
+                    }
+                    toggleBackgroundMusic();
+                    dom.homeSoundToggle.textContent = state.settings.sound ? '🔊' : '🔇';
+                }
+            }
+        ]
+    });
+  }
+
+  function updateOptionsButton() {
+    const activeOptions = GAME_OPTIONS.filter(opt => opt.id !== 'sound' && state.settings[opt.id]);
+    const count = activeOptions.length;
+    const label = dom.configureRolesLabel;
+    if (label) {
+        if (count === 0) {
+            label.textContent = "Aucun rôle spécial";
+        } else if (count === 1) {
+            label.textContent = `1 rôle spécial : ${activeOptions[0].label}`;
+        } else {
+            label.textContent = `${count} rôles spéciaux activés`;
+        }
+    }
+  }
+
   function renderThemeSelection() {
     const themeSelect = dom.themeSelect;
     if (themeSelect.options.length > 0) return; // Populate only once
@@ -1450,10 +1519,28 @@
         }
     };
 
+    updateModeDetails();
+
     gameModeSelect.onchange = () => {
         state.settings.gameMode = gameModeSelect.value;
         sounds.click();
         updateModeDetails();
+    };
+
+    dom.btnRandomMode.onclick = () => {
+        sounds.click();
+        const modes = Object.keys(GAME_MODES);
+        const randomMode = modes[rand(modes.length)];
+        state.settings.gameMode = randomMode;
+        updateModeDetails();
+    };
+
+    dom.btnRandomTheme.onclick = () => {
+        sounds.click();
+        const themes = Object.keys(THEME_DATA);
+        const randomTheme = themes[rand(themes.length)];
+        state.settings.theme = randomTheme;
+        updateThemeDetails();
     };
 
     // Load saved players
@@ -1465,17 +1552,8 @@
     dom.botNum.textContent = state.settings.botCount;
     renderPlayerSetup();
     
-    const updateOptionCards = () => {
-        ['sound', 'innocent', 'jester', 'agentBlanc', 'traitre', 'doubleAgent'].forEach(key => {
-            const domKey = `option${key.charAt(0).toUpperCase() + key.slice(1)}`;
-            const el = dom[domKey];
-            if (!el) return;
-            el.classList.toggle('active', state.settings[key]);
-            el.querySelector('.value').textContent = state.settings[key] ? 'Activé' : 'Désactivé';
-        });
-        updateModeDetails();
-    };
-    updateOptionCards();
+    updateOptionsButton();
+    dom.configureRolesBtn.onclick = showOptionsModal;
 
     const updateTotalPlayerCount = () => {
         const total = state.settings.playerCount + state.settings.botCount;
@@ -1500,6 +1578,7 @@
     dom.plus.onclick  = ()=>{ sounds.click(); state.settings.playerCount = clamp(state.settings.playerCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
     dom.minusBot.onclick = ()=>{ sounds.click(); state.settings.botCount = clamp(state.settings.botCount - 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
     dom.plusBot.onclick  = ()=>{ sounds.click(); state.settings.botCount = clamp(state.settings.botCount + 1, 0, state.maxPlayers); updateTotalPlayerCount(); };
+
 
     ['sound', 'innocent', 'jester', 'agentBlanc', 'traitre', 'doubleAgent'].forEach(key => {
         const domKey = `option${key.charAt(0).toUpperCase() + key.slice(1)}`;
@@ -1530,6 +1609,7 @@
         dom.optionCommEcrit.classList.add('active');
         dom.optionCommOral.classList.remove('active');
     };
+
   }
 
   // ---------- GAME FLOW ----------
@@ -1587,27 +1667,42 @@
     show('summary');
 
     // 6. Start countdown
-    let countdown = 5;
+    let countdown = 30;
     const countdownEl = dom.summaryCountdown;
     let countdownInterval;
 
-    const updateCountdown = () => {
-        if (countdown > 0) {
-            countdownEl.textContent = `La mission commence dans ${countdown}...`;
-            sounds.countdown();
-        } else {
-            countdownEl.textContent = 'Lancement !';
-            clearInterval(countdownInterval);
-            // 7. Transition to next screen
-            if (state.settings.playerCount > 0) {
-                show('pass');
-                renderRevealCard();
-            } else {
-                state._gameController.startRound();
-            }
-        }
-        countdown--;
+    const proceedToGame = () => {
+      clearInterval(countdownInterval);
+      if (state.settings.playerCount > 0) {
+        show('pass');
+        renderRevealCard();
+      } else {
+        if (state._gameController) state._gameController.startRound();
+      }
     };
+
+    const updateCountdown = () => {
+      if (countdown > 0) {
+        countdownEl.textContent = `La mission commence dans ${countdown}...`;
+        sounds.countdown();
+        countdown--;
+      } else {
+        countdownEl.textContent = 'Lancement !';
+        proceedToGame();
+      }
+    };
+
+    // Add a skip button
+    const skipButton = document.createElement('button');
+    skipButton.textContent = 'Passer (lancement immédiat)';
+    skipButton.className = 'btn ghost';
+    skipButton.style.marginTop = '0.5rem';
+    skipButton.style.animation = 'fadeInUp .5s 1.2s both';
+    skipButton.onclick = () => {
+        sounds.click();
+        proceedToGame();
+    };
+    countdownEl.parentElement.appendChild(skipButton);
 
     updateCountdown(); // Initial call
     countdownInterval = setInterval(updateCountdown, 1000);
@@ -2554,6 +2649,23 @@
     initSetup();
     show('home');
 
+    // --- ZOOM PREVENTION ---
+    document.addEventListener('touchmove', function(e) {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(e) {
+      const now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+    // --------------------
+
     function createFloatingWord() {
       const titleContainer = document.querySelector('.title-container');
       if (!titleContainer) return;
@@ -2566,8 +2678,9 @@
       span.textContent = word;
 
       const containerRect = titleContainer.getBoundingClientRect();
-      const x = Math.random() * (containerRect.width * 1.4) - (containerRect.width * 0.2);
-      const y = Math.random() * (containerRect.height * 1.6) - (containerRect.height * 0.3);
+      // Clamp the coordinates to be within the container's bounds
+      const x = Math.random() * containerRect.width;
+      const y = Math.random() * containerRect.height;
 
       span.style.left = `${x}px`;
       span.style.top = `${y}px`;
